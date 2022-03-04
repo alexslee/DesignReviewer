@@ -12,11 +12,21 @@ class DesignReviewHUD: UIControl {
   private lazy var feedbackGenerator = UIImpactFeedbackGenerator(style: .light)
 
   private lazy var visualEffectView: UIVisualEffectView = {
-    let view = UIVisualEffectView(effect: UIBlurEffect(style: .systemThinMaterialDark))
+    let style: UIBlurEffect.Style
+    let image: UIImage?
+    if #available(iOS 13.0, *) {
+      style = .systemThinMaterialDark
+      image = UIImage(systemName: "eye")?.withRenderingMode(.alwaysTemplate)
+    } else {
+      style = .dark
+      image = UIImage(named: "eye")?.withRenderingMode(.alwaysTemplate)
+    }
+
+    let view = UIVisualEffectView(effect: UIBlurEffect(style: style))
     view.translatesAutoresizingMaskIntoConstraints = false
     view.layer.masksToBounds = true
 
-    let imageView = UIImageView(image: UIImage(systemName: "eye")?.withRenderingMode(.alwaysTemplate))
+    let imageView = UIImageView(image: image)
     imageView.contentMode = .scaleAspectFit
     imageView.translatesAutoresizingMaskIntoConstraints = false
 

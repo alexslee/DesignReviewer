@@ -109,11 +109,17 @@ class DesignReviewInspectorViewModel {
   func segmentedControlItems() -> [Any] {
     var items = [UIImage?]()
 
-    items.append(UIImage(systemName: "person.crop.rectangle"))
-    items.append(UIImage(systemName: "ruler"))
-    items.append(UIImage(systemName: "rectangle.on.rectangle"))
-    items.append(UIImage(systemName: "square.stack.3d.down.right"))
-
+    if #available(iOS 13, *) {
+      items.append(UIImage(systemName: "person.crop.rectangle"))
+      items.append(UIImage(systemName: "ruler"))
+      items.append(UIImage(systemName: "rectangle.on.rectangle"))
+      items.append(UIImage(systemName: "square.stack.3d.down.right"))
+    } else {
+      items.append(UIImage(named: "person-crop-rectangle"))
+      items.append(UIImage(named: "square-and-line-vertical-and-square"))
+      items.append(UIImage(named: "rectangle-on-rectangle"))
+      items.append(UIImage(named: "square-stack-3d-down-right"))
+    }
     return items.compactMap { $0 }
   }
 

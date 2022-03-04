@@ -58,14 +58,26 @@ extension UIView: DesignReviewable {
 
   /// Convenience wrapper around some SFSymbols for use in constructing the summary attribute
   private var summarySymbolImage: UIImage? {
-    if self is UIImageView {
-      return UIImage(systemName: "photo")
-    } else if self is UIStackView {
-      return UIImage(systemName: "rectangle.stack")
-    } else if self is TextContainingView {
-      return UIImage(systemName: "text.quote")
+    if #available(iOS 13, *) {
+      if self is UIImageView {
+        return UIImage(systemName: "photo")
+      } else if self is UIStackView {
+        return UIImage(systemName: "rectangle.stack")
+      } else if self is TextContainingView {
+        return UIImage(systemName: "text.quote")
+      } else {
+        return UIImage(systemName: "rectangle")
+      }
     } else {
-      return UIImage(systemName: "rectangle")
+      if self is UIImageView {
+        return UIImage(named: "photo")
+      } else if self is UIStackView {
+        return UIImage(named: "rectangle-stack")
+      } else if self is TextContainingView {
+        return UIImage(named: "text-quote")
+      } else {
+        return UIImage(named: "rectangle")
+      }
     }
   }
 

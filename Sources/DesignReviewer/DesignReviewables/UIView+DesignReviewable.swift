@@ -142,7 +142,7 @@ extension UIView: DesignReviewable {
     // build list for accessibility
     attributes[.accessibility] = [DesignReviewInspectorAttribute]()
     attributes[.accessibility]?.append(DesignReviewMutableAttribute(
-      title: "Enabled",
+      title: "Is Element",
       keyPath: "isAccessibilityElement",
       reviewable: self))
     attributes[.accessibility]?.append(DesignReviewMutableAttribute(
@@ -173,7 +173,7 @@ extension UIView: DesignReviewable {
     // build list for interactivity
     attributes[.general] = [DesignReviewInspectorAttribute]()
     attributes[.general]?.append(DesignReviewMutableAttribute(
-      title: "UserInteractionEnabled",
+      title: "User Interaction Enabled",
       keyPath: "userInteractionEnabled",
       reviewable: self,
       modifier: { [weak self] newValue in
@@ -185,7 +185,7 @@ extension UIView: DesignReviewable {
         self.isUserInteractionEnabled = newBool
       }))
     attributes[.general]?.append(DesignReviewMutableAttribute(
-      title: "MultipleTouchEnabled",
+      title: "Multiple Touch Enabled",
       keyPath: "multipleTouchEnabled",
       reviewable: self,
       modifier: { [weak self] newValue in
@@ -197,38 +197,20 @@ extension UIView: DesignReviewable {
         self.isMultipleTouchEnabled = newBool
       }))
     attributes[.general]?.append(DesignReviewMutableAttribute(
-      title: "ExclusiveTouch",
+      title: "Exclusive Touch",
       keyPath: "exclusiveTouch",
       reviewable: self))
 
     // build list for visuals
     attributes[.appearance] = [DesignReviewInspectorAttribute]()
     attributes[.layout] = [DesignReviewInspectorAttribute]()
-    attributes[.appearance]?.append(DesignReviewMutableAttribute(
-      title: "TintColor",
-      keyPath: "tintColor",
-      reviewable: self))
-    attributes[.appearance]?.append(DesignReviewEnumAttribute<UIView.TintAdjustmentMode>(
-      title: "TintAdjustmentMode",
-      keyPath: "tintAdjustmentMode",
-      reviewable: self))
-
-    attributes[.layout]?.append(DesignReviewEnumAttribute<UIView.ContentMode>(
-      title: "ContentMode",
-      keyPath: "contentMode",
-      reviewable: self))
-    attributes[.layout]?.append(DesignReviewMutableAttribute(
-      title: "SafeAreaInsets",
-      keyPath: "safeAreaInsets",
-      reviewable: self))
 
     attributes[.appearance]?.append(DesignReviewMutableAttribute(
-      title: "BackgroundColor",
+      title: "Background Color",
       keyPath: "backgroundColor",
       reviewable: self))
-
     attributes[.appearance]?.append(DesignReviewMutableAttribute(
-      title: "Layer.cornerRadius",
+      title: "Corner Radius",
       keyPath: "layer.cornerRadius",
       reviewable: self,
       modifier: { [weak self] newValue in
@@ -239,6 +221,23 @@ extension UIView: DesignReviewable {
 
         self.layer.cornerRadius = CGFloat(rawRadius)
       }))
+    attributes[.appearance]?.append(DesignReviewEnumAttribute<UIView.TintAdjustmentMode>(
+      title: "Tint Adjustment Mode",
+      keyPath: "tintAdjustmentMode",
+      reviewable: self))
+    attributes[.appearance]?.append(DesignReviewMutableAttribute(
+      title: "Tint Color",
+      keyPath: "tintColor",
+      reviewable: self))
+
+    attributes[.layout]?.append(DesignReviewEnumAttribute<UIView.ContentMode>(
+      title: "Content Mode",
+      keyPath: "contentMode",
+      reviewable: self))
+    attributes[.layout]?.append(DesignReviewMutableAttribute(
+      title: "Safe Area Insets",
+      keyPath: "safeAreaInsets",
+      reviewable: self))
 
     attributes[.constraints] = [DesignReviewInspectorAttribute]()
     attributes[.constraints]?.append(DesignReviewImmutableAttribute(
@@ -268,21 +267,21 @@ extension UIView: DesignReviewable {
 
     attributes[.hugging] = [DesignReviewInspectorAttribute]()
     attributes[.hugging]?.append(DesignReviewImmutableAttribute(
-      title: "Horizontal",
+      title: "Horizontal Hugging Priority",
       keyPath: "horizontalContentHuggingPriority",
       value: contentHuggingPriority(for: .horizontal)))
     attributes[.hugging]?.append(DesignReviewImmutableAttribute(
-      title: "Vertical",
+      title: "Vertical Hugging Priority",
       keyPath: "verticalContentHuggingPriority",
       value: contentHuggingPriority(for: .vertical)))
 
     attributes[.resistance] = [DesignReviewInspectorAttribute]()
     attributes[.resistance]?.append(DesignReviewImmutableAttribute(
-      title: "Horizontal",
+      title: "Horizontal Compression Priority",
       keyPath: "horizontalContentCompressionResistance",
       value: contentCompressionResistancePriority(for: .horizontal)))
     attributes[.resistance]?.append(DesignReviewImmutableAttribute(
-      title: "Vertical",
+      title: "Vertical Compression Priority",
       keyPath: "verticalContentCompressionResistance",
       value: contentCompressionResistancePriority(for: .vertical)))
 
@@ -305,7 +304,7 @@ extension UIView: DesignReviewable {
         keyPath: "text",
         reviewable: self))
       attributes[.typography]?.append(DesignReviewMutableAttribute(
-        title: "AttributedText",
+        title: "Attributed Text",
         keyPath: "attributedText",
         reviewable: self))
 
@@ -314,12 +313,12 @@ extension UIView: DesignReviewable {
         keyPath: "lineBreakMode",
         reviewable: self))
       attributes[.typography]?.append(DesignReviewEnumAttribute<NSTextAlignment>(
-        title: "TextAlignment",
+        title: "Text Alignment",
         keyPath: "textAlignment",
         reviewable: self))
 
       attributes[.typography]?.append(DesignReviewMutableAttribute(
-        title: "TextColor",
+        title: "Text Color",
         keyPath: "textColor",
         reviewable: self))
       attributes[.typography]?.append(DesignReviewMutableAttribute(
@@ -327,7 +326,7 @@ extension UIView: DesignReviewable {
         keyPath: "font",
         reviewable: self))
       attributes[.typography]?.append(DesignReviewMutableAttribute(
-        title: "NumberOfLines",
+        title: "Number Of Lines",
         keyPath: "numberOfLines",
         reviewable: self,
         modifier: { [weak self] newValue in

@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 
 extension UIColor: DesignReviewable {
-  private static let previewImageHeight: CGFloat = 88
+  private static let previewImageHeight: CGFloat = 666 / 6 // 😈
 
   func createReviewableAttributes() -> [DesignReviewInspectorAttributeGroup: [DesignReviewInspectorAttribute]] {
     var attributes = [DesignReviewInspectorAttributeGroup: [DesignReviewInspectorAttribute]]()
@@ -19,8 +19,7 @@ extension UIColor: DesignReviewable {
       attributes[.preview] = [DesignReviewInspectorAttribute]()
 
       // defining some kinda-sorta-not-totally arbitrary dimensions just to draw the color into.
-      let width = UIScreen.main.nativeBounds.width / UIScreen.main.nativeScale
-      let size = CGSize(width: width, height: Self.previewImageHeight)
+      let size = CGSize(width: UIScreen.main.bounds.width, height: Self.previewImageHeight)
 
       let screenshot = DesignReviewImageCapturer(size: size).image { context in
         setFill()
@@ -40,7 +39,7 @@ extension UIColor: DesignReviewable {
     }
 
     attributes[.general]?.append(DesignReviewImmutableAttribute(
-      title: "HexString",
+      title: "Hex String",
       keyPath: "hexString",
       value: hexString))
 

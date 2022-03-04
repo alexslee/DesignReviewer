@@ -31,6 +31,19 @@ struct DesignReviewInspectorSection {
 
 enum DesignReviewInspectorSegmentedIndex: Int {
   case landing, constraints, twoDimensionalHierarchy, threeDimensionalHierarchy
+
+  var sections: [DesignReviewInspectorAttributeGroup] {
+    switch self {
+    case .landing:
+      return [.summary, .preview, .accessibility, .typography, .appearance, .behaviour, .general]
+    case .constraints:
+      return [.summary, .preview, .horizontal, .vertical, .hugging, .resistance, .layout, .constraints]
+    case .twoDimensionalHierarchy:
+      return [.summary, .preview, .classes, .views, .controllers]
+    case .threeDimensionalHierarchy:
+      return []
+    }
+  }
 }
 
 class DesignReviewInspectorViewModel {
@@ -40,6 +53,7 @@ class DesignReviewInspectorViewModel {
   private var allSections = [DesignReviewInspectorSection]()
 
   private var currentSegmentedIndex: DesignReviewInspectorSegmentedIndex = .landing
+  private var actualCreatedSegmentedIndices = [DesignReviewInspectorSegmentedIndex]()
 
   init(reviewable: DesignReviewable?) {
     self.reviewable = reviewable
@@ -75,6 +89,11 @@ class DesignReviewInspectorViewModel {
     return sections[indexPath.section].rows[indexPath.row].attribute
   }
 
+  func convertRawControlIndexToActualIndex(_ rawIndex: Int) -> DesignReviewInspectorSegmentedIndex? {
+    guard rawIndex < actualCreatedSegmentedIndices.count else { return nil }
+    return actualCreatedSegmentedIndices[rawIndex]
+  }
+
   func expandedStateForSection(_ section: Int) -> Bool {
     guard section < sections.count else { return false }
     return sections[section].isExpanded
@@ -106,54 +125,52 @@ class DesignReviewInspectorViewModel {
     return index
   }
 
-  func segmentedControlItems() -> [Any] {
+  func createSegmentedControlItems() -> [Any] {
     var items = [UIImage?]()
 
+    let landingHasData = !DesignReviewInspectorSegmentedIndex.landing.sections.filter({ searchCandidate in
+      allSections.contains(where: { $0.title == searchCandidate })
+    }).isEmpty
+
+    let constraintsHasData = !DesignReviewInspectorSegmentedIndex.constraints.sections.filter({ searchCandidate in
+      // don't let preview/summary influence segmented tab visibility for non-landing tabs
+      if searchCandidate == .preview || searchCandidate == .summary { return false }
+
+      return allSections.contains(where: { $0.title == searchCandidate })
+    }).isEmpty
+
+    let hierarchyHasData = !DesignReviewInspectorSegmentedIndex.twoDimensionalHierarchy.sections.filter({ searchCandidate in
+      // don't let preview/summary influence segmented tab visibility for non-landing tabs
+      if searchCandidate == .preview || searchCandidate == .summary { return false }
+
+      return allSections.contains(where: { $0.title == searchCandidate })
+    }).isEmpty
+
+    let addThreeDimensionalItem = (reviewable as? UIView) != nil
+
     if #available(iOS 13, *) {
-      items.append(UIImage(systemName: "person.crop.rectangle"))
-      items.append(UIImage(systemName: "ruler"))
-      items.append(UIImage(systemName: "rectangle.on.rectangle"))
-      items.append(UIImage(systemName: "square.stack.3d.down.right"))
+      if landingHasData { items.append(UIImage(systemName: "person.crop.rectangle")) }
+      if constraintsHasData { items.append(UIImage(systemName: "ruler")) }
+      if hierarchyHasData { items.append(UIImage(systemName: "rectangle.on.rectangle")) }
+      if addThreeDimensionalItem { items.append(UIImage(systemName: "square.stack.3d.down.right")) }
     } else {
-      items.append(UIImage(named: "person-crop-rectangle"))
-      items.append(UIImage(named: "square-and-line-vertical-and-square"))
-      items.append(UIImage(named: "rectangle-on-rectangle"))
-      items.append(UIImage(named: "square-stack-3d-down-right"))
+      if landingHasData { items.append(UIImage(named: "person-crop-rectangle")) }
+      if constraintsHasData { items.append(UIImage(named: "square-and-line-vertical-and-square")) }
+      if hierarchyHasData { items.append(UIImage(named: "rectangle-on-rectangle")) }
+      if addThreeDimensionalItem { items.append(UIImage(named: "square-stack-3d-down-right")) }
     }
+
+    if landingHasData { actualCreatedSegmentedIndices.append(.landing) }
+    if constraintsHasData { actualCreatedSegmentedIndices.append(.constraints) }
+    if hierarchyHasData { actualCreatedSegmentedIndices.append(.twoDimensionalHierarchy) }
+    if addThreeDimensionalItem { actualCreatedSegmentedIndices.append(.threeDimensionalHierarchy) }
+
     return items.compactMap { $0 }
   }
 
   func updateVisibleSections(segmentedIndex: DesignReviewInspectorSegmentedIndex) {
     currentSegmentedIndex = segmentedIndex
-
-    if segmentedIndex == .landing {
-      sections = allSections.filter {
-        switch $0.title {
-        case .summary, .preview, .accessibility, .typography, .appearance, .general:
-          return true
-        default:
-          return false
-        }
-      }
-    } else if segmentedIndex == .constraints {
-      sections = allSections.filter {
-        switch $0.title {
-        case .summary, .preview, .horizontal, .vertical, .hugging, .resistance, .layout, .constraints:
-          return true
-        default:
-          return false
-        }
-      }
-    } else if segmentedIndex == .twoDimensionalHierarchy {
-      sections = allSections.filter {
-        switch $0.title {
-        case .summary, .preview, .classes, .views, .controllers:
-          return true
-        default:
-          return false
-        }
-      }
-    }
+    sections = allSections.filter { segmentedIndex.sections.contains($0.title) }
   }
 
   func titleForSection(_ section: Int) -> String {

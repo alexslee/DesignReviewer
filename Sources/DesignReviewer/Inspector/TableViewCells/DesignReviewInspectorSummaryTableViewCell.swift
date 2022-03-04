@@ -26,7 +26,7 @@ class DesignReviewInspectorSummaryTableViewCell: UITableViewCell {
     separatorInset = UIEdgeInsets(top: 0, left: .large, bottom: 0, right: .large)
 
     indentationWidth = .medium
-    textLabel?.font = .header
+    textLabel?.font = .title
     textLabel?.numberOfLines = 0
     detailTextLabel?.numberOfLines = 0
 

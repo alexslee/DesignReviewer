@@ -26,20 +26,20 @@ extension NSLayoutConstraint: DesignReviewable {
     attributes[.general] = [DesignReviewInspectorAttribute]()
 
     attributes[.general]?.append(DesignReviewEnumAttribute<NSLayoutConstraint.Attribute>(
-      title: "FirstAttribute",
+      title: "First Attribute",
       keyPath: "firstAttribute",
       reviewable: self))
     attributes[.general]?.append(DesignReviewMutableAttribute(
-      title: "FirstItem",
+      title: "First Item",
       keyPath: "firstItem",
       reviewable: self))
 
     attributes[.general]?.append(DesignReviewEnumAttribute<NSLayoutConstraint.Attribute>(
-      title: "SecondAttribute",
+      title: "Second Attribute",
       keyPath: "secondAttribute",
       reviewable: self))
     attributes[.general]?.append(DesignReviewMutableAttribute(
-      title: "SecondItem",
+      title: "Second Item",
       keyPath: "secondItem",
       reviewable: self))
 

@@ -25,7 +25,7 @@ class DesignReviewMutableAttribute: DesignReviewInspectorAttribute, Equatable {
   }
 
   var isModifiable: Bool { modifier != nil }
-  var modifierIncrementSize: Double
+  let modifierIncrementSize: Double
   private(set) var modifier: ((Any) -> Void)?
 
   private(set) weak var reviewable: DesignReviewable?

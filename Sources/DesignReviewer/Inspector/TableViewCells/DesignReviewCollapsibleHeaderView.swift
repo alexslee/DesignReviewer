@@ -13,7 +13,6 @@ protocol DesignReviewCollapsibleHeaderViewDelegate: AnyObject {
 
 class DesignReviewCollapsibleHeaderView: UITableViewHeaderFooterView {
   static let reuseIdentifier = "DesignReviewCollapsibleHeaderView"
-  private static let chevronStrokeWidth: CGFloat = 1.5
 
   weak var delegate: DesignReviewCollapsibleHeaderViewDelegate? {
     didSet {
@@ -23,7 +22,16 @@ class DesignReviewCollapsibleHeaderView: UITableViewHeaderFooterView {
   }
 
   private lazy var imageView: UIImageView = {
-    let imageView = UIImageView(image: nil)
+    let imageView = UIImageView()
+
+    if #available(iOS 13, *) {
+      imageView.image = UIImage(systemName: "chevron.down")?.withRenderingMode(.alwaysTemplate)
+    } else {
+      imageView.image = UIImage(named: "chevron-down")?.withRenderingMode(.alwaysTemplate)
+    }
+
+    imageView.contentMode = .scaleAspectFit
+    imageView.tintColor = .monochrome4
     imageView.translatesAutoresizingMaskIntoConstraints = false
 
     return imageView
@@ -55,7 +63,9 @@ class DesignReviewCollapsibleHeaderView: UITableViewHeaderFooterView {
 
     NSLayoutConstraint.activate([
       imageView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
-      imageView.trailingAnchor.constraint(equalTo: layoutMarginsGuide.trailingAnchor)
+      imageView.trailingAnchor.constraint(equalTo: layoutMarginsGuide.trailingAnchor),
+      imageView.widthAnchor.constraint(equalToConstant: .large),
+      imageView.heightAnchor.constraint(equalToConstant: .large)
     ])
 
     NSLayoutConstraint.activate([
@@ -80,24 +90,6 @@ class DesignReviewCollapsibleHeaderView: UITableViewHeaderFooterView {
     tag = section
     self.delegate = delegate
     label.text = title
-
-    let size = CGSize(width: .small + Self.chevronStrokeWidth, height: .extraSmall + Self.chevronStrokeWidth)
-
-    imageView.image = DesignReviewImageCapturer(size: size).image { context in
-      let rect = context.config.bounds.insetBy(dx: Self.chevronStrokeWidth, dy: Self.chevronStrokeWidth)
-      let path = UIBezierPath()
-
-      path.move(to: rect.origin)
-      path.addLine(to: CGPoint(x: rect.midX, y: rect.maxY))
-      path.addLine(to: CGPoint(x: rect.maxX, y: rect.minY))
-
-      path.lineWidth = Self.chevronStrokeWidth
-      path.lineCapStyle = .round
-      path.lineJoinStyle = .round
-
-      UIColor.monochrome4.setStroke()
-      path.stroke()
-    }
 
     imageView.isHidden = !isExpandable
     label.sizeToFit()

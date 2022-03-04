@@ -18,9 +18,14 @@ class DesignReviewInspectorTableViewCell: UITableViewCell {
   weak var delegate: DesignReviewInspectorTableViewCellDelegate?
 
   private var attributeModifier: ((Any) -> Void)?
+  private var section: DesignReviewInspectorAttributeGroup?
 
   override var accessoryView: UIView? {
     didSet { setNeedsUpdateConstraints() }
+  }
+
+  required init?(coder aDecoder: NSCoder) {
+    fatalError("init(coder:) has not been implemented")
   }
 
   override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -33,27 +38,10 @@ class DesignReviewInspectorTableViewCell: UITableViewCell {
     clipsToBounds = true
     contentView.clipsToBounds = true
 
-    let selectedView = UIView()
-    selectedBackgroundView = selectedView
+    selectedBackgroundView = UIView()
 
     textLabel?.font = .body
     detailTextLabel?.font = .body
-  }
-
-  required init?(coder aDecoder: NSCoder) {
-    fatalError("init(coder:) has not been implemented")
-  }
-
-  override func setHighlighted(_ highlighted: Bool, animated: Bool) {
-    let color = accessoryView?.backgroundColor
-    super.setHighlighted(highlighted, animated: animated)
-    accessoryView?.backgroundColor = color
-  }
-
-  override func setSelected(_ selected: Bool, animated: Bool) {
-    let color = accessoryView?.backgroundColor
-    super.setSelected(selected, animated: animated)
-    accessoryView?.backgroundColor = color
   }
 
   override func prepareForReuse() {
@@ -67,8 +55,6 @@ class DesignReviewInspectorTableViewCell: UITableViewCell {
     editingAccessoryView = nil
     editingAccessoryType = .none
   }
-
-  private var section: DesignReviewInspectorAttributeGroup?
 
   func configure(reviewable: DesignReviewable?,
                  attribute: DesignReviewInspectorAttribute,
@@ -215,6 +201,7 @@ class DesignReviewInspectorTableViewCell: UITableViewCell {
     case let color as UIColor:
       text = UIColorValueTransformer().transformedValue(color) as? String
       accessoryView = DesignReviewUIColorAccessoryView(color: color)
+      accessoryView?.alpha = 1
     case let value as UIFont:
       text = "\(value.fontName), \(value.pointSize)"
     case is UIBarButtonItem, is UIImage:

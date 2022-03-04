@@ -17,7 +17,7 @@ extension UIImage: DesignReviewable {
 
     attributes[.appearance] = [DesignReviewInspectorAttribute]()
     attributes[.appearance]?.append(DesignReviewEnumAttribute<UIImage.RenderingMode>(
-      title: "RenderingMode",
+      title: "Rendering Mode",
       keyPath: "renderingMode",
       reviewable: self))
 

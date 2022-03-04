@@ -26,13 +26,11 @@ enum DesignReviewInspectorAttributeGroup: String, CaseIterable {
   case hugging
   case resistance
   case constraints
-
   case layout
+
   case classes
   case views
   case controllers
-
-  case more
 
   var title: String { rawValue.localizedCapitalized }
 }

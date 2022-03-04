@@ -63,7 +63,7 @@ class DesignReviewInspectorViewController: UIViewController {
   }
 
   private lazy var segmentedControl: UISegmentedControl = {
-    let control = UISegmentedControl(items: viewModel.segmentedControlItems())
+    let control = UISegmentedControl(items: viewModel.createSegmentedControlItems())
     control.selectedSegmentIndex = 0
     control.addTarget(self, action: #selector(segmentedIndexDidChange), for: .valueChanged)
     return control
@@ -122,8 +122,7 @@ class DesignReviewInspectorViewController: UIViewController {
   }
 
   @objc private func segmentedIndexDidChange() {
-    guard let segmentedIndex = DesignReviewInspectorSegmentedIndex(
-      rawValue: segmentedControl.selectedSegmentIndex) else {
+    guard let segmentedIndex = viewModel.convertRawControlIndexToActualIndex(segmentedControl.selectedSegmentIndex) else {
       return
     }
 
@@ -148,7 +147,7 @@ class DesignReviewInspectorViewController: UIViewController {
 extension DesignReviewInspectorViewController: DesignReviewCollapsibleHeaderViewDelegate {
   func sectionHeaderShouldToggleExpandedState(_ view: DesignReviewCollapsibleHeaderView) {
     let sectionIndex = view.tag
-    guard !(viewModel.attribute(for: IndexPath(row: 0, section: sectionIndex)) is DesignReviewPreviewAttribute) else { return }
+    guard !(viewModel.attribute(for: IndexPath(row: 0, section: sectionIndex)) is DesignReviewSummaryAttribute) else { return }
 
     feedbackGenerator.prepare()
     feedbackGenerator.impactOccurred()
@@ -178,7 +177,7 @@ extension DesignReviewInspectorViewController: DesignReviewInspectorTableViewCel
 
     cell.refreshTextOnly(attribute: attribute)
     if let screenshotSectionIndex = viewModel.refreshScreenshot() {
-      tableView.reloadSections(IndexSet([screenshotSectionIndex]), with: .none)
+      tableView.reloadRows(at: [IndexPath(row: 0, section: screenshotSectionIndex)], with: .none)
     }
   }
 }
@@ -245,16 +244,10 @@ extension DesignReviewInspectorViewController: UITableViewDataSource {
         return nil
     }
 
-    var isExpandable = true
-    if let attribute = viewModel.attribute(for: IndexPath(row: 0, section: section)),
-       attribute is DesignReviewPreviewAttribute {
-      isExpandable = false
-    }
-
     header.configure(section: section,
                      title: viewModel.titleForSection(section),
                      delegate: self,
-                     isExpandable: isExpandable)
+                     isExpandable: true)
     header.expand(viewModel.expandedStateForSection(section))
 
     return header
@@ -288,7 +281,7 @@ extension DesignReviewInspectorViewController: UITableViewDelegate {
   }
 
   func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-    if viewModel.attribute(for: indexPath) is DesignReviewPreviewAttribute {
+    if viewModel.attribute(for: indexPath) is DesignReviewSummaryAttribute {
       return UITableView.automaticDimension
     }
 

@@ -1,0 +1,80 @@
+//
+//  NSLayoutConstraint+DesignReviewable.swift
+//
+//
+//  Created by Alex Lee on 3/4/22.
+//
+
+import Foundation
+import UIKit
+
+extension NSLayoutConstraint: DesignReviewable {
+  func labelCopy() -> String {
+    return "Constraint of \(String(describing: firstItem)) to \(String(describing: secondItem))"
+  }
+
+  func createReviewableAttributes() -> [DesignReviewInspectorAttributeGroup: [DesignReviewInspectorAttribute]] {
+    var attributes = [DesignReviewInspectorAttributeGroup: [DesignReviewInspectorAttribute]]()
+
+    attributes[.behaviour] = [DesignReviewInspectorAttribute]()
+    attributes[.behaviour]?.append(DesignReviewMutableAttribute(
+      title: "Is Active",
+      keyPath: "active",
+      reviewable: self))
+
+    // build list of constraint attributes+relations
+    attributes[.general] = [DesignReviewInspectorAttribute]()
+
+    attributes[.general]?.append(DesignReviewEnumAttribute<NSLayoutConstraint.Attribute>(
+      title: "FirstAttribute",
+      keyPath: "firstAttribute",
+      reviewable: self))
+    attributes[.general]?.append(DesignReviewMutableAttribute(
+      title: "FirstItem",
+      keyPath: "firstItem",
+      reviewable: self))
+
+    attributes[.general]?.append(DesignReviewEnumAttribute<NSLayoutConstraint.Attribute>(
+      title: "SecondAttribute",
+      keyPath: "secondAttribute",
+      reviewable: self))
+    attributes[.general]?.append(DesignReviewMutableAttribute(
+      title: "SecondItem",
+      keyPath: "secondItem",
+      reviewable: self))
+
+    attributes[.general]?.append(DesignReviewEnumAttribute<NSLayoutConstraint.Relation>(
+      title: "Relation",
+      keyPath: "relation",
+      reviewable: self))
+
+    // build list of constraint metadata
+    attributes[.layout] = [DesignReviewInspectorAttribute]()
+
+    attributes[.layout]?.append(DesignReviewMutableAttribute(
+      title: "Constant",
+      keyPath: "constant",
+      reviewable: self,
+      modifier: { [weak self] newVal in
+        guard let self = self,
+          let rawConstant = newVal as? Double else {
+            return
+        }
+
+        self.constant = CGFloat(rawConstant)
+      }
+    ))
+
+    attributes[.layout]?.append(DesignReviewMutableAttribute(
+      title: "Multiplier",
+      keyPath: "multiplier",
+      reviewable: self))
+
+    attributes[.layout]?.append(DesignReviewMutableAttribute(
+      title: "Priority",
+      keyPath: "priority",
+      reviewable: self))
+
+    return attributes
+  }
+}

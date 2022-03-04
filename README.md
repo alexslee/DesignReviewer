@@ -10,7 +10,7 @@ Xcode to perform.
 
 ## Usage
 
-1. Install the package, which can be done via Swift Package Manager. (_If Facebook can claim to only support Cocoapods for React Native, then surely the rest of us mortals can mark our territory with SPM?_)
+1. Install the package, which can be done via Swift Package Manager. (_If Facebook can claim to only support Cocoapods for React Native that so many devs need, then surely the rest of us mortals can mark our territory with SPM for something only one dev would use?_)
 
 2. Decide how you want to invoke the `DesignReviewer`. This can be via something as straightforward as the action of a `UIButton` press, if you have a fairly simple app or just happen to have a spot where a UIButton could be placed + always accessible. Or, you could go fancier and opt for a shake gesture. Whatever the use case, you should just have to call the following:
 ```swift
@@ -25,5 +25,6 @@ DesignReviewer.start(inAppWindow: window)
 - [ ] Add ability for client to provide additional inspectable attributes for any given `DesignReviewable`
 - [ ] Make text attributes editable
 - [ ] Refine position of the constraint padding labels
+- [ ] Bump min version target up from 12 ("soon :tm:")
 - [ ] Properly center the 3D hierarchy rects, rather than just converting the views' rects to the 3D hierarchy coordinate space and using those relative positions
 - [ ] All the bugfixes

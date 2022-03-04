@@ -49,7 +49,7 @@ class DesignReviewExplodedHierarchyViewController: UIViewController {
     switchLabel.font = .callOut
     switchLabel.numberOfLines = 0
     switchLabel.text = "show names"
-    switchLabel.textColor = .monochrome5
+    switchLabel.textColor = .black
     let sonOfASwitch = UISwitch()
     sonOfASwitch.addTarget(self, action: #selector(switchUp), for: .valueChanged)
 
@@ -91,13 +91,13 @@ class DesignReviewExplodedHierarchyViewController: UIViewController {
 
     NSLayoutConstraint.activate([
       slider.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: .medium),
-      slider.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -.medium),
+      slider.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -.large),
       slider.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.5)
     ])
 
     NSLayoutConstraint.activate([
       showNamesToggle.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -.medium),
-      showNamesToggle.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -.medium),
+      showNamesToggle.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -.large),
       showNamesToggle.widthAnchor.constraint(lessThanOrEqualTo: view.widthAnchor, multiplier: 0.5)
     ])
 

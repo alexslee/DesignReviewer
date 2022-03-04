@@ -51,7 +51,7 @@ class DesignReviewImageCapturer {
 
   init(size: CGSize, config: DesignReviewImageCapturerConfig? = nil) {
     let bounds = CGRect(origin: .zero, size: size)
-    let isOpaque = config?.isOpaque ?? false
+    let isOpaque = config?.isOpaque ?? true
     let scale = config?.scale ?? UIScreen.main.scale
 
     self.config = DesignReviewImageCapturerConfig(bounds: bounds, isOpaque: isOpaque, scale: scale)

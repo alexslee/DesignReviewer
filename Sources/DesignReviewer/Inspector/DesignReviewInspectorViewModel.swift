@@ -106,21 +106,23 @@ class DesignReviewInspectorViewModel {
 
   func refreshScreenshot() -> Int? {
     guard let view = reviewable as? UIView,
-      let index = allSections.firstIndex(where: { $0.title == .preview }) else {
+      let index = allSections.firstIndex(where: { $0.title == .preview }),
+      let filteredIndex = sections.firstIndex(where: { $0.title == .preview }) else {
         return nil
     }
     view.layoutSubviews()
     let newScreenshot = view.polaroidSelfie()
     let oldSection = allSections[index]
 
-    allSections[index] = DesignReviewInspectorSection(
+    let newSection = DesignReviewInspectorSection(
       isExpanded: oldSection.isExpanded,
       rows: [DesignReviewInspectorRow(
         attribute: DesignReviewPreviewAttribute(image: newScreenshot),
         title: DesignReviewInspectorAttributeGroup.preview.title)],
       title: .preview)
 
-    updateVisibleSections(segmentedIndex: currentSegmentedIndex)
+    allSections[index] = newSection
+    sections[filteredIndex] = newSection
 
     return index
   }

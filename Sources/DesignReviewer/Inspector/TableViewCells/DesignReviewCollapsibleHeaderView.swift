@@ -62,17 +62,16 @@ class DesignReviewCollapsibleHeaderView: UITableViewHeaderFooterView {
     contentView.addSubview(label)
 
     NSLayoutConstraint.activate([
-      imageView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
-      imageView.trailingAnchor.constraint(equalTo: layoutMarginsGuide.trailingAnchor),
-      imageView.widthAnchor.constraint(equalToConstant: .large),
-      imageView.heightAnchor.constraint(equalToConstant: .large)
+      imageView.topAnchor.constraint(equalTo: contentView.topAnchor),
+      imageView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
+      imageView.trailingAnchor.constraint(equalTo: contentView.layoutMarginsGuide.trailingAnchor)
     ])
 
     NSLayoutConstraint.activate([
       label.topAnchor.constraint(equalTo: contentView.topAnchor, constant: .extraSmall),
       label.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -.extraSmall),
-      label.leadingAnchor.constraint(equalTo: layoutMarginsGuide.leadingAnchor),
-      label.trailingAnchor.constraint(equalTo: imageView.leadingAnchor, constant: -.medium)
+      label.leadingAnchor.constraint(equalTo: contentView.layoutMarginsGuide.leadingAnchor),
+      label.trailingAnchor.constraint(equalTo: imageView.leadingAnchor, constant: -.medium),
     ])
 
     tapper.isEnabled = false

@@ -43,19 +43,31 @@ class DesignReviewExplodedHierarchyView: UIView {
 
   private let border = CAShapeLayer()
 
-  private lazy var titleView: UIButton = {
-      let button = UIButton(type: .custom)
-      button.backgroundColor = .white
-      button.setTitleColor(.black, for: .normal)
-      button.titleLabel?.font = .systemFont(ofSize: 10)
-      button.isUserInteractionEnabled = false
+  private lazy var nameLabel: UILabel = {
+    let label = UILabel()
+    label.font = .finePrint
+    label.lineBreakMode = .byTruncatingMiddle
+    label.numberOfLines = 1
+    label.textAlignment = .center
+    label.textColor = .black
 
-      let frame = CGRect(x: clippedToBoundsFrame.origin.x,
-                         y: clippedToBoundsFrame.origin.y - 21,
-                         width: clippedToBoundsFrame.width,
-                         height: 19)
-      button.frame = self.convert(frame, from: self.root)
-      return button
+    label.translatesAutoresizingMaskIntoConstraints = false
+
+    return label // heh.
+  }()
+
+  private lazy var nameContainer: UIView = {
+    let view = UIView()
+    view.backgroundColor = .white
+    view.translatesAutoresizingMaskIntoConstraints = false
+
+    view.addSubview(nameLabel)
+
+    NSLayoutConstraint.activate(nameLabel.constraints(
+      toView: view,
+      withInsets: UIEdgeInsets(top: 0, left: .extraSmall, bottom: 0, right: .extraSmall)))
+
+    return view
   }()
 
   required init?(coder aDecoder: NSCoder) {
@@ -105,9 +117,13 @@ class DesignReviewExplodedHierarchyView: UIView {
     border.lineWidth = 1.0 / UIScreen.main.scale
     layer.addSublayer(border)
 
-    titleView.setTitle("\(type(of: reviewable))", for: .normal)
-    titleView.isHidden = true
-    addSubview(titleView)
+    nameLabel.text = "\(type(of: reviewable))"
+    nameContainer.isHidden = true
+    addSubview(nameContainer)
+
+    nameContainer.bottomAnchor.constraint(equalTo: topAnchor).isActive = true
+    NSLayoutConstraint.activate(nameContainer.constraints(toView: self, edges: [.left, .right]))
+    clipsToBounds = false
 
     addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(tapTapRevenge)))
 
@@ -127,6 +143,6 @@ class DesignReviewExplodedHierarchyView: UIView {
   }
 
   func toggleNameVisibility(_ shouldShow: Bool) {
-    titleView.isHidden = !shouldShow
+    nameContainer.isHidden = !shouldShow
   }
 }

@@ -213,10 +213,6 @@ class DesignReviewExplodedHierarchyContainerView: UIView {
 
     self.rootHierarchyView = rootHierarchyView
     maxDepth = depth
-
-    if rootReviewable.subReviewables.isEmpty == false {
-      rootHierarchyView.layer.contents = nil
-    }
   }
 }
 

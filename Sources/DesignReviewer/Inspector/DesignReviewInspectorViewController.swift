@@ -26,7 +26,7 @@ class DesignReviewInspectorViewController: UIViewController {
     view.keyboardDismissMode = .interactive
 
     view.rowHeight = UITableView.automaticDimension
-    view.sectionFooterHeight = UITableView.automaticDimension
+    view.sectionFooterHeight = 0
     view.sectionHeaderHeight = UITableView.automaticDimension
 
     view.translatesAutoresizingMaskIntoConstraints = false

@@ -48,7 +48,8 @@ extension UIView: DesignReviewable {
 
   /// Takes a screenshot of the current view as it appears on screen
   func polaroidSelfie() -> UIImage {
-    let screenshot = DesignReviewImageCapturer(size: bounds.size).image(actions: { [weak self] context in
+    let config = DesignReviewImageCapturerConfig(bounds: bounds, isOpaque: isOpaque, scale: UIScreen.main.scale)
+    let screenshot = DesignReviewImageCapturer(size: bounds.size, config: config).image(actions: { [weak self] context in
       let contextBounds = context.config.bounds
       self?.drawHierarchy(in: contextBounds, afterScreenUpdates: true)
     })
@@ -267,21 +268,21 @@ extension UIView: DesignReviewable {
 
     attributes[.hugging] = [DesignReviewInspectorAttribute]()
     attributes[.hugging]?.append(DesignReviewImmutableAttribute(
-      title: "Horizontal Hugging Priority",
+      title: "Horizontal Priority",
       keyPath: "horizontalContentHuggingPriority",
       value: contentHuggingPriority(for: .horizontal)))
     attributes[.hugging]?.append(DesignReviewImmutableAttribute(
-      title: "Vertical Hugging Priority",
+      title: "Vertical Priority",
       keyPath: "verticalContentHuggingPriority",
       value: contentHuggingPriority(for: .vertical)))
 
     attributes[.resistance] = [DesignReviewInspectorAttribute]()
     attributes[.resistance]?.append(DesignReviewImmutableAttribute(
-      title: "Horizontal Compression Priority",
+      title: "Horizontal Priority",
       keyPath: "horizontalContentCompressionResistance",
       value: contentCompressionResistancePriority(for: .horizontal)))
     attributes[.resistance]?.append(DesignReviewImmutableAttribute(
-      title: "Vertical Compression Priority",
+      title: "Vertical Priority",
       keyPath: "verticalContentCompressionResistance",
       value: contentCompressionResistancePriority(for: .vertical)))
 

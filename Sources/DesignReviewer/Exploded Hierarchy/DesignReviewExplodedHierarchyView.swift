@@ -24,7 +24,7 @@ class DesignReviewExplodedHierarchyView: UIView {
   var isCurrentlySelected = false {
     didSet {
       if isCurrentlySelected {
-        border.fillColor = UIColor.primary4.withAlphaComponent(0.3).cgColor
+        border.fillColor = UIColor.primary4.withAlphaComponent(0.4).cgColor
         border.strokeColor = UIColor.primary4.cgColor
       } else {
         border.fillColor = UIColor.clear.cgColor

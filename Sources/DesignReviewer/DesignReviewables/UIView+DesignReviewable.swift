@@ -48,8 +48,7 @@ extension UIView: DesignReviewable {
 
   /// Takes a screenshot of the current view as it appears on screen
   func polaroidSelfie() -> UIImage {
-    let config = DesignReviewImageCapturerConfig(bounds: bounds, isOpaque: isOpaque, scale: UIScreen.main.scale)
-    let screenshot = DesignReviewImageCapturer(size: bounds.size, config: config).image(actions: { [weak self] context in
+    let screenshot = DesignReviewImageCapturer(size: bounds.size).image(actions: { [weak self] context in
       let contextBounds = context.config.bounds
       self?.drawHierarchy(in: contextBounds, afterScreenUpdates: true)
     })

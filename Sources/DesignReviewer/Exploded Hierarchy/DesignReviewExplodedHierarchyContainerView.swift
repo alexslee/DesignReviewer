@@ -76,8 +76,8 @@ class DesignReviewExplodedHierarchyContainerView: UIView {
      y'all ready for some linear algebra?
      Note: Proofs for how the rotation matrices are derived, along with
      a more organized overview of how these transformations operate, can be found here:
+     https://thealexanderlee.com/blog/how-do-3d-transforms-of-ios-views-work-under-the-hood
      */
-    // TODO: post that writeup somewhere
 
     /*
      Starting with our identity matrix:
@@ -97,7 +97,8 @@ class DesignReviewExplodedHierarchyContainerView: UIView {
     /*
      m34 is the z-axis position of the view relative to the viewer - i.e., it controls the z-perspective.
      Think of it almost like moving the vanishing point you would draw on a piece of paper when doing
-     perspective drawings.
+     perspective drawings. For more on why this particular entry in the matrix behaves this way, see here:
+     https://thealexanderlee.com/blog/3d-transforms-on-ios-under-the-hood-part-2-perspective-shifts
      _                 _
     | 1   0   0    0    |
     |                   |

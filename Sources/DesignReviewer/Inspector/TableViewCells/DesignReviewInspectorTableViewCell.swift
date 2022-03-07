@@ -99,7 +99,7 @@ class DesignReviewInspectorTableViewCell: UITableViewCell {
 
       detailTextLabel?.text = attribute.subtitle ?? text
     } else {
-      detailTextLabel?.text = "none"
+      detailTextLabel?.text = "nil"
     }
   }
 
@@ -198,14 +198,18 @@ class DesignReviewInspectorTableViewCell: UITableViewCell {
       }
     case let value as NSValue:
       text = ValueTransformer().transformedValue(value) as? String
+    case is UIBarButtonItem:
+      text = nil
     case let color as UIColor:
       text = UIColorValueTransformer().transformedValue(color) as? String
       accessoryView = DesignReviewUIColorAccessoryView(color: color)
       accessoryView?.alpha = 1
     case let value as UIFont:
       text = "\(value.fontName), \(value.pointSize)"
-    case is UIBarButtonItem, is UIImage:
+    case let value as UIImage:
       text = nil
+      accessoryView = DesignReviewUIImageAccessoryView(image: value, imageInfo: value.displayableSize)
+      accessoryView?.alpha = 1
     case let value as UIView:
       text = value.summaryDisplayName
     case let value as UIViewController:

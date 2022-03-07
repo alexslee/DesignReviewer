@@ -61,7 +61,7 @@ class UIColorValueTransformer: ValueTransformer {
       return color.rgba.alpha == 0 ? "Clear" : color.hexString
     }
 
-    return "none"
+    return "nil"
   }
 
   override class func allowsReverseTransformation() -> Bool {

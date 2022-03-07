@@ -22,6 +22,6 @@ class DesignReviewPreviewAttribute: DesignReviewInspectorAttribute {
   init(image: UIImage) {
     title = ""
     value = image
-    keyPath = "none"
+    keyPath = "nada"
   }
 }

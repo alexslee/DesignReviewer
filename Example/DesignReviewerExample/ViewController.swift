@@ -23,6 +23,16 @@ class ViewController: UIViewController, UIScrollViewDelegate {
     return button
   }()
 
+  private lazy var testImageView: UIImageView = {
+    let imageView = UIImageView(image: UIImage(systemName: "hands.clap")?.withRenderingMode(.alwaysTemplate))
+    imageView.contentMode = .scaleAspectFit
+    imageView.translatesAutoresizingMaskIntoConstraints = false
+
+    imageView.heightAnchor.constraint(equalToConstant: 88).isActive = true
+
+    return imageView
+  }()
+
   private lazy var testLabel: UILabel = {
     let label = UILabel()
     label.font = .systemFont(ofSize: 18, weight: .bold)
@@ -163,6 +173,7 @@ Never gonna say goodbye
 
     testScrollView.addSubview(testStack)
     testStack.addArrangedSubview(testLabel)
+    testStack.addArrangedSubview(testImageView)
     testStack.addArrangedSubview(testButton)
     testStack.addArrangedSubview(testLongerLabel)
 

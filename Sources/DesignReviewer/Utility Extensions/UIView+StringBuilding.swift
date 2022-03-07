@@ -30,12 +30,12 @@ extension UIView {
     guard !subviews.isEmpty else { return nil }
 
     // count of immediate children
-    let children = subviews.count == 1 ? "1 Child" : "\(subviews.count) Children"
+    let children = subviews.count == 1 ? "1 child" : "\(subviews.count) children"
     // count of fully traversed subviews
     let traversedSubviews = allSubviews
-    let subviews = traversedSubviews.count == 1 ? "1 Subview" : "\(traversedSubviews.count) Subviews"
+    let subviews = traversedSubviews.count == 1 ? "1 subview" : "\(traversedSubviews.count) subviews"
 
-    return "\(children) (\(subviews))"
+    return "\(children); \(subviews) overall"
   }
 
   /// Constructs a string for the view's frame
@@ -70,7 +70,7 @@ extension UIView {
       if let textContent = textContainer.content?.prefix(30) {
         return "\"\(textContent)\" (\(name))"
       }
-      return "\(name) (Empty)"
+      return "\(name) - no text content"
     }
 
     if let identifier = truncatedAccessibilityIdentifier {
@@ -82,8 +82,8 @@ extension UIView {
 
   /// Constructs a string for the view's superclass
   private var superclassName: String {
-    guard let superclass = superclass else { return "Superclass: none" }
-    return "Superclass: " + String(describing: superclass)
+    guard let superclass = superclass else { return "🦸🏻 Superclass: nil" }
+    return "🦸🏻 Superclass: " + String(describing: superclass)
   }
 
   /// Pared down accessibility identifier

@@ -23,4 +23,11 @@ extension UIImage: DesignReviewable {
 
     return attributes
   }
+
+  var displayableSize: String {
+    let width = size.width.toString()
+    let height = size.height.toString()
+
+    return "\(width)w x \(height)h"
+  }
 }

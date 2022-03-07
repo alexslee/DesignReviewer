@@ -31,6 +31,14 @@ class DesignReviewExplodedHierarchyViewController: UIViewController {
     return button
   }()
 
+  private lazy var effectView: UIVisualEffectView = {
+    let isDark = traitCollection.userInterfaceStyle == .dark
+    let effect = isDark ? UIBlurEffect(style: .dark) : UIBlurEffect(style: .light)
+    let view = UIVisualEffectView(effect: effect)
+    view.translatesAutoresizingMaskIntoConstraints = false
+    return view
+  }()
+
   private lazy var slider: UISlider = {
     let slider = UISlider()
     slider.isContinuous = true
@@ -77,9 +85,6 @@ class DesignReviewExplodedHierarchyViewController: UIViewController {
 
     view.backgroundColor = .clear
 
-    let effectView = UIVisualEffectView(effect: UIBlurEffect(style: .extraLight))
-    effectView.translatesAutoresizingMaskIntoConstraints = false
-
     view.addSubview(effectView)
     view.addSubview(container)
     view.addSubview(slider)
@@ -107,6 +112,15 @@ class DesignReviewExplodedHierarchyViewController: UIViewController {
     ])
 
     title = "Boom"
+  }
+
+  override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+    super.traitCollectionDidChange(previousTraitCollection)
+    if #available(iOS 13, *),
+      traitCollection.hasDifferentColorAppearance(comparedTo: previousTraitCollection) {
+      let isDark = traitCollection.userInterfaceStyle == .dark
+      effectView.effect = isDark ? UIBlurEffect(style: .dark) : UIBlurEffect(style: .light)
+    }
   }
 
   func jumpStart() {

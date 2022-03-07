@@ -19,22 +19,18 @@ class DesignReviewInspectorSummaryTableViewCell: UITableViewCell {
     super.init(style: .subtitle, reuseIdentifier: reuseIdentifier)
 
     backgroundView = UIView()
-
     backgroundColor = nil
-
-    directionalLayoutMargins = NSDirectionalEdgeInsets(top: 0, leading: .large, bottom: 0, trailing: .large)
-    separatorInset = UIEdgeInsets(top: 0, left: .large, bottom: 0, right: .large)
-
-    indentationWidth = .medium
-    textLabel?.font = .title
-    textLabel?.numberOfLines = 0
-    detailTextLabel?.numberOfLines = 0
-
     clipsToBounds = true
     contentView.clipsToBounds = true
+    detailTextLabel?.numberOfLines = 0
+    directionalLayoutMargins = NSDirectionalEdgeInsets(top: 0, leading: .large, bottom: 0, trailing: .large)
     imageView?.clipsToBounds = true
     imageView?.contentMode = .scaleAspectFit
     imageView?.tintColor = .monochrome5
+    indentationWidth = .medium
+    separatorInset = UIEdgeInsets(top: 0, left: .large, bottom: 0, right: .large)
+    textLabel?.font = .title
+    textLabel?.numberOfLines = 0
   }
 
   func configure(title: String, subtitle: String?, image: UIImage?) {

@@ -62,9 +62,10 @@ class DesignReviewCollapsibleHeaderView: UITableViewHeaderFooterView {
     contentView.addSubview(label)
 
     NSLayoutConstraint.activate([
-      imageView.topAnchor.constraint(equalTo: contentView.topAnchor),
-      imageView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
-      imageView.trailingAnchor.constraint(equalTo: contentView.layoutMarginsGuide.trailingAnchor)
+      imageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: .extraExtraSmall),
+      imageView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -.extraExtraSmall),
+      imageView.trailingAnchor.constraint(equalTo: contentView.layoutMarginsGuide.trailingAnchor),
+      imageView.widthAnchor.constraint(equalTo: imageView.heightAnchor)
     ])
 
     NSLayoutConstraint.activate([

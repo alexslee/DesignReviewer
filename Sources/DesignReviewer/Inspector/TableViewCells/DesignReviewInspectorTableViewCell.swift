@@ -69,7 +69,7 @@ class DesignReviewInspectorTableViewCell: UITableViewCell {
     var indent = 0
     var titlePrefix = ""
 
-    if section == .views,
+    if section == .viewHierarchy,
        let viewAttribute = attribute.value as? UIView,
        let currentView = reviewable as? UIView {
       if currentView == viewAttribute.superview {

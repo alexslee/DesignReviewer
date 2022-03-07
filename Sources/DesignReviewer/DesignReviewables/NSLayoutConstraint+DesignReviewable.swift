@@ -16,15 +16,13 @@ extension NSLayoutConstraint: DesignReviewable {
   func createReviewableAttributes() -> [DesignReviewInspectorAttributeGroup: [DesignReviewInspectorAttribute]] {
     var attributes = [DesignReviewInspectorAttributeGroup: [DesignReviewInspectorAttribute]]()
 
-    attributes[.behaviour] = [DesignReviewInspectorAttribute]()
-    attributes[.behaviour]?.append(DesignReviewMutableAttribute(
-      title: "Is Active",
-      keyPath: "active",
-      reviewable: self))
-
     // build list of constraint attributes+relations
     attributes[.general] = [DesignReviewInspectorAttribute]()
 
+    attributes[.general]?.append(DesignReviewMutableAttribute(
+      title: "Is Active",
+      keyPath: "active",
+      reviewable: self))
     attributes[.general]?.append(DesignReviewEnumAttribute<NSLayoutConstraint.Attribute>(
       title: "First Attribute",
       keyPath: "firstAttribute",
@@ -49,9 +47,9 @@ extension NSLayoutConstraint: DesignReviewable {
       reviewable: self))
 
     // build list of constraint metadata
-    attributes[.layout] = [DesignReviewInspectorAttribute]()
+    attributes[.generalLayout] = [DesignReviewInspectorAttribute]()
 
-    attributes[.layout]?.append(DesignReviewMutableAttribute(
+    attributes[.generalLayout]?.append(DesignReviewMutableAttribute(
       title: "Constant",
       keyPath: "constant",
       reviewable: self,
@@ -65,12 +63,12 @@ extension NSLayoutConstraint: DesignReviewable {
       }
     ))
 
-    attributes[.layout]?.append(DesignReviewMutableAttribute(
+    attributes[.generalLayout]?.append(DesignReviewMutableAttribute(
       title: "Multiplier",
       keyPath: "multiplier",
       reviewable: self))
 
-    attributes[.layout]?.append(DesignReviewMutableAttribute(
+    attributes[.generalLayout]?.append(DesignReviewMutableAttribute(
       title: "Priority",
       keyPath: "priority",
       reviewable: self))

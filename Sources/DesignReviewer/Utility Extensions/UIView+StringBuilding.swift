@@ -65,14 +65,6 @@ extension UIView {
 
   /// Concatenates the strippedClassName with accessibility info, if there is any
   var summaryDisplayName: String {
-    if let textContainer = self as? TextContainingView {
-      let name = truncatedAccessibilityIdentifier ?? textContainer.strippedClassName
-      if let textContent = textContainer.content?.prefix(30) {
-        return "\"\(textContent)\" (\(name))"
-      }
-      return "\(name) - no text content"
-    }
-
     if let identifier = truncatedAccessibilityIdentifier {
       return "\(strippedClassName) (\(identifier))"
     }

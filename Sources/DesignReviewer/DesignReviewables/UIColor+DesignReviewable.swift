@@ -16,7 +16,7 @@ extension UIColor: DesignReviewable {
 
     // start with the preview screenshot
     if cgColor.pattern != nil || (self != .clear && cgColor.alpha != 0) {
-      attributes[.preview] = [DesignReviewInspectorAttribute]()
+      attributes[.screenshot] = [DesignReviewInspectorAttribute]()
 
       // defining some kinda-sorta-not-totally arbitrary dimensions just to draw the color into.
       let size = CGSize(width: UIScreen.main.bounds.width, height: Self.previewImageHeight)
@@ -26,7 +26,7 @@ extension UIColor: DesignReviewable {
         UIRectFill(context.config.bounds)
       }
 
-      attributes[.preview]?.append(DesignReviewPreviewAttribute(image: screenshot))
+      attributes[.screenshot]?.append(DesignReviewScreenshotAttribute(image: screenshot))
     }
 
     // throw everything else into the General section for now

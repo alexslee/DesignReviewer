@@ -8,18 +8,11 @@
 import Foundation
 import UIKit
 
-protocol TextContainingView: UIView {
-  var content: String? { get }
-}
+/// Convenience wrapper to quickly identify system views that contain text
+protocol TextContainingView: UIView {}
 
-extension UILabel: TextContainingView {
-  var content: String? { text?.trimmed }
-}
+extension UILabel: TextContainingView {}
 
-extension UITextView: TextContainingView {
-  var content: String? { text?.trimmed }
-}
+extension UITextView: TextContainingView {}
 
-extension UITextField: TextContainingView {
-  var content: String? { text?.trimmed }
-}
+extension UITextField: TextContainingView {}

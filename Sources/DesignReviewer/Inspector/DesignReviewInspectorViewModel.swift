@@ -35,11 +35,11 @@ enum DesignReviewInspectorSegmentedIndex: Int {
   var sections: [DesignReviewInspectorAttributeGroup] {
     switch self {
     case .landing:
-      return [.summary, .preview, .accessibility, .typography, .appearance, .behaviour, .general]
+      return [.summary, .screenshot, .accessibility, .typography, .styling, .general]
     case .constraints:
-      return [.summary, .preview, .horizontal, .vertical, .hugging, .resistance, .layout, .constraints]
+      return [.summary, .screenshot, .contentHugging, .compressionResistance, .generalLayout, .constraints]
     case .twoDimensionalHierarchy:
-      return [.summary, .preview, .classes, .views, .controllers]
+      return [.summary, .screenshot, .classHierarchy, .viewHierarchy]
     case .threeDimensionalHierarchy:
       return []
     }
@@ -67,7 +67,7 @@ class DesignReviewInspectorViewModel {
       var section = DesignReviewInspectorSection(rows: rows, title: attributeGroup)
 
       switch attributeGroup {
-      case .classes, .constraints, .hugging, .resistance:
+      case .classHierarchy, .constraints, .contentHugging, .compressionResistance:
         section.isExpanded = false
       default:
         break
@@ -105,8 +105,8 @@ class DesignReviewInspectorViewModel {
 
   func refreshScreenshot() -> Int? {
     guard let view = reviewable as? UIView,
-      let index = allSections.firstIndex(where: { $0.title == .preview }),
-      let filteredIndex = sections.firstIndex(where: { $0.title == .preview }) else {
+      let index = allSections.firstIndex(where: { $0.title == .screenshot }),
+      let filteredIndex = sections.firstIndex(where: { $0.title == .screenshot }) else {
         return nil
     }
     view.layoutSubviews()
@@ -116,9 +116,9 @@ class DesignReviewInspectorViewModel {
     let newSection = DesignReviewInspectorSection(
       isExpanded: oldSection.isExpanded,
       rows: [DesignReviewInspectorRow(
-        attribute: DesignReviewPreviewAttribute(image: newScreenshot),
-        title: DesignReviewInspectorAttributeGroup.preview.title)],
-      title: .preview)
+        attribute: DesignReviewScreenshotAttribute(image: newScreenshot),
+        title: DesignReviewInspectorAttributeGroup.screenshot.title)],
+      title: .screenshot)
 
     allSections[index] = newSection
     sections[filteredIndex] = newSection
@@ -135,14 +135,14 @@ class DesignReviewInspectorViewModel {
 
     let constraintsHasData = !DesignReviewInspectorSegmentedIndex.constraints.sections.filter({ searchCandidate in
       // don't let preview/summary influence segmented tab visibility for non-landing tabs
-      if searchCandidate == .preview || searchCandidate == .summary { return false }
+      if searchCandidate == .screenshot || searchCandidate == .summary { return false }
 
       return allSections.contains(where: { $0.title == searchCandidate })
     }).isEmpty
 
     let hierarchyHasData = !DesignReviewInspectorSegmentedIndex.twoDimensionalHierarchy.sections.filter({ searchCandidate in
       // don't let preview/summary influence segmented tab visibility for non-landing tabs
-      if searchCandidate == .preview || searchCandidate == .summary { return false }
+      if searchCandidate == .screenshot || searchCandidate == .summary { return false }
 
       return allSections.contains(where: { $0.title == searchCandidate })
     }).isEmpty

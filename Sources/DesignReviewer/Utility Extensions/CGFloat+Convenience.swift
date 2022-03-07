@@ -43,6 +43,9 @@ extension CGFloat {
 
     guard let formattedNumber = formatter.string(from: self as NSNumber) else { return "" }
 
-    return formattedNumber.string(prepending: prepending, appending: appending, separator: separator)
+    let rawStringBuild = [prepending, formattedNumber, appending]
+    let nilSafeBuild = rawStringBuild.compactMap { $0 }
+
+    return nilSafeBuild.joined(separator: separator)
   }
 }

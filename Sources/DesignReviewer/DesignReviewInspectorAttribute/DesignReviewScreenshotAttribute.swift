@@ -1,5 +1,5 @@
 //
-//  DesignReviewPreviewAttribute.swift
+//  DesignReviewScreenshotAttribute.swift
 //
 //
 //  Created by Alex Lee on 3/3/22.
@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 
 /// The image preview that can be added to the inspector for any given `DesignReviewable`.
-class DesignReviewPreviewAttribute: DesignReviewInspectorAttribute {
+class DesignReviewScreenshotAttribute: DesignReviewInspectorAttribute {
   let keyPath: String
   let subtitle: String? = nil
   let title: String

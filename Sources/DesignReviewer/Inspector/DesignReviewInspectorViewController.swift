@@ -35,8 +35,8 @@ class DesignReviewInspectorViewController: UIViewController {
                   forCellReuseIdentifier: DesignReviewInspectorSummaryTableViewCell.reuseIdentifier)
     view.register(DesignReviewInspectorTableViewCell.self,
                   forCellReuseIdentifier: DesignReviewInspectorTableViewCell.reuseIdentifier)
-    view.register(DesignReviewInspectorPreviewTableViewCell.self,
-                  forCellReuseIdentifier: DesignReviewInspectorPreviewTableViewCell.reuseIdentifier)
+    view.register(DesignReviewInspectorScreenshotTableViewCell.self,
+                  forCellReuseIdentifier: DesignReviewInspectorScreenshotTableViewCell.reuseIdentifier)
     view.register(DesignReviewCollapsibleHeaderView.self,
                   forHeaderFooterViewReuseIdentifier: DesignReviewCollapsibleHeaderView.reuseIdentifier)
 
@@ -224,10 +224,10 @@ extension DesignReviewInspectorViewController: UITableViewDataSource {
       return cell
     }
 
-    if let previewAttribute = attribute as? DesignReviewPreviewAttribute,
+    if let previewAttribute = attribute as? DesignReviewScreenshotAttribute,
        let cell = tableView.dequeueReusableCell(
-        withIdentifier: DesignReviewInspectorPreviewTableViewCell.reuseIdentifier,
-        for: indexPath) as? DesignReviewInspectorPreviewTableViewCell {
+        withIdentifier: DesignReviewInspectorScreenshotTableViewCell.reuseIdentifier,
+        for: indexPath) as? DesignReviewInspectorScreenshotTableViewCell {
       cell.configure(image: previewAttribute.image)
       return cell
     }
@@ -313,7 +313,7 @@ extension DesignReviewInspectorViewController: UITableViewDelegate {
   }
 
   func tableView(_ tableView: UITableView, shouldHighlightRowAt indexPath: IndexPath) -> Bool {
-    return !(viewModel.attribute(for: indexPath) is DesignReviewPreviewAttribute) &&
+    return !(viewModel.attribute(for: indexPath) is DesignReviewScreenshotAttribute) &&
     !(viewModel.attribute(for: indexPath) is DesignReviewSummaryAttribute)
   }
 }

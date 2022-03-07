@@ -96,14 +96,14 @@ extension UIView: DesignReviewable {
     if !isHidden, alpha > 0, !bounds.size.equalTo(.zero) {
       let screenshot = polaroidSelfie()
       if !screenshot.size.equalTo(.zero) {
-        attributes[.preview] = [DesignReviewInspectorAttribute]()
-        attributes[.preview]?.append(DesignReviewPreviewAttribute(image: screenshot))
+        attributes[.screenshot] = [DesignReviewInspectorAttribute]()
+        attributes[.screenshot]?.append(DesignReviewScreenshotAttribute(image: screenshot))
       }
     }
 
     // build list of classes
 
-    attributes[.classes] = [DesignReviewInspectorAttribute]()
+    attributes[.classHierarchy] = [DesignReviewInspectorAttribute]()
     var currentClass: AnyClass = classForCoder
     var classHierarchy = [String(describing: currentClass)]
 
@@ -113,27 +113,27 @@ extension UIView: DesignReviewable {
     }
 
     for `class` in classHierarchy {
-      attributes[.classes]?.append(DesignReviewImmutableAttribute(
+      attributes[.classHierarchy]?.append(DesignReviewImmutableAttribute(
         title: String(describing: `class`),
         keyPath: "classForCoder",
         value: ""))
     }
 
-    attributes[.views] = [DesignReviewInspectorAttribute]()
+    attributes[.viewHierarchy] = [DesignReviewInspectorAttribute]()
     if let superview = superview {
-      attributes[.views]?.append(DesignReviewImmutableAttribute(
+      attributes[.viewHierarchy]?.append(DesignReviewImmutableAttribute(
         title: String(describing: superview.classForCoder),
         keyPath: "superview",
         value: superview))
     }
 
-    attributes[.views]?.append(DesignReviewImmutableAttribute(
+    attributes[.viewHierarchy]?.append(DesignReviewImmutableAttribute(
       title: String(describing: classForCoder),
       keyPath: "self",
       value: self))
 
     for view in subviews.reversed() {
-      attributes[.views]?.append(DesignReviewImmutableAttribute(
+      attributes[.viewHierarchy]?.append(DesignReviewImmutableAttribute(
         title: String(describing: view.classForCoder),
         keyPath: "self",
         value: view))
@@ -202,10 +202,10 @@ extension UIView: DesignReviewable {
       reviewable: self))
 
     // build list for visuals
-    attributes[.appearance] = [DesignReviewInspectorAttribute]()
-    attributes[.layout] = [DesignReviewInspectorAttribute]()
+    attributes[.styling] = [DesignReviewInspectorAttribute]()
+    attributes[.generalLayout] = [DesignReviewInspectorAttribute]()
 
-    attributes[.appearance]?.append(DesignReviewMutableAttribute(
+    attributes[.styling]?.append(DesignReviewMutableAttribute(
       title: "Background Color",
       keyPath: "backgroundColor",
       reviewable: self,
@@ -218,7 +218,7 @@ extension UIView: DesignReviewable {
         self.backgroundColor = newColor
       }))
 
-    attributes[.appearance]?.append(DesignReviewMutableAttribute(
+    attributes[.styling]?.append(DesignReviewMutableAttribute(
       title: "Corner Radius",
       keyPath: "layer.cornerRadius",
       reviewable: self,
@@ -230,11 +230,11 @@ extension UIView: DesignReviewable {
 
         self.layer.cornerRadius = CGFloat(rawRadius)
       }))
-    attributes[.appearance]?.append(DesignReviewEnumAttribute<UIView.TintAdjustmentMode>(
+    attributes[.styling]?.append(DesignReviewEnumAttribute<UIView.TintAdjustmentMode>(
       title: "Tint Adjustment Mode",
       keyPath: "tintAdjustmentMode",
       reviewable: self))
-    attributes[.appearance]?.append(DesignReviewMutableAttribute(
+    attributes[.styling]?.append(DesignReviewMutableAttribute(
       title: "Tint Color",
       keyPath: "tintColor",
       reviewable: self,
@@ -247,11 +247,11 @@ extension UIView: DesignReviewable {
         self.tintColor = newColor
       }))
 
-    attributes[.layout]?.append(DesignReviewEnumAttribute<UIView.ContentMode>(
+    attributes[.generalLayout]?.append(DesignReviewEnumAttribute<UIView.ContentMode>(
       title: "Content Mode",
       keyPath: "contentMode",
       reviewable: self))
-    attributes[.layout]?.append(DesignReviewMutableAttribute(
+    attributes[.generalLayout]?.append(DesignReviewMutableAttribute(
       title: "Safe Area Insets",
       keyPath: "safeAreaInsets",
       reviewable: self))
@@ -282,22 +282,22 @@ extension UIView: DesignReviewable {
       }
     }
 
-    attributes[.hugging] = [DesignReviewInspectorAttribute]()
-    attributes[.hugging]?.append(DesignReviewImmutableAttribute(
+    attributes[.contentHugging] = [DesignReviewInspectorAttribute]()
+    attributes[.contentHugging]?.append(DesignReviewImmutableAttribute(
       title: "Horizontal Priority",
       keyPath: "horizontalContentHuggingPriority",
       value: contentHuggingPriority(for: .horizontal)))
-    attributes[.hugging]?.append(DesignReviewImmutableAttribute(
+    attributes[.contentHugging]?.append(DesignReviewImmutableAttribute(
       title: "Vertical Priority",
       keyPath: "verticalContentHuggingPriority",
       value: contentHuggingPriority(for: .vertical)))
 
-    attributes[.resistance] = [DesignReviewInspectorAttribute]()
-    attributes[.resistance]?.append(DesignReviewImmutableAttribute(
+    attributes[.compressionResistance] = [DesignReviewInspectorAttribute]()
+    attributes[.compressionResistance]?.append(DesignReviewImmutableAttribute(
       title: "Horizontal Priority",
       keyPath: "horizontalContentCompressionResistance",
       value: contentCompressionResistancePriority(for: .horizontal)))
-    attributes[.resistance]?.append(DesignReviewImmutableAttribute(
+    attributes[.compressionResistance]?.append(DesignReviewImmutableAttribute(
       title: "Vertical Priority",
       keyPath: "verticalContentCompressionResistance",
       value: contentCompressionResistancePriority(for: .vertical)))
@@ -305,7 +305,7 @@ extension UIView: DesignReviewable {
     // special field for UIImageViews
 
     if self is UIImageView {
-      attributes[.appearance]?.append(DesignReviewMutableAttribute(
+      attributes[.styling]?.append(DesignReviewMutableAttribute(
         title: "Image",
         keyPath: "image",
         reviewable: self))
@@ -368,19 +368,19 @@ extension UIView: DesignReviewable {
     // special fields for UIStackViews
 
     if self is UIStackView {
-      attributes[.appearance]?.append(DesignReviewEnumAttribute<UIStackView.Alignment>(
+      attributes[.styling]?.append(DesignReviewEnumAttribute<UIStackView.Alignment>(
         title: "Stack Alignment",
         keyPath: "alignment",
         reviewable: self))
-      attributes[.appearance]?.append(DesignReviewEnumAttribute<NSLayoutConstraint.Axis>(
+      attributes[.styling]?.append(DesignReviewEnumAttribute<NSLayoutConstraint.Axis>(
         title: "Stack Axis",
         keyPath: "axis",
         reviewable: self))
-      attributes[.appearance]?.append(DesignReviewEnumAttribute<UIStackView.Distribution>(
+      attributes[.styling]?.append(DesignReviewEnumAttribute<UIStackView.Distribution>(
         title: "Stack Distribution",
         keyPath: "distribution",
         reviewable: self))
-      attributes[.appearance]?.append(DesignReviewMutableAttribute(
+      attributes[.styling]?.append(DesignReviewMutableAttribute(
         title: "Stack Spacing",
         keyPath: "spacing",
         reviewable: self,

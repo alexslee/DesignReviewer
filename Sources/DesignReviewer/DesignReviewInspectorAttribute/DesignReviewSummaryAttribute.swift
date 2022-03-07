@@ -1,5 +1,5 @@
 //
-//  DesignReviewPreviewAttribute.swift
+//  DesignReviewSummaryAttribute.swift
 //
 //
 //  Created by Alex Lee on 3/3/22.

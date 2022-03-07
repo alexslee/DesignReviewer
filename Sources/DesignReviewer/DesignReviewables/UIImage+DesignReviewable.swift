@@ -12,11 +12,11 @@ extension UIImage: DesignReviewable {
   func createReviewableAttributes() -> [DesignReviewInspectorAttributeGroup: [DesignReviewInspectorAttribute]] {
     var attributes = [DesignReviewInspectorAttributeGroup: [DesignReviewInspectorAttribute]]()
 
-    attributes[.preview] = [DesignReviewInspectorAttribute]()
-    attributes[.preview]?.append(DesignReviewPreviewAttribute(image: self))
+    attributes[.screenshot] = [DesignReviewInspectorAttribute]()
+    attributes[.screenshot]?.append(DesignReviewScreenshotAttribute(image: self))
 
-    attributes[.appearance] = [DesignReviewInspectorAttribute]()
-    attributes[.appearance]?.append(DesignReviewEnumAttribute<UIImage.RenderingMode>(
+    attributes[.styling] = [DesignReviewInspectorAttribute]()
+    attributes[.styling]?.append(DesignReviewEnumAttribute<UIImage.RenderingMode>(
       title: "Rendering Mode",
       keyPath: "renderingMode",
       reviewable: self))

@@ -1,5 +1,5 @@
 //
-//  DesignReviewInspectorPreviewTableViewCell.swift
+//  DesignReviewInspectorScreenshotTableViewCell.swift
 //  
 //
 //  Created by Alex Lee on 3/3/22.
@@ -7,8 +7,8 @@
 
 import UIKit
 
-class DesignReviewInspectorPreviewTableViewCell: UITableViewCell {
-  static let reuseIdentifier = "DesignReviewInspectorPreviewTableViewCell"
+class DesignReviewInspectorScreenshotTableViewCell: UITableViewCell {
+  static let reuseIdentifier = "DesignReviewInspectorScreenshotTableViewCell"
 
   private lazy var previewImageView: UIImageView = {
     let view = UIImageView()

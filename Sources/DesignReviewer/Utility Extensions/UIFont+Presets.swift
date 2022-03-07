@@ -20,7 +20,6 @@ extension UIFont {
   static var bodyStrong: UIFont { font(size: 16, weight: .semibold) }
   static var bodySmall: UIFont { font(size: 14) }
   static var bodySmallStrong: UIFont { font(size: 14, weight: .semibold) }
-  static var price: UIFont { font(size: 18, weight: .semibold) }
   static var callOut: UIFont { font(size: 12, weight: .semibold) }
   static var finePrint: UIFont { font(size: 12) }
 }

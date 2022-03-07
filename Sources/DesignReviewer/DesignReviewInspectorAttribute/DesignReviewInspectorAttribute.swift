@@ -13,26 +13,39 @@ import UIKit
 enum DesignReviewInspectorAttributeGroup: String, CaseIterable {
   // these aren't alphabetical because they are iterated upon via CaseIterable, to construct the table
   case summary
-  case preview
+  case screenshot
 
-  case accessibility
   case typography
-  case appearance
-  case behaviour
+  case styling
   case general
+  case accessibility
 
-  case horizontal
-  case vertical
-  case hugging
-  case resistance
+  case contentHugging
+  case compressionResistance
   case constraints
-  case layout
+  case generalLayout
 
-  case classes
-  case views
-  case controllers
+  case viewHierarchy
+  case classHierarchy
 
-  var title: String { rawValue.localizedCapitalized }
+  var title: String {
+    switch self {
+    case .screenshot:
+      return "Live Screenshot"
+    case .contentHugging:
+      return "Content Hugging"
+    case .compressionResistance:
+      return "Compression Resistance"
+    case .generalLayout:
+      return "Other Layout Values"
+    case .viewHierarchy:
+      return "Nearby View Hierarchy"
+    case .classHierarchy:
+      return "🦸🏻 Superclass Chain"
+    default:
+      return rawValue.localizedCapitalized
+    }
+  }
 }
 
 /// Any property of a `DesignReviewable` that is displayable in the Design Review inspector.

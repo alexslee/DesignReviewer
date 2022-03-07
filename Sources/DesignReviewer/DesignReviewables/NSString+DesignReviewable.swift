@@ -24,8 +24,8 @@ extension NSString: DesignReviewable {
       view.drawHierarchy(in: context.config.bounds, afterScreenUpdates: true)
     })
     if !screenshot.size.equalTo(.zero) {
-      attributes[.preview] = [DesignReviewInspectorAttribute]()
-      attributes[.preview]?.append(DesignReviewPreviewAttribute(image: screenshot))
+      attributes[.screenshot] = [DesignReviewInspectorAttribute]()
+      attributes[.screenshot]?.append(DesignReviewScreenshotAttribute(image: screenshot))
     }
 
     return attributes

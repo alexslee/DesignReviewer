@@ -39,7 +39,7 @@ class DesignReviewCollapsibleHeaderView: UITableViewHeaderFooterView {
 
   private lazy var label: UILabel = {
     let label = UILabel()
-    label.font = .bodyStrong
+    label.font = .header
     label.lineBreakMode = .byWordWrapping
     label.numberOfLines = 0
     label.textColor = .monochrome5
@@ -57,6 +57,9 @@ class DesignReviewCollapsibleHeaderView: UITableViewHeaderFooterView {
 
   override init(reuseIdentifier: String?) {
     super.init(reuseIdentifier: reuseIdentifier)
+
+    backgroundView = UIView()
+    backgroundView?.backgroundColor = .background
 
     contentView.addSubview(imageView)
     contentView.addSubview(label)

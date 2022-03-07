@@ -49,6 +49,7 @@ protocol DesignReviewInspectorAttribute: CustomStringConvertible {
   /// Value of the attribute. Used to provide the value for static attributes, rather than the keypath access.
   var value: Any? { get }
 
+  /// Whether or not the attribute can be mutated (requires the attribute to have a dedicated closure to handle the change).
   var isModifiable: Bool { get }
 }
 

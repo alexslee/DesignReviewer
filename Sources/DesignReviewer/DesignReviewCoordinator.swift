@@ -100,17 +100,20 @@ class DesignReviewCoordinator: NSObject {
     }
   }
 
-  func presentExplodedHierarchy(reviewable: DesignReviewable) {
-    guard let appWindow = appWindow else { return }
+  func showColorPicker(initialColor: UIColor, changeHandler: ((UIColor) -> Void)?) {
+    guard #available(iOS 14, *) else { return }
+    let pickerViewController = UIColorPickerViewController()
+    pickerViewController.view.backgroundColor = .background
+    pickerViewController.selectedColor = initialColor
 
-    let explodedViewModel = DesignReviewExplodedHierarchyViewModel(coordinator: self, rootReviewable: reviewable)
-    let viewController = DesignReviewExplodedHierarchyViewController(root: appWindow, viewModel: explodedViewModel)
+    pickerViewController.delegate = self
 
-    if let navController = window?.rootViewController?.presentedViewController as? UINavigationController {
-      CATransaction.begin()
-      CATransaction.setCompletionBlock({ viewController.jumpStart() })
-      navController.pushViewController(viewController, animated: true)
-      CATransaction.commit()
+    currentColorPickerObserver = DesignReviewColorPickerSessionObserver(initialColor: initialColor,
+                                                                        changeHandler: changeHandler)
+
+    if let navigationController = window?.rootViewController?.presentedViewController as? UINavigationController {
+      navigationController.pushViewController(pickerViewController, animated: true)
+      return
     }
   }
 
@@ -121,6 +124,13 @@ class DesignReviewCoordinator: NSObject {
   func toggleHUDVisibility(_ isVisible: Bool) {
     viewModel.toggleHUDVisibility?(isVisible)
   }
+
+  struct DesignReviewColorPickerSessionObserver {
+    let initialColor: UIColor
+    let changeHandler: ((UIColor) -> Void)?
+  }
+
+  private var currentColorPickerObserver: DesignReviewColorPickerSessionObserver?
 }
 
 // MARK: - UIAdaptivePresentationControllerDelegate
@@ -129,4 +139,19 @@ extension DesignReviewCoordinator: UIAdaptivePresentationControllerDelegate {
   func presentationControllerDidDismiss(_ presentationController: UIPresentationController) {
     refreshHighlights()
   }
+}
+
+@available(iOS 14, *)
+extension DesignReviewCoordinator: UIColorPickerViewControllerDelegate {
+  func colorPickerViewControllerDidFinish(_ viewController: UIColorPickerViewController) {
+    currentColorPickerObserver = nil
+  }
+
+  func colorPickerViewController(_ viewController: UIColorPickerViewController,
+                                 didSelect color: UIColor,
+                                 continuously: Bool) {
+      if color != currentColorPickerObserver?.initialColor {
+        currentColorPickerObserver?.changeHandler?(color)
+      }
+    }
 }

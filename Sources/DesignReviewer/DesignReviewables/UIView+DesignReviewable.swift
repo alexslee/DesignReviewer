@@ -208,7 +208,16 @@ extension UIView: DesignReviewable {
     attributes[.appearance]?.append(DesignReviewMutableAttribute(
       title: "Background Color",
       keyPath: "backgroundColor",
-      reviewable: self))
+      reviewable: self,
+      modifier: { [weak self] newValue in
+        guard let self = self,
+          let newColor = newValue as? UIColor else {
+            return
+        }
+
+        self.backgroundColor = newColor
+      }))
+
     attributes[.appearance]?.append(DesignReviewMutableAttribute(
       title: "Corner Radius",
       keyPath: "layer.cornerRadius",
@@ -228,7 +237,15 @@ extension UIView: DesignReviewable {
     attributes[.appearance]?.append(DesignReviewMutableAttribute(
       title: "Tint Color",
       keyPath: "tintColor",
-      reviewable: self))
+      reviewable: self,
+      modifier: { [weak self] newValue in
+        guard let self = self,
+          let newColor = newValue as? UIColor else {
+            return
+        }
+
+        self.tintColor = newColor
+      }))
 
     attributes[.layout]?.append(DesignReviewEnumAttribute<UIView.ContentMode>(
       title: "Content Mode",
@@ -320,7 +337,15 @@ extension UIView: DesignReviewable {
       attributes[.typography]?.append(DesignReviewMutableAttribute(
         title: "Text Color",
         keyPath: "textColor",
-        reviewable: self))
+        reviewable: self,
+        modifier: { [weak self] newValue in
+          guard let self = self,
+            let newColor = newValue as? UIColor else {
+              return
+          }
+
+          (self as? UILabel)?.textColor = newColor
+        }))
       attributes[.typography]?.append(DesignReviewMutableAttribute(
         title: "Font",
         keyPath: "font",

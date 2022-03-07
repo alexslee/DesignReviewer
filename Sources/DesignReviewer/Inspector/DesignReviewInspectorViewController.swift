@@ -40,6 +40,8 @@ class DesignReviewInspectorViewController: UIViewController {
     view.register(DesignReviewCollapsibleHeaderView.self,
                   forHeaderFooterViewReuseIdentifier: DesignReviewCollapsibleHeaderView.reuseIdentifier)
 
+    view.addGestureRecognizer(UILongPressGestureRecognizer(target: self, action: #selector(longPressed)))
+
     return view
   }()
 
@@ -139,6 +141,28 @@ class DesignReviewInspectorViewController: UIViewController {
 
     viewModel.updateVisibleSections(segmentedIndex: segmentedIndex)
     tableView.reloadData()
+  }
+
+  @objc private func longPressed(_ sender: UILongPressGestureRecognizer) {
+    guard sender.state == .began, #available(iOS 14, *) else { return }
+    let convertedPoint = sender.location(in: tableView)
+
+    if let indexPath = tableView.indexPathForRow(at: convertedPoint),
+     let attribute = viewModel.attribute(for: indexPath),
+     let colorValue = attribute.value as? UIColor {
+      viewModel.showColorPicker(initialColor: colorValue, changeHandler: { [weak self] newColor in
+        guard let self = self else { return }
+
+        (attribute as? DesignReviewMutableAttribute)?.modifier?(newColor)
+
+        if let screenshotSectionIndex = self.viewModel.refreshScreenshot() {
+          let screenshotIndexPath = IndexPath(row: 0, section: screenshotSectionIndex)
+          self.tableView.reloadRows(at: [screenshotIndexPath, indexPath], with: .none)
+        } else {
+          self.tableView.reloadRows(at: [indexPath], with: .none)
+        }
+      })
+    }
   }
 }
 

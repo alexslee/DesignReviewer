@@ -99,9 +99,8 @@ class DesignReviewInspectorViewModel {
     return sections[section].isExpanded
   }
 
-  func presentExplodedHierarchy() {
-    guard let reviewable = reviewable else { return }
-    coordinator?.presentExplodedHierarchy(reviewable: reviewable)
+  func showColorPicker(initialColor: UIColor, changeHandler: ((UIColor) -> Void)?) {
+    coordinator?.showColorPicker(initialColor: initialColor, changeHandler: changeHandler)
   }
 
   func refreshScreenshot() -> Int? {

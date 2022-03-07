@@ -147,6 +147,12 @@ extension DesignReviewCoordinator: UIColorPickerViewControllerDelegate {
     currentColorPickerObserver = nil
   }
 
+  func colorPickerViewControllerDidSelectColor(_ viewController: UIColorPickerViewController) {
+    if viewController.selectedColor != currentColorPickerObserver?.initialColor {
+      currentColorPickerObserver?.changeHandler?(viewController.selectedColor)
+    }
+  }
+
   func colorPickerViewController(_ viewController: UIColorPickerViewController,
                                  didSelect color: UIColor,
                                  continuously: Bool) {

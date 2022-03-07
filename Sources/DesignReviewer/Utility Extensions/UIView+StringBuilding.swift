@@ -59,8 +59,10 @@ extension UIView {
 
   /// Concatenates some of the strings in this extension for use in the summary view
   var summaryDescription: String {
-    let desc = [childrenAndSubviewsDescription, frameDescription, boundsDescription, superclassName]
-    return desc.compactMap({ $0 }).joined(separator: "\n")
+    let rawStringBuild = [frameDescription, boundsDescription, childrenAndSubviewsDescription, superclassName]
+    let nilSafeBuild = rawStringBuild.compactMap({ $0 })
+
+    return nilSafeBuild.joined(separator: "\n")
   }
 
   /// Concatenates the strippedClassName with accessibility info, if there is any

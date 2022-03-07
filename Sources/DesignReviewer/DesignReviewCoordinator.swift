@@ -49,6 +49,8 @@ class DesignReviewCoordinator: NSObject {
       self?.window = nil
 
       Self.isPresenting = false
+      // wipe indices clean s.t. a subsequent open wouldn't draw rects where the views may no longer exist
+      self?.viewModel.selectedReviewableIndices.removeAll()
     })
   }
 

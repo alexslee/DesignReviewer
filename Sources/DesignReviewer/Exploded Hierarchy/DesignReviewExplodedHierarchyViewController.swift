@@ -41,8 +41,6 @@ class DesignReviewExplodedHierarchyViewController: UIViewController {
   }()
 
   private lazy var toolbarEffectContainerView: UIVisualEffectView = {
-//    let isDark = traitCollection.userInterfaceStyle == .dark
-//    let effect = isDark ? UIBlurEffect(style: .dark) : UIBlurEffect(style: .light)
     let effect = UIBlurEffect(style: .prominent)
     let view = UIVisualEffectView(effect: effect)
     view.translatesAutoresizingMaskIntoConstraints = false

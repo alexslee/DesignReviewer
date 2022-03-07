@@ -44,7 +44,7 @@ extension UIColor: DesignReviewable {
       value: hexString))
 
     attributes[.general]?.append(DesignReviewImmutableAttribute(
-      title: "Change color by long pressing me on the previous page!",
+      title: "Change color by long pressing me on the previous page! (iOS 14+)",
       keyPath: "nada",
       value: ""))
 

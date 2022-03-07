@@ -36,6 +36,17 @@ class DesignReviewExplodedHierarchyViewController: UIViewController {
     let effect = isDark ? UIBlurEffect(style: .dark) : UIBlurEffect(style: .light)
     let view = UIVisualEffectView(effect: effect)
     view.translatesAutoresizingMaskIntoConstraints = false
+
+    return view
+  }()
+
+  private lazy var toolbarEffectContainerView: UIVisualEffectView = {
+//    let isDark = traitCollection.userInterfaceStyle == .dark
+//    let effect = isDark ? UIBlurEffect(style: .dark) : UIBlurEffect(style: .light)
+    let effect = UIBlurEffect(style: .prominent)
+    let view = UIVisualEffectView(effect: effect)
+    view.translatesAutoresizingMaskIntoConstraints = false
+
     return view
   }()
 
@@ -57,7 +68,7 @@ class DesignReviewExplodedHierarchyViewController: UIViewController {
     switchLabel.font = .callOut
     switchLabel.numberOfLines = 0
     switchLabel.text = "show names"
-    switchLabel.textColor = .black
+    switchLabel.textColor = .monochrome5
     let sonOfASwitch = UISwitch()
     sonOfASwitch.addTarget(self, action: #selector(switchUp), for: .valueChanged)
 
@@ -87,28 +98,32 @@ class DesignReviewExplodedHierarchyViewController: UIViewController {
 
     view.addSubview(effectView)
     view.addSubview(container)
-    view.addSubview(slider)
-    view.addSubview(showNamesToggle)
+    view.addSubview(toolbarEffectContainerView)
+    toolbarEffectContainerView.contentView.addSubview(slider)
+    toolbarEffectContainerView.contentView.addSubview(showNamesToggle)
     view.addSubview(button)
 
     NSLayoutConstraint.activate(effectView.constraints(toView: view))
     NSLayoutConstraint.activate(container.constraints(toView: view))
 
+    NSLayoutConstraint.activate(toolbarEffectContainerView.constraints(toView: view, edges: [.left, .right, .bottom]))
+
     NSLayoutConstraint.activate([
-      slider.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: .medium),
-      slider.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -.large),
-      slider.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.5)
+      slider.leadingAnchor.constraint(equalTo: toolbarEffectContainerView.contentView.leadingAnchor, constant: .medium),
+      slider.bottomAnchor.constraint(equalTo: toolbarEffectContainerView.safeAreaLayoutGuide.bottomAnchor, constant: -.large),
+      slider.widthAnchor.constraint(equalTo: toolbarEffectContainerView.contentView.widthAnchor, multiplier: 0.5),
+      slider.topAnchor.constraint(equalTo: toolbarEffectContainerView.contentView.topAnchor, constant: .extraSmall)
     ])
 
     NSLayoutConstraint.activate([
-      showNamesToggle.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -.medium),
-      showNamesToggle.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -.large),
-      showNamesToggle.widthAnchor.constraint(lessThanOrEqualTo: view.widthAnchor, multiplier: 0.5)
+      showNamesToggle.trailingAnchor.constraint(equalTo: toolbarEffectContainerView.contentView.trailingAnchor, constant: -.medium),
+      showNamesToggle.bottomAnchor.constraint(equalTo: toolbarEffectContainerView.safeAreaLayoutGuide.bottomAnchor, constant: -.large),
+      showNamesToggle.widthAnchor.constraint(lessThanOrEqualTo: toolbarEffectContainerView.contentView.widthAnchor, multiplier: 0.5)
     ])
 
     NSLayoutConstraint.activate([
-      button.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: .medium),
-      button.bottomAnchor.constraint(equalTo: slider.topAnchor, constant: -.small)
+      button.leadingAnchor.constraint(equalTo: toolbarEffectContainerView.leadingAnchor, constant: .medium),
+      button.bottomAnchor.constraint(equalTo: toolbarEffectContainerView.topAnchor, constant: -.small)
     ])
 
     title = "Boom"

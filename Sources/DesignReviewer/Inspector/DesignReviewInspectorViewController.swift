@@ -313,6 +313,7 @@ extension DesignReviewInspectorViewController: UITableViewDelegate {
   }
 
   func tableView(_ tableView: UITableView, shouldHighlightRowAt indexPath: IndexPath) -> Bool {
-    return !(viewModel.attribute(for: indexPath) is DesignReviewPreviewAttribute)
+    return !(viewModel.attribute(for: indexPath) is DesignReviewPreviewAttribute) &&
+    !(viewModel.attribute(for: indexPath) is DesignReviewSummaryAttribute)
   }
 }

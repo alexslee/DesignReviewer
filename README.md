@@ -22,6 +22,8 @@ DesignReviewer.start(inAppWindow: window)
 
 ## TODOs:
 
+- [x] Check tablet appearance + rotation behaviour
+- [x] Make color attributes editable
 - [ ] Add ability for client to provide additional inspectable attributes for any given `DesignReviewable`
 - [ ] Make text attributes editable
 - [ ] Refine position of the constraint padding labels

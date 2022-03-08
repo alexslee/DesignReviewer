@@ -6,11 +6,20 @@
 //
 
 import UIKit
+import DesignReviewer
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
   func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
     // Override point for customization after application launch.
+
+    /*
+     Example of adding a custom attribute that will be fetched for inspection. Note: this can be done at
+     any point really, as the internal setup uses a Set. Abstracting it to something that happens
+     at launch (as well as behind any debug-only flags you may wish to configure) is your perogative.
+     */
+    DesignReviewer.addCustomAttribute(DesignReviewCustomAttribute(title: "Dummy Try", keyPath: "dummyString"),
+                                      to: UILabel.self)
     return true
   }
 
@@ -27,7 +36,4 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     // If any sessions were discarded while the application was not running, this will be called shortly after application:didFinishLaunchingWithOptions.
     // Use this method to release any resources that were specific to the discarded scenes, as they will not return.
   }
-
-
 }
-

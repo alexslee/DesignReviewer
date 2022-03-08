@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 
 extension UIImage: DesignReviewable {
-  func createReviewableAttributes() -> [DesignReviewInspectorAttributeGroup: [DesignReviewInspectorAttribute]] {
+  public func createReviewableAttributes() -> [DesignReviewInspectorAttributeGroup: [DesignReviewInspectorAttribute]] {
     var attributes = [DesignReviewInspectorAttributeGroup: [DesignReviewInspectorAttribute]]()
 
     attributes[.screenshot] = [DesignReviewInspectorAttribute]()

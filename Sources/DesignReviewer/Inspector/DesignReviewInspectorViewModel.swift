@@ -23,7 +23,7 @@ struct DesignReviewInspectorSection {
   var isExpanded = true
 
   /// The rows displayed in the given section
-  let rows: [DesignReviewInspectorRow]
+  var rows: [DesignReviewInspectorRow]
 
   /// The title of the given section
   let title: DesignReviewInspectorAttributeGroup
@@ -55,7 +55,7 @@ class DesignReviewInspectorViewModel {
   private var currentSegmentedIndex: DesignReviewInspectorSegmentedIndex = .landing
   private var actualCreatedSegmentedIndices = [DesignReviewInspectorSegmentedIndex]()
 
-  init(reviewable: DesignReviewable?) {
+  init(reviewable: DesignReviewable?, userDefinedCustomAttributes: Set<DesignReviewCustomAttribute>? = nil) {
     self.reviewable = reviewable
 
     let reviewableAttributes = reviewable?.createReviewableAttributes()
@@ -75,6 +75,8 @@ class DesignReviewInspectorViewModel {
 
       return section
     }
+
+    accountForUserDefinedCustomAttributes(userDefinedCustomAttributes)
 
     // initial visible sections should be 'generic'
     updateVisibleSections(segmentedIndex: .landing)
@@ -97,6 +99,14 @@ class DesignReviewInspectorViewModel {
   func expandedStateForSection(_ section: Int) -> Bool {
     guard section < sections.count else { return false }
     return sections[section].isExpanded
+  }
+
+  func showDesignReviewIfPossible(for indexPath: IndexPath) {
+    guard let attribute = attribute(for: indexPath) else { return }
+
+    if let value = attribute.value as? DesignReviewable, value !== reviewable {
+      coordinator?.presentDesignReview(for: value)
+    }
   }
 
   func showColorPicker(initialColor: UIColor, changeHandler: ((UIColor) -> Void)?) {
@@ -189,5 +199,21 @@ class DesignReviewInspectorViewModel {
 
   func toggleHUDVisibility(_ isVisible: Bool) {
     coordinator?.toggleHUDVisibility(isVisible)
+  }
+
+  private func accountForUserDefinedCustomAttributes(_ attributes: Set<DesignReviewCustomAttribute>?) {
+    guard let reviewable = reviewable else { return }
+
+    for attribute in attributes ?? [] {
+      let convertedAttribute = attribute.toMutableAttribute(for: reviewable)
+      let newRow = DesignReviewInspectorRow(attribute: convertedAttribute, title: attribute.title)
+
+      guard let internalIndex = allSections.firstIndex(where: { $0.title == attribute.group }) else {
+        allSections.append(DesignReviewInspectorSection(rows: [newRow], title: attribute.group))
+        continue
+      }
+
+      allSections[internalIndex].rows.append(newRow)
+    }
   }
 }

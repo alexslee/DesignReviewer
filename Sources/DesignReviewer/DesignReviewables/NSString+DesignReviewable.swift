@@ -8,7 +8,7 @@
 import UIKit
 
 extension NSString: DesignReviewable {
-  func createReviewableAttributes() -> [DesignReviewInspectorAttributeGroup: [DesignReviewInspectorAttribute]] {
+  public func createReviewableAttributes() -> [DesignReviewInspectorAttributeGroup: [DesignReviewInspectorAttribute]] {
     var attributes = [DesignReviewInspectorAttributeGroup: [DesignReviewInspectorAttribute]]()
 
     let view = UILabel()

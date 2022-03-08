@@ -16,6 +16,8 @@ class DesignReviewCoordinator: NSObject {
   static var isPresenting = false
   private var window: UIWindow?
 
+  var userDefinedCustomAttributes = [String: Set<DesignReviewCustomAttribute>]()
+
   init(viewModel: DesignReviewViewModel, appWindow: UIWindow?) {
     self.viewModel = viewModel
     self.appWindow = appWindow
@@ -83,23 +85,24 @@ class DesignReviewCoordinator: NSObject {
   }
 
   func presentDesignReview(for reviewable: DesignReviewable) {
-    if reviewable as? UIView != nil {
-      let inspectorViewModel = DesignReviewInspectorViewModel(reviewable: reviewable)
-      let viewController = DesignReviewInspectorViewController(viewModel: inspectorViewModel)
+    let customAttributes = userDefinedCustomAttributes[String(describing: reviewable.classForCoder)]
 
-      inspectorViewModel.coordinator = self
+    let inspectorViewModel = DesignReviewInspectorViewModel(reviewable: reviewable,
+                                                            userDefinedCustomAttributes: customAttributes)
+    let viewController = DesignReviewInspectorViewController(viewModel: inspectorViewModel)
 
-      if let navigationController = window?.rootViewController?.presentedViewController as? UINavigationController {
-        navigationController.pushViewController(viewController, animated: true)
-        return
-      }
+    inspectorViewModel.coordinator = self
 
-      window?.rootViewController?.definesPresentationContext = true
-
-      let newNavController = UINavigationController(rootViewController: viewController)
-      window?.rootViewController?.present(newNavController, animated: true)
-      newNavController.presentationController?.delegate = self
+    if let navigationController = window?.rootViewController?.presentedViewController as? UINavigationController {
+      navigationController.pushViewController(viewController, animated: true)
+      return
     }
+
+    window?.rootViewController?.definesPresentationContext = true
+
+    let newNavController = UINavigationController(rootViewController: viewController)
+    window?.rootViewController?.present(newNavController, animated: true)
+    newNavController.presentationController?.delegate = self
   }
 
   func showColorPicker(initialColor: UIColor, changeHandler: ((UIColor) -> Void)?) {

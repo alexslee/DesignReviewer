@@ -282,15 +282,7 @@ extension DesignReviewInspectorViewController: UITableViewDataSource {
 
 extension DesignReviewInspectorViewController: UITableViewDelegate {
   func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-    guard let attribute = viewModel.attribute(for: indexPath) else { return }
-
-    if let value = attribute.value as? DesignReviewable, value !== viewModel.reviewable {
-      let viewModel = DesignReviewInspectorViewModel(reviewable: value)
-      viewModel.coordinator = self.viewModel.coordinator
-      let controller = DesignReviewInspectorViewController(viewModel: viewModel)
-
-      navigationController?.pushViewController(controller, animated: true)
-    }
+    viewModel.showDesignReviewIfPossible(for: indexPath)
 
     tableView.deselectRow(at: indexPath, animated: true)
   }

@@ -10,7 +10,7 @@ import UIKit
 
 /// Represents a section of the inspector VC's table view.
 /// Each section is a collection of `DesignReviewInspectorAttribute`s.
-enum DesignReviewInspectorAttributeGroup: String, CaseIterable {
+public enum DesignReviewInspectorAttributeGroup: String, CaseIterable {
   // these aren't alphabetical because they are iterated upon via CaseIterable, to construct the table
   case summary
   case screenshot
@@ -49,7 +49,7 @@ enum DesignReviewInspectorAttributeGroup: String, CaseIterable {
 }
 
 /// Any property of a `DesignReviewable` that is displayable in the Design Review inspector.
-protocol DesignReviewInspectorAttribute: CustomStringConvertible {
+public protocol DesignReviewInspectorAttribute: CustomStringConvertible {
   /// Keypath of the attribute. Used to fetch the values of dynamic + enum attributes via `value(forKeyPath:)`.
   var keyPath: String { get }
 
@@ -69,7 +69,7 @@ protocol DesignReviewInspectorAttribute: CustomStringConvertible {
 // MARK: - CustomStringConvertible
 
 extension DesignReviewInspectorAttribute {
-  var description: String {
+  public var description: String {
     let valueStr: String
     if let value = value {
       valueStr = "\(value)"

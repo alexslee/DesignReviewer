@@ -9,13 +9,13 @@ import Foundation
 import UIKit
 
 extension UIView: DesignReviewable {
-  var subReviewables: [DesignReviewable] { subviews as [DesignReviewable] }
+  public var subReviewables: [DesignReviewable] { subviews as [DesignReviewable] }
 
-  func convertBounds(to target: UIView) -> CGRect {
+  public func convertBounds(to target: UIView) -> CGRect {
     return convert(bounds, to: target)
   }
 
-  var isOnScreen: Bool {
+  public var isOnScreen: Bool {
     if isHidden || alpha == 0 || frame.equalTo(.zero) || frame.equalTo(window?.bounds ?? UIScreen.main.bounds) {
       return false
     }
@@ -47,7 +47,7 @@ extension UIView: DesignReviewable {
   }
 
   /// Takes a screenshot of the current view as it appears on screen
-  func polaroidSelfie() -> UIImage {
+  public func polaroidSelfie() -> UIImage {
     let screenshot = DesignReviewImageCapturer(size: bounds.size).image(actions: { [weak self] context in
       let contextBounds = context.config.bounds
       self?.drawHierarchy(in: contextBounds, afterScreenUpdates: true)
@@ -81,7 +81,7 @@ extension UIView: DesignReviewable {
     }
   }
 
-  func createReviewableAttributes()
+  public func createReviewableAttributes()
   -> [DesignReviewInspectorAttributeGroup: [DesignReviewInspectorAttribute]] {
     var attributes = [DesignReviewInspectorAttributeGroup: [DesignReviewInspectorAttribute]]()
 

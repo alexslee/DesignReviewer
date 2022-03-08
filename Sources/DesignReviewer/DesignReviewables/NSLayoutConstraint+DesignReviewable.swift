@@ -13,7 +13,7 @@ extension NSLayoutConstraint: DesignReviewable {
     return "Constraint of \(String(describing: firstItem)) to \(String(describing: secondItem))"
   }
 
-  func createReviewableAttributes() -> [DesignReviewInspectorAttributeGroup: [DesignReviewInspectorAttribute]] {
+  public func createReviewableAttributes() -> [DesignReviewInspectorAttributeGroup: [DesignReviewInspectorAttribute]] {
     var attributes = [DesignReviewInspectorAttributeGroup: [DesignReviewInspectorAttribute]]()
 
     // build list of constraint attributes+relations

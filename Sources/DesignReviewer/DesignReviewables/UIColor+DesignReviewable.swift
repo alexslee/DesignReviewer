@@ -11,7 +11,7 @@ import UIKit
 extension UIColor: DesignReviewable {
   private static let previewImageHeight: CGFloat = 666 / 6 // 😈
 
-  func createReviewableAttributes() -> [DesignReviewInspectorAttributeGroup: [DesignReviewInspectorAttribute]] {
+  public func createReviewableAttributes() -> [DesignReviewInspectorAttributeGroup: [DesignReviewInspectorAttribute]] {
     var attributes = [DesignReviewInspectorAttributeGroup: [DesignReviewInspectorAttribute]]()
 
     // start with the preview screenshot

@@ -18,7 +18,7 @@ import UIKit
  2) be an attribute that is part of a different class that is inspected (e.g. a layout constraint
     on a view)
  */
-protocol DesignReviewable: AnyObject {
+public protocol DesignReviewable: AnyObject {
   /**
    Helps construct strings (and by extension, labels) of the object's actual class name, for display
    in the Design Review tool's table.
@@ -53,11 +53,11 @@ protocol DesignReviewable: AnyObject {
 // MARK: - Default implementations
 
 extension DesignReviewable {
-  var isOnScreen: Bool { false }
+  public var isOnScreen: Bool { false }
 
-  var subReviewables: [DesignReviewable] { [] }
+  public var subReviewables: [DesignReviewable] { [] }
 
-  func convertBounds(to target: UIView) -> CGRect {
+  public func convertBounds(to target: UIView) -> CGRect {
     return .zero
   }
 }

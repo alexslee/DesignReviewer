@@ -18,6 +18,13 @@ class DesignReviewCoordinator: NSObject {
 
   var userDefinedCustomAttributes = [String: Set<DesignReviewCustomAttribute>]()
 
+  private struct DesignReviewColorPickerSessionObserver {
+    let initialColor: UIColor
+    let changeHandler: ((UIColor) -> Void)?
+  }
+
+  private var currentColorPickerObserver: DesignReviewColorPickerSessionObserver?
+
   init(viewModel: DesignReviewViewModel, appWindow: UIWindow?) {
     self.viewModel = viewModel
     self.appWindow = appWindow
@@ -122,29 +129,24 @@ class DesignReviewCoordinator: NSObject {
     }
   }
 
-  private func refreshHighlights() {
-    viewModel.refreshHighlights()
+  private func refreshSelectionBorders() {
+    viewModel.refreshSelectionBorders()
   }
 
   func toggleHUDVisibility(_ isVisible: Bool) {
     viewModel.toggleHUDVisibility?(isVisible)
   }
-
-  struct DesignReviewColorPickerSessionObserver {
-    let initialColor: UIColor
-    let changeHandler: ((UIColor) -> Void)?
-  }
-
-  private var currentColorPickerObserver: DesignReviewColorPickerSessionObserver?
 }
 
 // MARK: - UIAdaptivePresentationControllerDelegate
 
 extension DesignReviewCoordinator: UIAdaptivePresentationControllerDelegate {
   func presentationControllerDidDismiss(_ presentationController: UIPresentationController) {
-    refreshHighlights()
+    refreshSelectionBorders()
   }
 }
+
+// MARK: - UIColorPickerViewControllerDelegate
 
 @available(iOS 14, *)
 extension DesignReviewCoordinator: UIColorPickerViewControllerDelegate {

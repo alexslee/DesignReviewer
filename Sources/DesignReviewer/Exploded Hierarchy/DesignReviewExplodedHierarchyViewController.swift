@@ -20,8 +20,8 @@ class DesignReviewExplodedHierarchyViewController: UIViewController {
     return view
   }()
 
-  private lazy var button: SolidButton = {
-    let button = SolidButton(buttonText: "")
+  private lazy var button: DesignReviewSolidButton = {
+    let button = DesignReviewSolidButton(buttonText: "")
     button.addTarget(self, action: #selector(inspectFromHere), for: .touchUpInside)
     button.isHidden = true
     button.translatesAutoresizingMaskIntoConstraints = false
@@ -123,8 +123,6 @@ class DesignReviewExplodedHierarchyViewController: UIViewController {
       button.leadingAnchor.constraint(equalTo: toolbarEffectContainerView.leadingAnchor, constant: .medium),
       button.bottomAnchor.constraint(equalTo: toolbarEffectContainerView.topAnchor, constant: -.small)
     ])
-
-    title = "Boom"
   }
 
   override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -160,19 +158,5 @@ extension DesignReviewExplodedHierarchyViewController: DesignReviewExplodedHiera
     button.isHidden = (primaryView == nil)
     guard let reviewable = primaryView?.baseReviewable else { return }
     button.buttonText = "Inspect " + String(describing: reviewable.classForCoder)
-  }
-}
-
-class DesignReviewExplodedHierarchyViewModel {
-  weak var coordinator: DesignReviewCoordinator?
-  let rootReviewable: DesignReviewable
-
-  init(coordinator: DesignReviewCoordinator?, rootReviewable: DesignReviewable) {
-    self.coordinator = coordinator
-    self.rootReviewable = rootReviewable
-  }
-
-  func inspect(_ reviewable: DesignReviewable) {
-    coordinator?.presentDesignReview(for: reviewable)
   }
 }

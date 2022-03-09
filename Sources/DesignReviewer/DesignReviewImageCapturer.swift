@@ -8,7 +8,7 @@
 import Foundation
 import UIKit
 
-/// Represents an image renderer configuration. Downstream, these values used to configure the
+/// Represents an image capturer configuration. Downstream, these values used to configure the
 /// environment in which the image will be drawn.
 struct DesignReviewImageCapturerConfig {
   /// Bounds of the context within which the image will be drawn.
@@ -41,7 +41,7 @@ class DesignReviewImageCapturerContext {
   }
 }
 
-/// Represents an image renderer used for drawing arbitrary contents for outputting as a `UIImage`
+/// Represents an image capturer used for outputting arbitrary contents into a `UIImage`.
 class DesignReviewImageCapturer {
   let config: DesignReviewImageCapturerConfig
 

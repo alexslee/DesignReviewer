@@ -76,9 +76,9 @@ class DesignReviewSpecContainerView: DesignReviewSelectableView {
 
     let primaryFrame = primaryView?.convert(primaryView?.bounds ?? .zero, to: containerView) ?? .zero
     let secondaryFrame = secondaryView?.convert(secondaryView?.bounds ?? .zero, to: containerView) ?? .zero
-    let specs = DesignReviewViewModel.distance(from: primaryFrame, to: secondaryFrame, in: bounds)
+    let specs = DesignReviewViewModel.specs(between: primaryFrame, and: secondaryFrame, in: bounds)
 
-    if specs.top == 0 {
+    if specs.shouldHideSpec(for: .top) {
       topSpecView.removeFromSuperview()
     } else {
       topSpecView.updateSpec(specs.top)
@@ -86,7 +86,7 @@ class DesignReviewSpecContainerView: DesignReviewSelectableView {
       addSpecViewToContainer(topSpecView, side: .top)
     }
 
-    if specs.bottom == 0 {
+    if specs.shouldHideSpec(for: .bottom) {
       bottomSpecView.removeFromSuperview()
     } else {
       bottomSpecView.updateSpec(specs.bottom)
@@ -94,7 +94,7 @@ class DesignReviewSpecContainerView: DesignReviewSelectableView {
       addSpecViewToContainer(bottomSpecView, side: .bottom)
     }
 
-    if specs.left == 0 {
+    if specs.shouldHideSpec(for: .left) {
       leftSpecView.removeFromSuperview()
     } else {
       leftSpecView.updateSpec(specs.left)
@@ -102,7 +102,7 @@ class DesignReviewSpecContainerView: DesignReviewSelectableView {
       addSpecViewToContainer(leftSpecView, side: .left)
     }
 
-    if specs.right == 0 {
+    if specs.shouldHideSpec(for: .right) {
       rightSpecView.removeFromSuperview()
     } else {
       rightSpecView.updateSpec(specs.right)
@@ -110,6 +110,8 @@ class DesignReviewSpecContainerView: DesignReviewSelectableView {
       addSpecViewToContainer(rightSpecView, side: .right)
     }
   }
+
+  // what the actual hell have you done...
 
   private func addSpecViewToContainer(_ specView: UIView, side: Specs.Side) {
     guard let containerView = containerView else { return }

@@ -19,6 +19,19 @@ struct Specs {
   let left: CGFloat
   let bottom: CGFloat
   let right: CGFloat
+
+  func shouldHideSpec(for side: Side) -> Bool {
+    switch side {
+    case .top:
+      return top == 0
+    case .left:
+      return left == 0
+    case .bottom:
+      return bottom == 0
+    case .right:
+      return right == 0
+    }
+  }
 }
 
 class DesignReviewViewModel {
@@ -27,11 +40,11 @@ class DesignReviewViewModel {
   weak var coordinator: DesignReviewCoordinator?
   var selectedReviewableIndices = [Int]()
 
-  var recalculateHighlights: (() -> Void)?
+  var recalculateSelectionBorders: (() -> Void)?
   var toggleHUDVisibility: ((_ isVisible: Bool) -> Void)?
 
-  func refreshHighlights() {
-    recalculateHighlights?()
+  func refreshSelectionBorders() {
+    recalculateSelectionBorders?()
   }
 
   func startDesignReview() {
@@ -83,51 +96,65 @@ extension DesignReviewViewModel {
 // MARK: - Distance calculation
 
 extension DesignReviewViewModel {
-  /// Calculates the distance between each corresponding side of two given `CGRect`s.
-  static func distance(from: CGRect, to: CGRect, in bounds: CGRect) -> Specs {
+  /// Constructs the `Specs` representing the space between each corresponding side of two given `CGRect`s.
+  static func specs(between rect1: CGRect, and rect2: CGRect, in bounds: CGRect) -> Specs {
+    let (left, right) = horizontalSpecs(between: rect1, and: rect2, in: bounds)
+    let (top, bottom) = verticalSpecs(between: rect1, and: rect2, in: bounds)
+
+    return Specs(top: top, left: left, bottom: bottom, right: right)
+  }
+
+  /// Calculates the horizontal (left + right) spaces between the corresponding sides of two given `CGRect`s.
+  private static func horizontalSpecs(between rect1: CGRect,
+                                      and rect2: CGRect,
+                                      in bounds: CGRect) -> (left: CGFloat, right: CGFloat) {
     var left: CGFloat = 0
     var right: CGFloat = 0
+
+    if rect1.minX == rect2.minX, rect1.maxX == rect2.maxX {
+      left = 0
+      right = 0
+    } else if rect1.minX >= rect2.minX, rect1.maxX <= rect2.maxX {
+      left = rect1.minX - rect2.minX
+      right = rect2.maxX - rect1.maxX
+    } else if rect1.minX <= rect2.minX, rect1.maxX >= rect2.maxX {
+      left = rect2.minX - rect1.minX
+      right = rect1.maxX - rect2.maxX
+    } else if rect1.minX > rect2.minX {
+      left = 0
+      right = bounds.width - (rect1.width + rect2.width)
+    } else {
+      left = bounds.width - (rect1.width + rect2.width)
+      right = 0
+    }
+
+    return (left, right)
+  }
+
+  /// Calculates the vertical (top + bottom) spaces between the corresponding sides of two given `CGRect`s.
+  private static func verticalSpecs(between rect1: CGRect,
+                                    and rect2: CGRect,
+                                    in bounds: CGRect) -> (top: CGFloat, bottom: CGFloat) {
     var top: CGFloat = 0
     var bottom: CGFloat = 0
 
-    let hSpacing = bounds.width - (from.width + to.width)
-    let vSpacing = bounds.height - (from.height + to.height)
-
-    // calculating left + right specs
-    if (to.minX == from.minX) && (to.maxX == from.maxX) {
-      right = 0
-      left = 0
-    } else if (from.minX >= to.minX) && (from.maxX <= to.maxX) {
-      left = from.minX - to.minX
-      right = to.maxX - from.maxX
-    } else if (to.minX >= from.minX) && (to.maxX <= from.maxX) {
-      left = to.minX - from.minX
-      right = from.maxX - to.maxX
-    } else if to.minX < from.minX {
-      left = 0
-      right = hSpacing
-    } else {
-      left = hSpacing
-      right = 0
-    }
-
-    if (to.minY == from.minY) && (to.maxY == from.maxY) {
+    if rect1.minY == rect2.minY, rect1.maxY == rect2.maxY {
       top = 0
       bottom = 0
-    } else if (from.minY >= to.minY) && (from.maxY <= to.maxY) {
-      top = from.minY - to.minY
-      bottom = to.maxY - from.maxY
-    } else if (to.minY >= from.minY) && (to.maxY <= from.maxY) {
-      top = to.minY - from.minY
-      bottom = from.maxY - to.maxY
-    } else if to.minY < from.minY {
+    } else if rect1.minY >= rect2.minY, rect1.maxY <= rect2.maxY {
+      top = rect1.minY - rect2.minY
+      bottom = rect2.maxY - rect1.maxY
+    } else if rect1.minY <= rect2.minY, rect1.maxY >= rect2.maxY {
+      top = rect2.minY - rect1.minY
+      bottom = rect1.maxY - rect2.maxY
+    } else if rect1.minY > rect2.minY {
       top = 0
-      bottom = vSpacing
+      bottom = bounds.height - (rect1.height + rect2.height)
     } else {
-      top = vSpacing
+      top = bounds.height - (rect1.height + rect2.height)
       bottom = 0
     }
 
-    return Specs(top: top, left: left, bottom: bottom, right: right)
+    return (top, bottom)
   }
 }

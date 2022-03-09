@@ -30,10 +30,10 @@ class DesignReviewContainerView: UIView {
     return view
   }()
 
-  /// 'primary' here just refers to MRU, if multiple views are highlighted
+  /// 'primary' here just refers to MRU, if multiple views are selected
   private var primaryView: DesignReviewSelectableView?
 
-  /// 'secondary' here just refers to LRU, if multiple views are highlighted
+  /// 'secondary' here just refers to LRU, if multiple views are selected
   private var secondaryView: DesignReviewSelectableView?
 
   // MARK: - Internal properties
@@ -77,7 +77,7 @@ class DesignReviewContainerView: UIView {
   }
 
   func refresh(animated: Bool = false) {
-    updateHighlights(animated: animated)
+    updateSelectionBorders(animated: animated)
 
     primaryView?.setNeedsDisplay()
     secondaryView?.setNeedsDisplay()
@@ -139,19 +139,19 @@ class DesignReviewContainerView: UIView {
 
     if !isPanning {
       viewModel.selectedReviewableIndices.reverse()
-      updateHighlights(animated: true)
+      updateSelectionBorders(animated: true)
     }
   }
 
   private func selectReviewable(at index: Int, animated: Bool = false) {
     viewModel.updateSelectedIndices(index: index, isPanning: isPanning)
-    updateHighlights(animated: animated)
+    updateSelectionBorders(animated: animated)
     feedbackGenerator.prepare()
     feedbackGenerator.impactOccurred()
   }
 
   /// Updates the border highlights around the currently selected view(s), and re-calculates specs if needed.
-  func updateHighlights(animated: Bool) {
+  func updateSelectionBorders(animated: Bool) {
     if animated {
       UIView.animate(withDuration: 0.3) { [weak self] in
         guard let self = self else { return }
@@ -185,8 +185,8 @@ class DesignReviewContainerView: UIView {
       UIView.animate(
         withDuration: 0.2,
         delay: 0,
-        usingSpringWithDamping: 0.9,
-        initialSpringVelocity: 1.1,
+        usingSpringWithDamping: 1,
+        initialSpringVelocity: 1,
         options: .beginFromCurrentState,
         animations: { [weak self] in
           self?.designReviewSpecContainerView.refreshLayoutContents()

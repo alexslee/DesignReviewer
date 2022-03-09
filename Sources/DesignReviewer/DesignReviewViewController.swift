@@ -94,7 +94,7 @@ extension DesignReviewViewController {
 
 extension DesignReviewViewController {
   private func setupViewModelBindings() {
-    viewModel.recalculateHighlights = { [weak self] in
+    viewModel.recalculateSelectionBorders = { [weak self] in
       guard let self = self else { return }
       self.designReviewContainerView.refresh(animated: true)
     }

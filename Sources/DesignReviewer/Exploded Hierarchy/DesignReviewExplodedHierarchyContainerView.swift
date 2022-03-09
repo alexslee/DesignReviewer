@@ -80,7 +80,7 @@ class DesignReviewExplodedHierarchyContainerView: UIView {
      */
 
     /*
-     Starting with our identity matrix:
+     We'll build our transformation matrix by starting with our identity matrix:
      _              _
     | 1   0   0   0  |
     |                |
@@ -95,7 +95,7 @@ class DesignReviewExplodedHierarchyContainerView: UIView {
     var initialTransformation = CATransform3DIdentity
 
     /*
-     m34 is the z-axis position of the view relative to the viewer - i.e., it controls the z-perspective.
+     m34 relates to the z-axis position of the view relative to the viewer - i.e., it controls the z-perspective.
      Think of it almost like moving the vanishing point you would draw on a piece of paper when doing
      perspective drawings. For more on why this particular entry in the matrix behaves this way, see here:
      https://thealexanderlee.com/blog/3d-transforms-on-ios-under-the-hood-part-2-perspective-shifts
@@ -112,10 +112,10 @@ class DesignReviewExplodedHierarchyContainerView: UIView {
     initialTransformation.m34 = -1 / 2000 * zoomScale
 
     /*
-     Rotate our initialTransformation matrix by xRotation radians, about [1 0 0]
-     (i.e. we are performing a rotation about the x-axis only, by the current value of that variable).
-     In essence, this is saying 'multiply initialTransformation by our new rotation vector'. How does
-     this look in our handy-dandy ASCII art? Well, glad you asked:
+     Add a rotation to our initialTransformation matrix, such that we will rotate each point by xRotation radians,
+     about [1 0 0] (i.e. we are performing a rotation about the x-axis only, by the current value of that
+     variable). In essence, this is saying 'multiply initialTransformation by our new rotation vector'. How does
+     a x-axis rotation itself look in our handy-dandy ASCII art? Well, glad you asked:
                         _                             _
                        | 1       0           0      0  |
                        |                               |
@@ -129,7 +129,7 @@ class DesignReviewExplodedHierarchyContainerView: UIView {
     let xRotatedMatrix = CATransform3DRotate(initialTransformation, xRotation, 1, 0, 0)
 
     /*
-     Now, take that rotated matrix and further rotate it by yRotation radians, about [0 1 0]
+     Now, take that rotated matrix and further tack on a rotation by yRotation radians, about [0 1 0]
      (i.e. we are performing a rotation about the y-axis only, by the current value of that variable).
      In essence, this is saying 'multiply xRotatedMatrix by our new rotation vector'. ASCII? Gotchu fam:
                         _                             _
@@ -146,7 +146,7 @@ class DesignReviewExplodedHierarchyContainerView: UIView {
 
     /*
      The last math we'll do is scale our matrix up/down to account for any zoom scale, via a simple
-     multiplication (recall that we began our calculations based on an identity matrix):
+     multiplication (recall that we began our calculations based on an identity matrix). Again, in ASCII:
                         _                 _
                        | s    0    0    0  |
                        |  x                |

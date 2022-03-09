@@ -16,7 +16,14 @@ import UIKit
  However, in order to appear in the inspector, it must either:
  1) be iterable in the view hierarchy/be visible on-screen (e.g. a UIButton, a UIStackView, etc.)
  2) be an attribute that is part of a different class that is inspected (e.g. a layout constraint
-    on a view)
+    on a view).
+
+ Currently provided `DesignReviewable` implementations:
+ - NSLayoutConstraint
+ - NSString
+ - UIColor
+ - UIImage
+ - UIView
  */
 public protocol DesignReviewable: AnyObject {
   /**

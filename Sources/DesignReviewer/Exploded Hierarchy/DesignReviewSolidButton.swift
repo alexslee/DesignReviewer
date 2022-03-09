@@ -1,5 +1,5 @@
 //
-//  SolidButton.swift
+//  DesignReviewSolidButton.swift
 //  
 //
 //  Created by Alex Lee on 3/3/22.
@@ -7,7 +7,7 @@
 
 import UIKit
 
-class SolidButton: UIButton {
+class DesignReviewSolidButton: UIButton {
   var isTemplate = true
 
   var buttonText: String? {

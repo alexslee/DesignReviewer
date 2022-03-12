@@ -26,6 +26,7 @@ class DesignReviewMutableAttribute: DesignReviewInspectorAttribute, Equatable {
 
   var isModifiable: Bool { modifier != nil }
   let modifierIncrementSize: Double
+  let modifierRange: ClosedRange<Double>?
   private(set) var modifier: ((Any) -> Void)?
 
   private(set) weak var reviewable: DesignReviewable?
@@ -35,13 +36,15 @@ class DesignReviewMutableAttribute: DesignReviewInspectorAttribute, Equatable {
        keyPath: String,
        reviewable: DesignReviewable,
        modifier: ((Any) -> Void)? = nil,
-       modifierIncrementSize: Double = 4) {
+       modifierIncrementSize: Double = 4,
+       modifierRange: ClosedRange<Double>? = nil) {
     self.title = title ?? keyPath.localizedCapitalized
     self.subtitle = subtitle
     self.keyPath = keyPath
     self.reviewable = reviewable
     self.modifier = modifier
     self.modifierIncrementSize = modifierIncrementSize
+    self.modifierRange = modifierRange
   }
 
   static func == (lhs: DesignReviewMutableAttribute, rhs: DesignReviewMutableAttribute) -> Bool {

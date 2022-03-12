@@ -265,6 +265,21 @@ extension UIView: DesignReviewable {
         self.tintColor = newColor
       }))
 
+    attributes[.styling]?.append(DesignReviewMutableAttribute(
+      title: "Opacity",
+      keyPath: "alpha",
+      reviewable: self,
+      modifier: { [weak self] newValue in
+        guard let self = self,
+          let rawAlpha = newValue as? Double else {
+            return
+        }
+
+        self.alpha = CGFloat(rawAlpha)
+      },
+      modifierIncrementSize: 0.1,
+      modifierRange: 0.1...1))
+
     attributes[.generalLayout]?.append(DesignReviewEnumAttribute<UIView.ContentMode>(
       title: "Content Mode",
       keyPath: "contentMode",

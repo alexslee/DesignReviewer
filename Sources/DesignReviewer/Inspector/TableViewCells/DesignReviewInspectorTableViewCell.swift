@@ -189,9 +189,16 @@ class DesignReviewInspectorTableViewCell: UITableViewCell {
       } else {
         let stepper = UIStepper()
 
-        stepper.minimumValue = -CGFloat.infinity
-        stepper.maximumValue = CGFloat.infinity
-        stepper.stepValue = (attribute as? DesignReviewMutableAttribute)?.modifierIncrementSize ?? Double(CGFloat.extraExtraSmall)
+        if let mutableAttr = attribute as? DesignReviewMutableAttribute {
+          stepper.stepValue = mutableAttr.modifierIncrementSize
+          stepper.minimumValue = mutableAttr.modifierRange?.lowerBound ?? -CGFloat.infinity
+          stepper.maximumValue = mutableAttr.modifierRange?.upperBound ?? CGFloat.infinity
+        } else {
+          stepper.stepValue = Double(CGFloat.extraExtraSmall)
+          stepper.minimumValue = -CGFloat.infinity
+          stepper.maximumValue = CGFloat.infinity
+        }
+
         stepper.value = number.doubleValue
         stepper.isEnabled = attribute.isModifiable
         stepper.alpha = attribute.isModifiable ? 1 : 0.5

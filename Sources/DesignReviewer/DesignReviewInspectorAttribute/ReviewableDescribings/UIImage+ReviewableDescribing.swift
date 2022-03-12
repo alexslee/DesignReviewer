@@ -12,7 +12,7 @@ extension UIImage.RenderingMode: ReviewableDescribing, CaseIterable {
     return [.alwaysOriginal, .alwaysTemplate, .automatic]
   }
 
-  var displayName: String {
+  public var displayName: String {
     switch self {
     case .alwaysOriginal:
       return "Always Original"

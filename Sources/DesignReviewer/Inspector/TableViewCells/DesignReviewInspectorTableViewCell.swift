@@ -40,10 +40,14 @@ class DesignReviewInspectorTableViewCell: UITableViewCell {
     clipsToBounds = true
     contentView.clipsToBounds = true
 
-    selectedBackgroundView = UIView()
-
     textLabel?.font = .body
     detailTextLabel?.font = .body
+
+    let selectedBackgroundView = UIView()
+    selectedBackgroundView.backgroundColor = UIColor(white: 0.0, alpha: 0.1)
+    self.selectedBackgroundView = selectedBackgroundView
+
+    backgroundColor = .monochrome0
   }
 
   override func prepareForReuse() {

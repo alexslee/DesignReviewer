@@ -13,7 +13,7 @@ extension UIView.ContentMode: ReviewableDescribing, CaseIterable {
             .redraw, .scaleAspectFill, .scaleToFill, .scaleAspectFit]
   }()
 
-  var displayName: String {
+  public var displayName: String {
     switch self {
     case .left:
       return "Left"
@@ -52,7 +52,7 @@ extension UIView.TintAdjustmentMode: ReviewableDescribing, CaseIterable {
     return [.automatic, .normal, .dimmed]
   }()
 
-  var displayName: String {
+  public var displayName: String {
     switch self {
     case .automatic:
       return "Automatic"

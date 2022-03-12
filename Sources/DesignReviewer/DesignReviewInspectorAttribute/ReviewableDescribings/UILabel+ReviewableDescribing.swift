@@ -13,7 +13,7 @@ extension NSLineBreakMode: ReviewableDescribing, CaseIterable {
             .byTruncatingTail, .byTruncatingMiddle, .byWordWrapping]
   }()
 
-  var displayName: String {
+  public var displayName: String {
     switch self {
     case .byCharWrapping:
       return "By Char Wrapping"
@@ -38,7 +38,7 @@ extension NSTextAlignment: ReviewableDescribing, CaseIterable {
     return [.center, .justified, .left, .natural, .right]
   }()
 
-  var displayName: String {
+  public var displayName: String {
     switch self {
     case .center:
       return "Center"

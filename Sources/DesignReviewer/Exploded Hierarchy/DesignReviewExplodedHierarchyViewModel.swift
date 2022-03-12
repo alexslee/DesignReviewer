@@ -8,10 +8,10 @@
 import Foundation
 
 class DesignReviewExplodedHierarchyViewModel {
-  weak var coordinator: DesignReviewCoordinator?
+  weak var coordinator: DesignReviewInspectorCoordinator?
   let rootReviewable: DesignReviewable
 
-  init(coordinator: DesignReviewCoordinator?, rootReviewable: DesignReviewable) {
+  init(coordinator: DesignReviewInspectorCoordinator?, rootReviewable: DesignReviewable) {
     self.coordinator = coordinator
     self.rootReviewable = rootReviewable
   }

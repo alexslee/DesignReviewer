@@ -13,14 +13,11 @@ import UIKit
  you wish (in response to a button press, a gesture, etc.).
  */
 public class DesignReviewer {
-  private static var coordinator: DesignReviewCoordinator = {
-    let viewModel = DesignReviewViewModel()
-    return DesignReviewCoordinator(viewModel: viewModel, appWindow: window)
-  }()
+  private static var coordinator: DesignReviewCoordinator?
 
-  private static var window: UIWindow?
+  internal static var window: UIWindow?
 
-  private static var customAttributes = [String: Set<DesignReviewCustomAttribute>]()
+  internal static var customAttributes = [String: Set<DesignReviewCustomAttribute>]()
 
   /**
    Spins up the `DesignReviewer`.
@@ -35,8 +32,19 @@ public class DesignReviewer {
    */
   public static func start(inAppWindow appWindow: UIWindow?) {
     window = appWindow
-    coordinator.userDefinedCustomAttributes = customAttributes
-    coordinator.start()
+    initializeCoordinatorIfNeededAndStart()
+  }
+
+  private static func initializeCoordinatorIfNeededAndStart() {
+    guard coordinator == nil else {
+      coordinator?.start()
+      return
+    }
+
+    let viewModel = DesignReviewViewModel()
+    coordinator = DesignReviewCoordinator(viewModel: viewModel, appWindow: window)
+    coordinator?.userDefinedCustomAttributes = customAttributes
+    coordinator?.start()
   }
 
   /**
@@ -46,8 +54,9 @@ public class DesignReviewer {
    method directly. The tool can already be dismissed by double-tapping on the floating eye itself.
    */
   public static func finish() {
-    coordinator.finish()
-    coordinator.userDefinedCustomAttributes.removeAll()
+    coordinator?.finish()
+    coordinator?.userDefinedCustomAttributes.removeAll()
+    coordinator = nil
     window = nil
   }
 

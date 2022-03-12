@@ -8,7 +8,7 @@
 import Foundation
 
 /// Protocol that any enum must conform to if it is to be displayed in the inspector VC's table.
-protocol ReviewableDescribing {
+protocol ReviewableDescribing: DesignReviewAttributeOptionSelectable {
   var displayName: String { get }
 }
 
@@ -29,16 +29,27 @@ class DesignReviewEnumAttribute<T>: DesignReviewInspectorAttribute,
     return enumRep.displayName
   }
 
+  var isModifiable: Bool { modifier != nil }
+  var isAlertable: Bool { isModifiable }
+
+  private(set) var modifier: ((Any) -> Void)?
+
+  var alertableOptions: [DesignReviewAttributeOptionSelectable] {
+    T.allCases.compactMap({ $0 as DesignReviewAttributeOptionSelectable })
+  }
+
   private(set) weak var reviewable: DesignReviewable?
 
   init(title: String?,
        subtitle: String? = nil,
        keyPath: String,
-       reviewable: DesignReviewable) {
+       reviewable: DesignReviewable,
+       modifier: ((Any) -> Void)? = nil) {
     self.title = title ?? keyPath.capitalized
     self.subtitle = subtitle
     self.keyPath = keyPath
     self.reviewable = reviewable
+    self.modifier = modifier
   }
 
   static func == (lhs: DesignReviewEnumAttribute<T>, rhs: DesignReviewEnumAttribute<T>) -> Bool {

@@ -14,7 +14,7 @@ extension NSLayoutConstraint.Attribute: ReviewableDescribing, CaseIterable {
             .right, .rightMargin, .top, .topMargin, .trailing, .trailingMargin, .width]
   }()
 
-  var displayName: String {
+  public var displayName: String {
     switch self {
     case .bottom:
       return "Bottom"
@@ -69,7 +69,7 @@ extension NSLayoutConstraint.Axis: ReviewableDescribing, CaseIterable {
     return [.horizontal, .vertical]
   }()
 
-  var displayName: String {
+  public var displayName: String {
     switch self {
     case .horizontal:
       return "Horizontal"
@@ -86,7 +86,7 @@ extension NSLayoutConstraint.Relation: ReviewableDescribing, CaseIterable {
     return []
   }()
 
-  var displayName: String {
+  public var displayName: String {
     switch self {
     case .equal:
       return "="

@@ -62,6 +62,12 @@ class DesignReviewViewController: UIViewController {
 
     designReviewContainerView.refresh()
   }
+
+  override func dismiss(animated flag: Bool, completion: (() -> Void)? = nil) {
+    super.dismiss(animated: flag, completion: completion)
+
+    viewModel.cleanSlateIfNeeded()
+  }
 }
 
 // MARK: - Gesture handlers
@@ -69,7 +75,7 @@ class DesignReviewViewController: UIViewController {
 extension DesignReviewViewController {
   @objc private func doubleTappedHUD() {
     designReviewContainerView.resetSelectableViews()
-    viewModel.coordinator?.dismissReviewHUD()
+    DesignReviewer.finish()
   }
 
   @objc private func panhandler(_ gestureRecognizer: UIPanGestureRecognizer) {

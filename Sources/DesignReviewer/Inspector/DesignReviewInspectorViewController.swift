@@ -48,7 +48,7 @@ class DesignReviewInspectorViewController: UIViewController {
   private lazy var explodedHierarchyViewController: DesignReviewExplodedHierarchyViewController? = {
     guard let reviewable = viewModel.reviewable else { return nil }
 
-    guard let root = viewModel.coordinator?.appWindow else { return nil }
+    guard let root = DesignReviewer.window else { return nil }
 
     let explodedViewModel = DesignReviewExplodedHierarchyViewModel(
       coordinator: viewModel.coordinator,
@@ -105,6 +105,12 @@ class DesignReviewInspectorViewController: UIViewController {
     }
   }
 
+  override func viewDidDisappear(_ animated: Bool) {
+    super.viewDidDisappear(animated)
+
+    viewModel.close()
+  }
+
   // MARK: - Helpers
 
   private func layoutExplodedHierarchyIfNecessary() {
@@ -148,20 +154,38 @@ class DesignReviewInspectorViewController: UIViewController {
     let convertedPoint = sender.location(in: tableView)
 
     if let indexPath = tableView.indexPathForRow(at: convertedPoint),
-     let attribute = viewModel.attribute(for: indexPath),
-     let colorValue = attribute.value as? UIColor {
-      viewModel.showColorPicker(initialColor: colorValue, changeHandler: { [weak self] newColor in
-        guard let self = self else { return }
+     let attribute = viewModel.attribute(for: indexPath) {
+      if let colorValue = attribute.value as? UIColor {
+        viewModel.showColorPicker(initialColor: colorValue, changeHandler: { [weak self] newColor in
+          guard let self = self else { return }
 
-        (attribute as? DesignReviewMutableAttribute)?.modifier?(newColor)
+          attribute.modifier?(newColor)
 
-        if let screenshotSectionIndex = self.viewModel.refreshScreenshot() {
-          let screenshotIndexPath = IndexPath(row: 0, section: screenshotSectionIndex)
-          self.tableView.reloadRows(at: [screenshotIndexPath, indexPath], with: .none)
-        } else {
-          self.tableView.reloadRows(at: [indexPath], with: .none)
-        }
-      })
+          if let screenshotSectionIndex = self.viewModel.refreshScreenshot() {
+            let screenshotIndexPath = IndexPath(row: 0, section: screenshotSectionIndex)
+            self.tableView.reloadRows(at: [screenshotIndexPath, indexPath], with: .none)
+          } else {
+            self.tableView.reloadRows(at: [indexPath], with: .none)
+          }
+        })
+      } else {
+        viewModel.showAlertIfPossible(for: attribute, in: self, changeHandler: { [weak self] newValue in
+          guard let self = self else { return }
+
+          attribute.modifier?(newValue)
+
+          if let cell = self.tableView.cellForRow(at: indexPath) as? DesignReviewInspectorTableViewCell {
+            cell.refreshTextOnly(attribute: attribute)
+          }
+
+          if let screenshotSectionIndex = self.viewModel.refreshScreenshot() {
+            let screenshotIndexPath = IndexPath(row: 0, section: screenshotSectionIndex)
+            self.tableView.reloadRows(at: [screenshotIndexPath, indexPath], with: .none)
+          } else {
+            self.tableView.reloadRows(at: [indexPath], with: .none)
+          }
+        })
+      }
     }
   }
 }

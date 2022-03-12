@@ -47,7 +47,7 @@ enum DesignReviewInspectorSegmentedIndex: Int {
 }
 
 class DesignReviewInspectorViewModel {
-  weak var coordinator: DesignReviewCoordinator?
+  weak var coordinator: DesignReviewInspectorCoordinator?
   private(set) weak var reviewable: DesignReviewable?
   private(set) var sections = [DesignReviewInspectorSection]()
   private var allSections = [DesignReviewInspectorSection]()
@@ -107,6 +107,32 @@ class DesignReviewInspectorViewModel {
     if let value = attribute.value as? DesignReviewable, value !== reviewable {
       coordinator?.presentDesignReview(for: value)
     }
+  }
+
+  func close() {
+    coordinator?.finish()
+  }
+
+  func showAlertIfPossible(for attribute: DesignReviewInspectorAttribute,
+                           in context: UIViewController,
+                           changeHandler: ((Any) -> Void)?) {
+    guard attribute.isAlertable else { return }
+
+    var initialOption: DesignReviewAttributeOptionSelectable?
+    if let value = attribute.value as? String { // enum attributes should be casted to strings for value
+      initialOption = attribute.alertableOptions.first(where: { $0.displayName == value })
+    }
+
+    let newViewModel = DesignReviewSuboptimalAlertOptionsViewModel(
+      title: attribute.title,
+      subtitle: nil,
+      options: attribute.alertableOptions,
+      initialOption: initialOption,
+      onOptionChosen: { newOption in
+        changeHandler?(newOption)
+    })
+
+    coordinator?.showAlert(viewModel: newViewModel, in: context)
   }
 
   func showColorPicker(initialColor: UIColor, changeHandler: ((UIColor) -> Void)?) {
@@ -195,10 +221,6 @@ class DesignReviewInspectorViewModel {
     sections[section].isExpanded.toggle()
 
     return sections[section].isExpanded
-  }
-
-  func toggleHUDVisibility(_ isVisible: Bool) {
-    coordinator?.toggleHUDVisibility(isVisible)
   }
 
   private func accountForUserDefinedCustomAttributes(_ attributes: Set<DesignReviewCustomAttribute>?) {

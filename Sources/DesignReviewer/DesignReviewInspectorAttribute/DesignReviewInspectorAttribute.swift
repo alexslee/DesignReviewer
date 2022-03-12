@@ -64,6 +64,27 @@ public protocol DesignReviewInspectorAttribute: CustomStringConvertible {
 
   /// Whether or not the attribute can be mutated (requires the attribute to have a dedicated closure to handle the change).
   var isModifiable: Bool { get }
+
+  /// Closure to mutate the attribute (nil for immutable values and unsupported mutables+enums).
+  var modifier: ((Any) -> Void)? { get }
+
+  /// Whether or not the attribute can be mutated via an alert (requires the attribute to have a dedicated closure to
+  /// handle the change).
+  var isAlertable: Bool { get }
+
+  /// List of options for the alert (requires the attribute to have `isAlertable = true`).
+  var alertableOptions: [DesignReviewAttributeOptionSelectable] { get }
+}
+
+// MARK: - Default implementations
+
+extension DesignReviewInspectorAttribute {
+  public var isModifiable: Bool { false }
+  public var isAlertable: Bool { false }
+
+  public var modifier: ((Any) -> Void)? { nil }
+
+  public var alertableOptions: [DesignReviewAttributeOptionSelectable] { [] }
 }
 
 // MARK: - CustomStringConvertible
@@ -79,10 +100,4 @@ extension DesignReviewInspectorAttribute {
 
     return "\(title) – \(keyPath) | " + valueStr
   }
-}
-
-// MARK: - Default implementation
-
-extension DesignReviewInspectorAttribute {
-  var isModifiable: Bool { false }
 }

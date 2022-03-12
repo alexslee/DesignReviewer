@@ -283,7 +283,16 @@ extension UIView: DesignReviewable {
     attributes[.generalLayout]?.append(DesignReviewEnumAttribute<UIView.ContentMode>(
       title: "Content Mode",
       keyPath: "contentMode",
-      reviewable: self))
+      reviewable: self,
+      modifier: { [weak self] newValue in
+        guard let self = self,
+          let newContentMode = newValue as? UIView.ContentMode else {
+            return
+        }
+
+        self.contentMode = newContentMode
+      }))
+
     attributes[.generalLayout]?.append(DesignReviewMutableAttribute(
       title: "Safe Area Insets",
       keyPath: "safeAreaInsets",
@@ -401,7 +410,15 @@ extension UIView: DesignReviewable {
       attributes[.styling]?.append(DesignReviewEnumAttribute<NSLayoutConstraint.Axis>(
         title: "Stack Axis",
         keyPath: "axis",
-        reviewable: self))
+        reviewable: self,
+        modifier: { [weak self] newValue in
+          guard let self = self,
+            let newAxis = newValue as? NSLayoutConstraint.Axis else {
+              return
+          }
+
+          (self as? UIStackView)?.axis = newAxis
+        }))
       attributes[.styling]?.append(DesignReviewEnumAttribute<UIStackView.Distribution>(
         title: "Stack Distribution",
         keyPath: "distribution",

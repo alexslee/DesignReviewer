@@ -9,7 +9,16 @@ import Foundation
 import os.log
 import UIKit
 
-class DesignReviewCoordinator: NSObject {
+internal struct DesignReviewColorPickerSessionObserver {
+  let initialColor: UIColor
+  let changeHandler: ((UIColor) -> Void)?
+}
+
+class DesignReviewCoordinator: NSObject, DesignReviewCoordinatorProtocol {
+  let coordinatorID = UUID()
+  var children = [DesignReviewCoordinatorProtocol]()
+  weak var parent: DesignReviewCoordinatorProtocol?
+
   private let viewModel: DesignReviewViewModel
 
   private(set) var appWindow: UIWindow?
@@ -17,11 +26,6 @@ class DesignReviewCoordinator: NSObject {
   private var window: UIWindow?
 
   var userDefinedCustomAttributes = [String: Set<DesignReviewCustomAttribute>]()
-
-  private struct DesignReviewColorPickerSessionObserver {
-    let initialColor: UIColor
-    let changeHandler: ((UIColor) -> Void)?
-  }
 
   private var currentColorPickerObserver: DesignReviewColorPickerSessionObserver?
 
@@ -60,6 +64,8 @@ class DesignReviewCoordinator: NSObject {
       Self.isPresenting = false
       // wipe indices clean s.t. a subsequent open wouldn't draw rects where the views may no longer exist
       self?.viewModel.selectedReviewableIndices.removeAll()
+
+      self?.children.removeAll()
     })
   }
 
@@ -92,41 +98,22 @@ class DesignReviewCoordinator: NSObject {
   }
 
   func presentDesignReview(for reviewable: DesignReviewable) {
+    guard let rootViewController = window?.rootViewController else { return }
+
     let customAttributes = userDefinedCustomAttributes[String(describing: reviewable.classForCoder)]
 
     let inspectorViewModel = DesignReviewInspectorViewModel(reviewable: reviewable,
                                                             userDefinedCustomAttributes: customAttributes)
-    let viewController = DesignReviewInspectorViewController(viewModel: inspectorViewModel)
 
-    inspectorViewModel.coordinator = self
+    rootViewController.definesPresentationContext = true
 
-    if let navigationController = window?.rootViewController?.presentedViewController as? UINavigationController {
-      navigationController.pushViewController(viewController, animated: true)
-      return
-    }
+    let router = DesignReviewInspectorRouter(viewController: rootViewController)
+    let coordinator = DesignReviewInspectorCoordinator(viewModel: inspectorViewModel, router: router)
 
-    window?.rootViewController?.definesPresentationContext = true
+    coordinator.parent = self
+    children.append(coordinator)
 
-    let newNavController = UINavigationController(rootViewController: viewController)
-    window?.rootViewController?.present(newNavController, animated: true)
-    newNavController.presentationController?.delegate = self
-  }
-
-  func showColorPicker(initialColor: UIColor, changeHandler: ((UIColor) -> Void)?) {
-    guard #available(iOS 14, *) else { return }
-    let pickerViewController = UIColorPickerViewController()
-    pickerViewController.view.backgroundColor = .background
-    pickerViewController.selectedColor = initialColor
-
-    pickerViewController.delegate = self
-
-    currentColorPickerObserver = DesignReviewColorPickerSessionObserver(initialColor: initialColor,
-                                                                        changeHandler: changeHandler)
-
-    if let navigationController = window?.rootViewController?.presentedViewController as? UINavigationController {
-      navigationController.pushViewController(pickerViewController, animated: true)
-      return
-    }
+    coordinator.start()
   }
 
   private func refreshSelectionBorders() {
@@ -144,27 +131,4 @@ extension DesignReviewCoordinator: UIAdaptivePresentationControllerDelegate {
   func presentationControllerDidDismiss(_ presentationController: UIPresentationController) {
     refreshSelectionBorders()
   }
-}
-
-// MARK: - UIColorPickerViewControllerDelegate
-
-@available(iOS 14, *)
-extension DesignReviewCoordinator: UIColorPickerViewControllerDelegate {
-  func colorPickerViewControllerDidFinish(_ viewController: UIColorPickerViewController) {
-    currentColorPickerObserver = nil
-  }
-
-  func colorPickerViewControllerDidSelectColor(_ viewController: UIColorPickerViewController) {
-    if viewController.selectedColor != currentColorPickerObserver?.initialColor {
-      currentColorPickerObserver?.changeHandler?(viewController.selectedColor)
-    }
-  }
-
-  func colorPickerViewController(_ viewController: UIColorPickerViewController,
-                                 didSelect color: UIColor,
-                                 continuously: Bool) {
-      if color != currentColorPickerObserver?.initialColor {
-        currentColorPickerObserver?.changeHandler?(color)
-      }
-    }
 }

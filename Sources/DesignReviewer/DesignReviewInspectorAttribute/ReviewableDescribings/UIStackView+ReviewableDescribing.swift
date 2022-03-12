@@ -12,7 +12,7 @@ extension UIStackView.Alignment: ReviewableDescribing, CaseIterable {
     return [.bottom, .center, .fill, .firstBaseline, .lastBaseline, .leading, .top, .trailing]
   }()
 
-  var displayName: String {
+  public var displayName: String {
     switch self {
     case .bottom:
       return "Bottom"
@@ -41,7 +41,7 @@ extension UIStackView.Distribution: ReviewableDescribing, CaseIterable {
     return [.equalCentering, .equalSpacing, .fill, .fillEqually, .fillProportionally]
   }()
 
-  var displayName: String {
+  public var displayName: String {
     switch self {
     case .equalCentering:
       return "Equal Centering"

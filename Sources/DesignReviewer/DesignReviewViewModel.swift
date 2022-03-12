@@ -70,6 +70,10 @@ class DesignReviewViewModel {
 
     selectedReviewableIndices.append(index)
   }
+
+  func cleanSlateIfNeeded() {
+    coordinator?.removeAllChildren()
+  }
 }
 
 // MARK: - Helpers

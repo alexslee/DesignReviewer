@@ -17,8 +17,16 @@ public protocol DesignReviewAttributeOptionSelectable {
 protocol DesignReviewSuboptimalAlertViewModelProtocol {
   var title: String { get }
   var subtitle: String? { get }
+  var onOptionChosen: ((Any) -> Void)? { get }
+}
 
-  var onOptionChosen: ((DesignReviewAttributeOptionSelectable) -> Void)? { get }
+struct DesignReviewSuboptimalAlertTextViewModel: DesignReviewSuboptimalAlertViewModelProtocol {
+  private(set) var title: String
+  private(set) var subtitle: String?
+
+  private(set) var initialValue: String
+
+  private(set) var onOptionChosen: ((Any) -> Void)?
 }
 
 struct DesignReviewSuboptimalAlertOptionsViewModel: DesignReviewSuboptimalAlertViewModelProtocol {
@@ -28,7 +36,7 @@ struct DesignReviewSuboptimalAlertOptionsViewModel: DesignReviewSuboptimalAlertV
   private(set) var options: [DesignReviewAttributeOptionSelectable]
   private(set) var initialOption: DesignReviewAttributeOptionSelectable?
 
-  private(set) var onOptionChosen: ((DesignReviewAttributeOptionSelectable) -> Void)?
+  private(set) var onOptionChosen: ((Any) -> Void)?
 }
 
 class DesignReviewSuboptimalAlertViewController: UIViewController {
@@ -36,6 +44,8 @@ class DesignReviewSuboptimalAlertViewController: UIViewController {
     let view = DesignReviewSuboptimalAlertView(viewModel: viewModel)
     view.translatesAutoresizingMaskIntoConstraints = false
     view.okayButton.addTarget(self, action: #selector(okayDokay), for: .touchUpInside)
+
+    view.delegate = self
 
     return view
   }()
@@ -54,6 +64,10 @@ class DesignReviewSuboptimalAlertViewController: UIViewController {
     modalPresentationStyle = .overCurrentContext
     modalTransitionStyle = .crossDissolve
     view.backgroundColor = .black.withAlphaComponent(0.5)
+  }
+
+  override var canBecomeFirstResponder: Bool {
+    viewModel is DesignReviewSuboptimalAlertTextViewModel
   }
 
   override func viewDidLoad() {
@@ -75,13 +89,29 @@ class DesignReviewSuboptimalAlertViewController: UIViewController {
       suboptimalAlertView.bottomAnchor.constraint(lessThanOrEqualTo: view.safeAreaLayoutGuide.bottomAnchor,
                                                   constant: -.large)
     ])
+
+    if canBecomeFirstResponder {
+      becomeFirstResponder()
+    }
   }
 
   @objc private func okayDokay() {
     if let newOption = suboptimalAlertView.selectedOption {
       viewModel.onOptionChosen?(newOption)
+    } else if let newText = suboptimalAlertView.textView.text {
+      viewModel.onOptionChosen?(newText)
     }
 
+    resignFirstResponder()
+
     dismiss(animated: true, completion: nil)
+  }
+}
+
+extension DesignReviewSuboptimalAlertViewController: DesignReviewSuboptimalAlertViewDelegate {
+  func alertView(_ alertView: DesignReviewSuboptimalAlertView, valueDidChange newValue: Any?) {
+    guard let newValue = newValue else { return }
+
+    viewModel.onOptionChosen?(newValue)
   }
 }

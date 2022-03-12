@@ -20,7 +20,6 @@ import UIKit
 
  Currently provided `DesignReviewable` implementations:
  - NSLayoutConstraint
- - NSString
  - UIColor
  - UIImage
  - UIView

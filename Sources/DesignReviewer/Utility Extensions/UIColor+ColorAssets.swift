@@ -19,6 +19,7 @@ extension UIColor {
   static var background: UIColor { color(named: "background") }
 
   static var monochrome0: UIColor { color(named: "monochrome0") }
+  static var monochrome1: UIColor { color(named: "monochrome1") }
   static var monochrome2: UIColor { color(named: "monochrome2") }
   static var monochrome4: UIColor { color(named: "monochrome4") }
   static var monochrome5: UIColor { color(named: "monochrome5") }

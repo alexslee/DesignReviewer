@@ -8,7 +8,13 @@
 import Foundation
 import UIKit
 
+protocol DesignReviewSuboptimalAlertViewDelegate: AnyObject {
+  func alertView(_ alertView: DesignReviewSuboptimalAlertView, valueDidChange newValue: Any?)
+}
+
 class DesignReviewSuboptimalAlertView: UIView {
+  static let tableCellHeight: CGFloat = .extraLarge
+
   private lazy var containerStackView: UIStackView = {
     let stack = UIStackView()
     stack.axis = .vertical
@@ -32,6 +38,24 @@ class DesignReviewSuboptimalAlertView: UIView {
     let label = UILabel()
     label.font = .body
     return label
+  }()
+
+  private(set) lazy var textView: UITextView = {
+    let view = UITextView()
+    view.backgroundColor = .monochrome1
+    view.font = .body
+    view.isEditable = true
+    view.isScrollEnabled = true
+    view.layer.borderColor = UIColor.monochrome2.cgColor
+    view.layer.borderWidth = 1
+    view.layer.cornerRadius = .extraExtraSmall
+    view.keyboardType = .default
+    view.textColor = .monochrome5
+    view.translatesAutoresizingMaskIntoConstraints = false
+
+    view.delegate = self
+
+    return view
   }()
 
   private(set) lazy var tableView: UITableView = {
@@ -79,6 +103,16 @@ class DesignReviewSuboptimalAlertView: UIView {
   }()
 
   private let viewModel: DesignReviewSuboptimalAlertViewModelProtocol
+
+  private var optionsViewModel: DesignReviewSuboptimalAlertOptionsViewModel? {
+    viewModel as? DesignReviewSuboptimalAlertOptionsViewModel
+  }
+
+  private var textViewModel: DesignReviewSuboptimalAlertTextViewModel? {
+    viewModel as? DesignReviewSuboptimalAlertTextViewModel
+  }
+
+  weak var delegate: DesignReviewSuboptimalAlertViewDelegate?
   private(set) var selectedOption: DesignReviewAttributeOptionSelectable?
 
   required init?(coder aDecoder: NSCoder) {
@@ -130,6 +164,21 @@ class DesignReviewSuboptimalAlertView: UIView {
       idealHeight.isActive = true
 
       containerStackView.addArrangedSubview(okayButton)
+    } else if let textViewModel = textViewModel {
+      textView.text = textViewModel.initialValue
+
+      containerStackView.addArrangedSubview(textView)
+
+      let maxHeight = textView.heightAnchor.constraint(lessThanOrEqualTo: safeAreaLayoutGuide.heightAnchor)
+      maxHeight.priority = .required
+      maxHeight.isActive = true
+
+      let idealHeight = textView.heightAnchor.constraint(
+        equalToConstant: textView.sizeThatFits(safeAreaLayoutGuide.layoutFrame.size).height)
+      idealHeight.priority = UILayoutPriority(999)
+      idealHeight.isActive = true
+
+      containerStackView.addArrangedSubview(okayButton)
     }
   }
 }
@@ -137,12 +186,6 @@ class DesignReviewSuboptimalAlertView: UIView {
 // MARK: - UITableViewDataSource
 
 extension DesignReviewSuboptimalAlertView: UITableViewDataSource {
-  static let tableCellHeight: CGFloat = .extraLarge
-
-  private var optionsViewModel: DesignReviewSuboptimalAlertOptionsViewModel? {
-    viewModel as? DesignReviewSuboptimalAlertOptionsViewModel
-  }
-
   func numberOfSections(in tableView: UITableView) -> Int { 1 }
 
   func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -187,6 +230,8 @@ extension DesignReviewSuboptimalAlertView: UITableViewDelegate {
 
     selectedOption = optionsViewModel.options[indexPath.row]
     tableView.cellForRow(at: indexPath)?.accessoryType = .checkmark
+
+    delegate?.alertView(self, valueDidChange: selectedOption)
   }
 
   func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
@@ -217,3 +262,8 @@ extension DesignReviewSuboptimalAlertView: UITableViewDelegate {
   }
 }
 
+extension DesignReviewSuboptimalAlertView: UITextViewDelegate {
+  func textViewDidChange(_ textView: UITextView) {
+    delegate?.alertView(self, valueDidChange: textView.text)
+  }
+}

@@ -118,19 +118,30 @@ class DesignReviewInspectorViewModel {
                            changeHandler: ((Any) -> Void)?) {
     guard attribute.isAlertable else { return }
 
-    var initialOption: DesignReviewAttributeOptionSelectable?
-    if let value = attribute.value as? String { // enum attributes should be casted to strings for value
-      initialOption = attribute.alertableOptions.first(where: { $0.displayName == value })
-    }
+    let newViewModel: DesignReviewSuboptimalAlertViewModelProtocol
+    if attribute is DesignReviewMutableAttribute, let initialValue = attribute.value as? String {
+      newViewModel = DesignReviewSuboptimalAlertTextViewModel(
+        title: attribute.title,
+        subtitle: nil,
+        initialValue: initialValue,
+        onOptionChosen: { newOption in
+          changeHandler?(newOption)
+        })
+    } else {
+      var initialOption: DesignReviewAttributeOptionSelectable?
+      if let value = attribute.value as? String { // enum attributes should be casted to strings for value
+        initialOption = attribute.alertableOptions.first(where: { $0.displayName == value })
+      }
 
-    let newViewModel = DesignReviewSuboptimalAlertOptionsViewModel(
-      title: attribute.title,
-      subtitle: nil,
-      options: attribute.alertableOptions,
-      initialOption: initialOption,
-      onOptionChosen: { newOption in
-        changeHandler?(newOption)
-    })
+      newViewModel = DesignReviewSuboptimalAlertOptionsViewModel(
+        title: attribute.title,
+        subtitle: nil,
+        options: attribute.alertableOptions,
+        initialOption: initialOption,
+        onOptionChosen: { newOption in
+          changeHandler?(newOption)
+        })
+    }
 
     coordinator?.showAlert(viewModel: newViewModel, in: context)
   }

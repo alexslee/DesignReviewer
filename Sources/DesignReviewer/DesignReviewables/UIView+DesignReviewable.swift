@@ -354,7 +354,16 @@ extension UIView: DesignReviewable {
       attributes[.typography]?.append(DesignReviewMutableAttribute(
         title: "Text",
         keyPath: "text",
-        reviewable: self))
+        reviewable: self,
+        modifier: { [weak self] newValue in
+          guard let self = self,
+            let newText = newValue as? String else {
+              return
+          }
+
+          (self as? UILabel)?.text = newText
+        },
+      shouldModifyViaAlert: true))
       attributes[.typography]?.append(DesignReviewMutableAttribute(
         title: "Attributed Text",
         keyPath: "attributedText",

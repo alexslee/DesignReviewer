@@ -40,7 +40,7 @@ An example of this functionality is provided in the sample project.
 - [x] Make color attributes editable
 - [x] Add ability for client to provide additional inspectable attributes for any given `DesignReviewable`
   - Note: for now, these custom attributes must be KVC-compliant properties on the `DesignReviewable` types
-- [ ] Make text attributes editable
+- [x] Make text attributes editable
 - [ ] Refine position of the constraint padding labels
 - [ ] Bump min version target up from 12 ("soon :tm:")
 - [ ] Properly center the 3D hierarchy rects, rather than just converting the views' rects to the 3D hierarchy coordinate space and using those relative positions

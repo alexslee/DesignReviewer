@@ -49,6 +49,7 @@ class DesignReviewSuboptimalAlertView: UIView {
     view.rowHeight = UITableView.automaticDimension
     view.sectionFooterHeight = 0
     view.sectionHeaderHeight = 0
+    view.allowsMultipleSelection = false
 
     view.translatesAutoresizingMaskIntoConstraints = false
 
@@ -112,7 +113,9 @@ class DesignReviewSuboptimalAlertView: UIView {
   }
 
   private func setupAlertContents() {
-    if viewModel is DesignReviewSuboptimalAlertOptionsViewModel {
+    if let optionsViewModel = optionsViewModel {
+      selectedOption = optionsViewModel.initialOption
+
       containerStackView.addArrangedSubview(tableView)
 
       tableView.widthAnchor.constraint(equalTo: safeAreaLayoutGuide.widthAnchor).isActive = true
@@ -122,7 +125,7 @@ class DesignReviewSuboptimalAlertView: UIView {
       maxHeight.isActive = true
 
       let idealHeight = tableView.heightAnchor.constraint(
-        equalToConstant: DesignReviewSuboptimalAlertView.tableCellHeight * CGFloat(optionsViewModel?.options.count ?? 0))
+        equalToConstant: DesignReviewSuboptimalAlertView.tableCellHeight * CGFloat(optionsViewModel.options.count))
       idealHeight.priority = UILayoutPriority(999)
       idealHeight.isActive = true
 
@@ -158,10 +161,14 @@ extension DesignReviewSuboptimalAlertView: UITableViewDataSource {
 
     cell.textLabel?.text = optionsViewModel.options[indexPath.row].displayName
 
+    if selectedOption?.displayName == optionsViewModel.options[indexPath.row].displayName {
+      cell.accessoryType = .checkmark
+    } else {
+      cell.accessoryType = .none
+    }
+
     return cell
   }
-
-  func tableView(_ tableView: UITableView, shouldHighlightRowAt indexPath: IndexPath) -> Bool { true }
 }
 
 // MARK: - UITableViewDelegate
@@ -173,7 +180,40 @@ extension DesignReviewSuboptimalAlertView: UITableViewDelegate {
       return
     }
 
+    if let selectedRow = optionsViewModel.options.firstIndex(where: { $0.displayName == selectedOption?.displayName }),
+     selectedRow != indexPath.row {
+      _ = self.tableView(self.tableView, willDeselectRowAt: IndexPath(row: selectedRow, section: 0))
+    }
+
     selectedOption = optionsViewModel.options[indexPath.row]
+    tableView.cellForRow(at: indexPath)?.accessoryType = .checkmark
+  }
+
+  func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+    guard let optionsViewModel = optionsViewModel,
+      indexPath.row < optionsViewModel.options.count else {
+      return
+    }
+
+    if selectedOption?.displayName == optionsViewModel.options[indexPath.row].displayName {
+      tableView.selectRow(at: indexPath, animated: false, scrollPosition: .none)
+      self.tableView(self.tableView, didSelectRowAt: indexPath)
+    } else {
+      tableView.deselectRow(at: indexPath, animated: false)
+      _ = self.tableView(self.tableView, willDeselectRowAt: indexPath)
+    }
+  }
+
+  func tableView(_ tableView: UITableView, shouldHighlightRowAt indexPath: IndexPath) -> Bool { true }
+
+  func tableView(_ tableView: UITableView, willDeselectRowAt indexPath: IndexPath) -> IndexPath? {
+    guard let optionsViewModel = optionsViewModel,
+      indexPath.row < optionsViewModel.options.count else {
+      return nil
+    }
+
+    tableView.cellForRow(at: indexPath)?.accessoryType = .none
+    return indexPath
   }
 }
 

@@ -9,10 +9,6 @@ import Foundation
 import UIKit
 
 extension NSLayoutConstraint: DesignReviewable {
-  func labelCopy() -> String {
-    return "Constraint of \(String(describing: firstItem)) to \(String(describing: secondItem))"
-  }
-
   public func createReviewableAttributes() -> [DesignReviewInspectorAttributeGroup: [DesignReviewInspectorAttribute]] {
     var attributes = [DesignReviewInspectorAttributeGroup: [DesignReviewInspectorAttribute]]()
 
@@ -46,10 +42,7 @@ extension NSLayoutConstraint: DesignReviewable {
       keyPath: "relation",
       reviewable: self))
 
-    // build list of constraint metadata
-    attributes[.generalLayout] = [DesignReviewInspectorAttribute]()
-
-    attributes[.generalLayout]?.append(DesignReviewMutableAttribute(
+    attributes[.general]?.append(DesignReviewMutableAttribute(
       title: "Constant",
       keyPath: "constant",
       reviewable: self,
@@ -63,12 +56,12 @@ extension NSLayoutConstraint: DesignReviewable {
       }
     ))
 
-    attributes[.generalLayout]?.append(DesignReviewMutableAttribute(
+    attributes[.general]?.append(DesignReviewMutableAttribute(
       title: "Multiplier",
       keyPath: "multiplier",
       reviewable: self))
 
-    attributes[.generalLayout]?.append(DesignReviewMutableAttribute(
+    attributes[.general]?.append(DesignReviewMutableAttribute(
       title: "Priority",
       keyPath: "priority",
       reviewable: self))

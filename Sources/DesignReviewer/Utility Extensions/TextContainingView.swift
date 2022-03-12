@@ -9,10 +9,39 @@ import Foundation
 import UIKit
 
 /// Convenience wrapper to quickly identify system views that contain text
-protocol TextContainingView: UIView {}
+protocol TextContainingView: UIView {
+  var sneakPeek: String { get }
+  var sneakPeekBuilder: String { get }
+}
 
-extension UILabel: TextContainingView {}
+extension TextContainingView {
+  static var sneakPeekLength: Int { 10 }
 
-extension UITextView: TextContainingView {}
+  var sneakPeek: String {
+    "'" + sneakPeekBuilder + "'"
+  }
+}
 
-extension UITextField: TextContainingView {}
+extension UILabel: TextContainingView {
+  var sneakPeekBuilder: String { (text ?? "").truncatedSelfWithTail }
+}
+
+extension UITextView: TextContainingView {
+  var sneakPeekBuilder: String { (text ?? "").truncatedSelfWithTail }
+}
+
+extension UITextField: TextContainingView {
+  var sneakPeekBuilder: String { (text ?? "").truncatedSelfWithTail }
+}
+
+extension UIButton: TextContainingView {
+  var sneakPeekBuilder: String { (title(for: .normal) ?? "").truncatedSelfWithTail }
+}
+
+private extension String {
+  var truncatedSelfWithTail: String {
+    guard count > UILabel.sneakPeekLength else { return self }
+
+    return String(prefix(UILabel.sneakPeekLength)) + "..."
+  }
+}

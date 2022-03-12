@@ -32,8 +32,10 @@ class DesignReviewInspectorTableViewCell: UITableViewCell {
     super.init(style: .value1, reuseIdentifier: reuseIdentifier)
 
     indentationWidth = .medium
-    textLabel?.numberOfLines = 0
+    textLabel?.numberOfLines = 3
+    textLabel?.lineBreakMode = .byTruncatingTail
     detailTextLabel?.numberOfLines = 2
+    detailTextLabel?.lineBreakMode = .byTruncatingTail
 
     clipsToBounds = true
     contentView.clipsToBounds = true
@@ -157,6 +159,8 @@ class DesignReviewInspectorTableViewCell: UITableViewCell {
       text = "\(value.count)"
     case let value as NSAttributedString:
       text = value.string
+    case let value as NSLayoutConstraint:
+      text = value.summaryDescription
     case let number as NSNumber:
       let formatter = NumberFormatter()
       formatter.minimumIntegerDigits = 1

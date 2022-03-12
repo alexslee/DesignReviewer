@@ -81,6 +81,24 @@ extension UIView: DesignReviewable {
     }
   }
 
+  private var actualRelatedConstraints: Set<NSLayoutConstraint> {
+    var constraintList = [NSLayoutConstraint]()
+    var parent = self.superview
+    while let superview = parent {
+      for constraint in superview.constraints {
+        if let first = constraint.firstItem as? UIView, first == self {
+          constraintList.append(constraint)
+        } else if let second = constraint.secondItem as? UIView, second == self {
+          constraintList.append(constraint)
+        }
+      }
+
+      parent = superview.superview
+    }
+
+    return Set(constraintList)
+  }
+
   public func createReviewableAttributes()
   -> [DesignReviewInspectorAttributeGroup: [DesignReviewInspectorAttribute]] {
     var attributes = [DesignReviewInspectorAttributeGroup: [DesignReviewInspectorAttribute]]()
@@ -267,17 +285,10 @@ extension UIView: DesignReviewable {
       reviewable: self))
 
     if !translatesAutoresizingMaskIntoConstraints {
-      for constraint in constraintsAffectingLayout(for: .horizontal) {
+      for constraint in actualRelatedConstraints {
         attributes[.constraints]?.append(DesignReviewImmutableAttribute(
-          title: constraint.labelCopy(),
+          title: constraint.summaryDisplayName,
           keyPath: "horizontalConstraints",
-          value: constraint))
-      }
-
-      for constraint in constraintsAffectingLayout(for: .vertical) {
-        attributes[.constraints]?.append(DesignReviewImmutableAttribute(
-          title: constraint.labelCopy(),
-          keyPath: "verticalConstraints",
           value: constraint))
       }
     }

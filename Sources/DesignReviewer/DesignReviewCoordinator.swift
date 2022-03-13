@@ -122,13 +122,3 @@ class DesignReviewCoordinator: NSObject, DesignReviewCoordinatorProtocol {
     viewModel.toggleHUDVisibility?(isVisible)
   }
 }
-
-// MARK: - UIAdaptivePresentationControllerDelegate
-
-extension DesignReviewCoordinator: UIAdaptivePresentationControllerDelegate {
-  func presentationControllerDidDismiss(_ presentationController: UIPresentationController) {
-    refreshSelectionBorders()
-
-    removeAllChildren()
-  }
-}

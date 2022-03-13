@@ -97,31 +97,6 @@ extension DesignReviewViewController {
   }
 }
 
-extension DesignReviewViewController: UIAdaptivePresentationControllerDelegate {
-  func presentationControllerDidDismiss(_ presentationController: UIPresentationController) {
-    designReviewContainerView.refresh(animated: true)
-    viewModel.coordinator?.removeAllChildren()
-  }
-}
-
-extension DesignReviewViewController: UINavigationControllerDelegate {
-  func navigationController(_ navigationController: UINavigationController,
-                            willShow viewController: UIViewController,
-                            animated: Bool) {
-
-    if #available(iOS 14, *), viewController is UIColorPickerViewController {
-      return
-    } else if viewController is DesignReviewInspectorViewController {
-      return
-    }
-
-    dismiss(animated: true, completion: {
-      self.designReviewContainerView.refresh(animated: true)
-      self.viewModel.coordinator?.removeAllChildren()
-    })
-  }
-}
-
 // MARK: - Helpers
 
 extension DesignReviewViewController {
@@ -164,5 +139,34 @@ extension DesignReviewViewController: DesignReviewContainerViewDelegate {
 
   func didEnd(in container: DesignReviewContainerView) {
     toggleHUDVisibility(hidden: false, animated: true)
+  }
+}
+
+// MARK: - UIAdaptivePresentationControllerDelegate
+
+extension DesignReviewViewController: UIAdaptivePresentationControllerDelegate {
+  func presentationControllerDidDismiss(_ presentationController: UIPresentationController) {
+    designReviewContainerView.refresh(animated: true)
+    viewModel.coordinator?.removeAllChildren()
+  }
+}
+
+// MARK: - UINavigationControllerDelegate
+
+extension DesignReviewViewController: UINavigationControllerDelegate {
+  func navigationController(_ navigationController: UINavigationController,
+                            willShow viewController: UIViewController,
+                            animated: Bool) {
+
+    if #available(iOS 14, *), viewController is UIColorPickerViewController {
+      return
+    } else if viewController is DesignReviewInspectorViewController {
+      return
+    }
+
+    dismiss(animated: true, completion: {
+      self.designReviewContainerView.refresh(animated: true)
+      self.viewModel.coordinator?.removeAllChildren()
+    })
   }
 }

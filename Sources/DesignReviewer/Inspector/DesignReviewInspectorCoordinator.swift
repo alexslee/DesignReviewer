@@ -128,13 +128,3 @@ extension DesignReviewInspectorCoordinator: UIColorPickerViewControllerDelegate 
     }
   }
 }
-
-extension DesignReviewInspectorCoordinator: UIAdaptivePresentationControllerDelegate {
-  func presentationControllerWillDismiss(_ presentationController: UIPresentationController) {
-    parent?.removeAllChildren()
-  }
-
-  func presentationControllerDidDismiss(_ presentationController: UIPresentationController) {
-    parent?.removeAllChildren()
-  }
-}

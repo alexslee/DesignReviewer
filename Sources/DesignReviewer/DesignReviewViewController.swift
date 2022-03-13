@@ -63,10 +63,11 @@ class DesignReviewViewController: UIViewController {
     designReviewContainerView.refresh()
   }
 
-  override func dismiss(animated flag: Bool, completion: (() -> Void)? = nil) {
-    super.dismiss(animated: flag, completion: completion)
+  override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+    super.viewWillTransition(to: size, with: coordinator)
 
-    viewModel.cleanSlateIfNeeded()
+    // naive way to ensure HUD remains on screen is to just re-center on rotation/size change
+    designReviewHUD.center = CGPoint(x: size.width / 2, y: size.height / 2)
   }
 }
 
@@ -93,6 +94,31 @@ extension DesignReviewViewController {
 
   @objc private func tappedHUD() {
     viewModel.startDesignReview()
+  }
+}
+
+extension DesignReviewViewController: UIAdaptivePresentationControllerDelegate {
+  func presentationControllerDidDismiss(_ presentationController: UIPresentationController) {
+    designReviewContainerView.refresh(animated: true)
+    viewModel.coordinator?.removeAllChildren()
+  }
+}
+
+extension DesignReviewViewController: UINavigationControllerDelegate {
+  func navigationController(_ navigationController: UINavigationController,
+                            willShow viewController: UIViewController,
+                            animated: Bool) {
+
+    if #available(iOS 14, *), viewController is UIColorPickerViewController {
+      return
+    } else if viewController is DesignReviewInspectorViewController {
+      return
+    }
+
+    dismiss(animated: true, completion: {
+      self.designReviewContainerView.refresh(animated: true)
+      self.viewModel.coordinator?.removeAllChildren()
+    })
   }
 }
 

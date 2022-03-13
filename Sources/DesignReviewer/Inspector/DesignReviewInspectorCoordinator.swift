@@ -9,23 +9,31 @@ import Foundation
 import UIKit
 
 class DesignReviewInspectorRouter {
-  private(set) weak var viewController: UIViewController?
+  private(set) var viewController: UIViewController
 
   init(viewController: UIViewController) {
     self.viewController = viewController
   }
 
   func beginInspection(_ viewController: UIViewController) {
-    if let navController = self.viewController?.presentedViewController as? UINavigationController {
+    if let navController = self.viewController.presentedViewController as? UINavigationController {
       navController.pushViewController(viewController, animated: true)
     } else {
-      let newNavController = UINavigationController(rootViewController: viewController)
-      self.viewController?.present(newNavController, animated: true)
+      let newNavController = UINavigationController(rootViewController: UIViewController())
+      newNavController.presentationController?.delegate = self.viewController as? UIAdaptivePresentationControllerDelegate
+      newNavController.delegate = self.viewController as? UINavigationControllerDelegate
+
+      newNavController.pushViewController(viewController, animated: false)
+      self.viewController.present(newNavController, animated: true)
     }
   }
 
   func pushIfPossible(_ viewController: UIViewController) {
-    (viewController as? UINavigationController)?.pushViewController(viewController, animated: true)
+    if let currentAsNav = viewController as? UINavigationController {
+      currentAsNav.pushViewController(viewController, animated: true)
+    } else if let presentedAsNav = self.viewController.presentedViewController as? UINavigationController {
+      presentedAsNav.pushViewController(viewController, animated: true)
+    }
   }
 }
 
@@ -52,24 +60,18 @@ class DesignReviewInspectorCoordinator: NSObject, DesignReviewCoordinatorProtoco
     router.beginInspection(viewController)
   }
 
-  func finish() {
-    guard children.isEmpty else { return }
-
-    parent?.removeAllChildren()
-  }
-
   func showAlert(viewModel: DesignReviewSuboptimalAlertViewModelProtocol,
                  in viewController: UIViewController) {
-    let router = DesignReviewSuboptimalAlertRouter(viewController: viewController)
-    let coordinator = DesignReviewSuboptimalAlertCoordinator(viewModel: viewModel,
-                                                             router: router)
+    let newRouter = DesignReviewSuboptimalAlertRouter(viewController: viewController)
+    let newCoordinator = DesignReviewSuboptimalAlertCoordinator(viewModel: viewModel, router: newRouter)
 
-    children.append(coordinator)
-    coordinator.start()
+    newCoordinator.parent = self
+    children.append(newCoordinator)
+    newCoordinator.start()
   }
 
   func presentDesignReview(for reviewable: DesignReviewable) {
-    guard let currentContext = router.viewController else { return }
+    let currentContext = router.viewController
     let customAttributes = DesignReviewer.customAttributes[String(describing: reviewable.classForCoder)]
 
     let newViewModel = DesignReviewInspectorViewModel(
@@ -106,6 +108,10 @@ class DesignReviewInspectorCoordinator: NSObject, DesignReviewCoordinatorProtoco
 extension DesignReviewInspectorCoordinator: UIColorPickerViewControllerDelegate {
   func colorPickerViewControllerDidFinish(_ viewController: UIColorPickerViewController) {
     currentColorPickerObserver = nil
+
+    for child in children {
+      child.parent = self
+    }
   }
 
   func colorPickerViewControllerDidSelectColor(_ viewController: UIColorPickerViewController) {
@@ -120,5 +126,15 @@ extension DesignReviewInspectorCoordinator: UIColorPickerViewControllerDelegate 
     if color != currentColorPickerObserver?.initialColor {
       currentColorPickerObserver?.changeHandler?(color)
     }
+  }
+}
+
+extension DesignReviewInspectorCoordinator: UIAdaptivePresentationControllerDelegate {
+  func presentationControllerWillDismiss(_ presentationController: UIPresentationController) {
+    parent?.removeAllChildren()
+  }
+
+  func presentationControllerDidDismiss(_ presentationController: UIPresentationController) {
+    parent?.removeAllChildren()
   }
 }

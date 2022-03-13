@@ -113,6 +113,12 @@ class DesignReviewInspectorViewModel {
     coordinator?.finish()
   }
 
+  func closeForGood() {
+    allSections.removeAll()
+    sections.removeAll()
+    coordinator?.finish()
+  }
+
   func showAlertIfPossible(for attribute: DesignReviewInspectorAttribute,
                            in context: UIViewController,
                            changeHandler: ((Any) -> Void)?) {
@@ -156,9 +162,9 @@ class DesignReviewInspectorViewModel {
       let filteredIndex = sections.firstIndex(where: { $0.title == .screenshot }) else {
         return nil
     }
-    view.layoutSubviews()
+    view.layoutIfNeeded()
     let newScreenshot = view.polaroidSelfie()
-    let oldSection = allSections[index]
+    let oldSection = sections[filteredIndex]
 
     let newSection = DesignReviewInspectorSection(
       isExpanded: oldSection.isExpanded,

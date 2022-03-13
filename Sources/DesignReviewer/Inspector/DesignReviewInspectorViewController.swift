@@ -100,15 +100,16 @@ class DesignReviewInspectorViewController: UIViewController {
   override func viewWillDisappear(_ animated: Bool) {
     super.viewWillDisappear(animated)
 
+    // if this view controller is being popped, the nav controller will already have updated its list
+    // of vcs, so we can check + manage memory for that case here
+    if navigationController?.viewControllers.firstIndex(of: self) == nil {
+      viewModel.close()
+      return
+    }
+
     if let reviewable = viewModel.reviewable {
       title = String(describing: reviewable.classForCoder)
     }
-  }
-
-  override func viewDidDisappear(_ animated: Bool) {
-    super.viewDidDisappear(animated)
-
-    viewModel.close()
   }
 
   // MARK: - Helpers
@@ -167,6 +168,8 @@ class DesignReviewInspectorViewController: UIViewController {
           } else {
             self.tableView.reloadRows(at: [indexPath], with: .none)
           }
+
+          self.reconstructExplodedHierarchy()
         })
       } else {
         viewModel.showAlertIfPossible(for: attribute, in: self, changeHandler: { [weak self] newValue in
@@ -174,19 +177,21 @@ class DesignReviewInspectorViewController: UIViewController {
 
           attribute.modifier?(newValue)
 
-          if let cell = self.tableView.cellForRow(at: indexPath) as? DesignReviewInspectorTableViewCell {
-            cell.refreshTextOnly(attribute: attribute)
-          }
-
           if let screenshotSectionIndex = self.viewModel.refreshScreenshot() {
             let screenshotIndexPath = IndexPath(row: 0, section: screenshotSectionIndex)
             self.tableView.reloadRows(at: [screenshotIndexPath, indexPath], with: .none)
           } else {
             self.tableView.reloadRows(at: [indexPath], with: .none)
           }
+
+          self.reconstructExplodedHierarchy()
         })
       }
     }
+  }
+
+  private func reconstructExplodedHierarchy() {
+    explodedHierarchyViewController?.reconstructExplodedHierarchy()
   }
 }
 
@@ -227,6 +232,8 @@ extension DesignReviewInspectorViewController: DesignReviewInspectorTableViewCel
     if let screenshotSectionIndex = viewModel.refreshScreenshot() {
       tableView.reloadRows(at: [IndexPath(row: 0, section: screenshotSectionIndex)], with: .none)
     }
+
+    self.reconstructExplodedHierarchy()
   }
 }
 
@@ -292,10 +299,12 @@ extension DesignReviewInspectorViewController: UITableViewDataSource {
         return nil
     }
 
+    header.delegate = self
+
     header.configure(section: section,
                      title: viewModel.titleForSection(section),
-                     delegate: self,
                      isExpandable: true)
+
     header.expand(viewModel.expandedStateForSection(section))
 
     return header

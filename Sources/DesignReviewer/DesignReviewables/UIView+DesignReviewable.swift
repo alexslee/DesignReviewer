@@ -361,22 +361,57 @@ extension UIView: DesignReviewable {
               return
           }
 
+          if let button = self.superview as? UIButton {
+            button.setTitle(newText, for: .normal)
+            (self as? UILabel)?.text = newText
+            return
+          }
+
           (self as? UILabel)?.text = newText
         },
       shouldModifyViaAlert: true))
+
       attributes[.typography]?.append(DesignReviewMutableAttribute(
         title: "Attributed Text",
         keyPath: "attributedText",
-        reviewable: self))
+        reviewable: self,
+        modifier: { [weak self] newValue in
+          guard let self = self,
+            let newText = newValue as? String,
+            let currentString = (self as? UILabel)?.attributedText as? NSMutableAttributedString else {
+              return
+          }
+
+          currentString.mutableString.setString(newText)
+          (self as? UILabel)?.attributedText = currentString
+        },
+      shouldModifyViaAlert: true))
 
       attributes[.typography]?.append(DesignReviewEnumAttribute<NSLineBreakMode>(
         title: "LineBreakMode",
         keyPath: "lineBreakMode",
-        reviewable: self))
+        reviewable: self,
+        modifier: { [weak self] newValue in
+          guard let self = self,
+            let newBreakMode = newValue as? NSLineBreakMode else {
+              return
+          }
+
+          (self as? UILabel)?.lineBreakMode = newBreakMode
+        }))
+
       attributes[.typography]?.append(DesignReviewEnumAttribute<NSTextAlignment>(
         title: "Text Alignment",
         keyPath: "textAlignment",
-        reviewable: self))
+        reviewable: self,
+        modifier: { [weak self] newValue in
+          guard let self = self,
+            let newAlignment = newValue as? NSTextAlignment else {
+              return
+          }
+
+          (self as? UILabel)?.textAlignment = newAlignment
+        }))
 
       attributes[.typography]?.append(DesignReviewMutableAttribute(
         title: "Text Color",
@@ -415,7 +450,16 @@ extension UIView: DesignReviewable {
       attributes[.styling]?.append(DesignReviewEnumAttribute<UIStackView.Alignment>(
         title: "Stack Alignment",
         keyPath: "alignment",
-        reviewable: self))
+        reviewable: self,
+        modifier: { [weak self] newValue in
+          guard let self = self,
+            let newAlignment = newValue as? UIStackView.Alignment else {
+              return
+          }
+
+          (self as? UIStackView)?.alignment = newAlignment
+        }))
+
       attributes[.styling]?.append(DesignReviewEnumAttribute<NSLayoutConstraint.Axis>(
         title: "Stack Axis",
         keyPath: "axis",
@@ -428,10 +472,20 @@ extension UIView: DesignReviewable {
 
           (self as? UIStackView)?.axis = newAxis
         }))
+
       attributes[.styling]?.append(DesignReviewEnumAttribute<UIStackView.Distribution>(
         title: "Stack Distribution",
         keyPath: "distribution",
-        reviewable: self))
+        reviewable: self,
+        modifier: { [weak self] newValue in
+          guard let self = self,
+            let newDistribution = newValue as? UIStackView.Distribution else {
+              return
+          }
+
+          (self as? UIStackView)?.distribution = newDistribution
+        }))
+
       attributes[.styling]?.append(DesignReviewMutableAttribute(
         title: "Stack Spacing",
         keyPath: "spacing",

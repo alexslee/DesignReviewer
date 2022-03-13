@@ -14,36 +14,12 @@ public protocol DesignReviewAttributeOptionSelectable {
   var displayName: String { get }
 }
 
-protocol DesignReviewSuboptimalAlertViewModelProtocol {
-  var title: String { get }
-  var subtitle: String? { get }
-  var onOptionChosen: ((Any) -> Void)? { get }
-}
-
-struct DesignReviewSuboptimalAlertTextViewModel: DesignReviewSuboptimalAlertViewModelProtocol {
-  private(set) var title: String
-  private(set) var subtitle: String?
-
-  private(set) var initialValue: String
-
-  private(set) var onOptionChosen: ((Any) -> Void)?
-}
-
-struct DesignReviewSuboptimalAlertOptionsViewModel: DesignReviewSuboptimalAlertViewModelProtocol {
-  private(set) var title: String
-  private(set) var subtitle: String?
-
-  private(set) var options: [DesignReviewAttributeOptionSelectable]
-  private(set) var initialOption: DesignReviewAttributeOptionSelectable?
-
-  private(set) var onOptionChosen: ((Any) -> Void)?
-}
-
 class DesignReviewSuboptimalAlertViewController: UIViewController {
   private lazy var suboptimalAlertView: DesignReviewSuboptimalAlertView = {
     let view = DesignReviewSuboptimalAlertView(viewModel: viewModel)
     view.translatesAutoresizingMaskIntoConstraints = false
     view.okayButton.addTarget(self, action: #selector(okayDokay), for: .touchUpInside)
+    view.notOkayButton.addTarget(self, action: #selector(thanksButNoThanks), for: .touchUpInside)
 
     view.delegate = self
 
@@ -95,11 +71,30 @@ class DesignReviewSuboptimalAlertViewController: UIViewController {
     }
   }
 
+  override func viewDidDisappear(_ animated: Bool) {
+    super.viewDidDisappear(animated)
+
+    viewModel.coordinator?.finish()
+  }
+
   @objc private func okayDokay() {
     if let newOption = suboptimalAlertView.selectedOption {
       viewModel.onOptionChosen?(newOption)
     } else if let newText = suboptimalAlertView.textView.text {
       viewModel.onOptionChosen?(newText)
+    }
+
+    resignFirstResponder()
+
+    dismiss(animated: true, completion: nil)
+  }
+
+  @objc private func thanksButNoThanks() {
+    if let viewModel = viewModel as? DesignReviewSuboptimalAlertOptionsViewModel,
+       let initialOption = viewModel.initialOption {
+      viewModel.onOptionChosen?(initialOption)
+    } else if let viewModel = viewModel as? DesignReviewSuboptimalAlertTextViewModel {
+      viewModel.onOptionChosen?(viewModel.initialValue)
     }
 
     resignFirstResponder()

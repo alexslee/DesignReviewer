@@ -26,12 +26,13 @@ class DesignReviewSuboptimalAlertCoordinator: DesignReviewCoordinatorProtocol {
   weak var parent: DesignReviewCoordinatorProtocol?
 
   private let router: DesignReviewSuboptimalAlertRouter
-  private let viewModel: DesignReviewSuboptimalAlertViewModelProtocol
+  private var viewModel: DesignReviewSuboptimalAlertViewModelProtocol
 
   init(viewModel: DesignReviewSuboptimalAlertViewModelProtocol,
        router: DesignReviewSuboptimalAlertRouter) {
     self.router = router
     self.viewModel = viewModel
+    self.viewModel.coordinator = self
   }
 
   func start() {

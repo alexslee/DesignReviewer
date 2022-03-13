@@ -188,7 +188,7 @@ class DesignReviewInspectorTableViewCell: UITableViewCell {
 
         sonOfASwitch.addTarget(self, action: #selector(accessoryInteracted), for: .valueChanged)
 
-        attributeModifier = (attribute as? DesignReviewMutableAttribute)?.modifier
+        attributeModifier = attribute.modifier
         accessoryView = sonOfASwitch
       } else {
         let stepper = UIStepper()
@@ -208,7 +208,7 @@ class DesignReviewInspectorTableViewCell: UITableViewCell {
         stepper.alpha = attribute.isModifiable ? 1 : 0.5
 
         stepper.addTarget(self, action: #selector(accessoryInteracted), for: .valueChanged)
-        attributeModifier = (attribute as? DesignReviewMutableAttribute)?.modifier
+        attributeModifier = attribute.modifier
         accessoryView = stepper
       }
     case let value as NSValue:

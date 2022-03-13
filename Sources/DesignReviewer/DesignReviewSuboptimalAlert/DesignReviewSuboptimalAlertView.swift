@@ -15,6 +15,16 @@ protocol DesignReviewSuboptimalAlertViewDelegate: AnyObject {
 class DesignReviewSuboptimalAlertView: UIView {
   static let tableCellHeight: CGFloat = .extraLarge
 
+  private lazy var buttonStackView: UIStackView = {
+    let stack = UIStackView()
+    stack.axis = .horizontal
+    stack.distribution = .fillEqually
+    stack.alignment = .fill
+    stack.spacing = .extraSmall
+
+    return stack
+  }()
+
   private lazy var containerStackView: UIStackView = {
     let stack = UIStackView()
     stack.axis = .vertical
@@ -29,6 +39,17 @@ class DesignReviewSuboptimalAlertView: UIView {
   lazy var okayButton: DesignReviewSolidButton = {
     let button = DesignReviewSolidButton(buttonText: "Aight")
     button.translatesAutoresizingMaskIntoConstraints = false
+
+    button.heightAnchor.constraint(equalToConstant: 52).isActive = true
+    return button
+  }()
+
+  lazy var notOkayButton: DesignReviewSolidButton = {
+    let button = DesignReviewSolidButton(buttonText: "Nah")
+
+    button.translatesAutoresizingMaskIntoConstraints = false
+    button.backgroundColor = .clear
+    button.setTitleColor(.primary3, for: .normal)
 
     button.heightAnchor.constraint(equalToConstant: 52).isActive = true
     return button
@@ -86,6 +107,7 @@ class DesignReviewSuboptimalAlertView: UIView {
   private lazy var titleLabel: UILabel = {
     let label = UILabel()
     label.font = .header
+    label.setContentCompressionResistancePriority(.required, for: .vertical)
     return label
   }()
 
@@ -93,8 +115,7 @@ class DesignReviewSuboptimalAlertView: UIView {
     let stack = UIStackView()
     stack.axis = .vertical
     stack.distribution = .equalCentering
-    stack.spacing = .extraSmall
-    stack.translatesAutoresizingMaskIntoConstraints = false
+    stack.spacing = .extraExtraSmall
     stack.isLayoutMarginsRelativeArrangement = true
 
     stack.layoutMargins = UIEdgeInsets(top: 0, left: .extraSmall, bottom: 0, right: .extraSmall)
@@ -144,6 +165,11 @@ class DesignReviewSuboptimalAlertView: UIView {
     NSLayoutConstraint.activate(containerStackView.constraints(toView: self, withInsets: insets))
 
     setupAlertContents()
+
+    buttonStackView.addArrangedSubview(okayButton)
+    buttonStackView.addArrangedSubview(notOkayButton)
+
+    containerStackView.addArrangedSubview(buttonStackView)
   }
 
   private func setupAlertContents() {
@@ -162,8 +188,6 @@ class DesignReviewSuboptimalAlertView: UIView {
         equalToConstant: DesignReviewSuboptimalAlertView.tableCellHeight * CGFloat(optionsViewModel.options.count))
       idealHeight.priority = UILayoutPriority(999)
       idealHeight.isActive = true
-
-      containerStackView.addArrangedSubview(okayButton)
     } else if let textViewModel = textViewModel {
       textView.text = textViewModel.initialValue
 
@@ -177,8 +201,6 @@ class DesignReviewSuboptimalAlertView: UIView {
         equalToConstant: textView.sizeThatFits(safeAreaLayoutGuide.layoutFrame.size).height)
       idealHeight.priority = UILayoutPriority(999)
       idealHeight.isActive = true
-
-      containerStackView.addArrangedSubview(okayButton)
     }
   }
 }

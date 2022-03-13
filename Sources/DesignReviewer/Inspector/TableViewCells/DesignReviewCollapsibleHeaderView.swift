@@ -88,10 +88,8 @@ class DesignReviewCollapsibleHeaderView: UITableViewHeaderFooterView {
 
   func configure(section: Int,
                  title: String,
-                 delegate: DesignReviewCollapsibleHeaderViewDelegate,
                  isExpandable: Bool = true) {
     tag = section
-    self.delegate = delegate
     label.text = title
 
     imageView.isHidden = !isExpandable

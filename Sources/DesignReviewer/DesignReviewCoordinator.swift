@@ -105,15 +105,13 @@ class DesignReviewCoordinator: NSObject, DesignReviewCoordinatorProtocol {
     let inspectorViewModel = DesignReviewInspectorViewModel(reviewable: reviewable,
                                                             userDefinedCustomAttributes: customAttributes)
 
-    rootViewController.definesPresentationContext = true
+    let newRouter = DesignReviewInspectorRouter(viewController: rootViewController)
+    let newCoordinator = DesignReviewInspectorCoordinator(viewModel: inspectorViewModel, router: newRouter)
 
-    let router = DesignReviewInspectorRouter(viewController: rootViewController)
-    let coordinator = DesignReviewInspectorCoordinator(viewModel: inspectorViewModel, router: router)
+    newCoordinator.parent = self
+    children.append(newCoordinator)
 
-    coordinator.parent = self
-    children.append(coordinator)
-
-    coordinator.start()
+    newCoordinator.start()
   }
 
   private func refreshSelectionBorders() {
@@ -130,5 +128,7 @@ class DesignReviewCoordinator: NSObject, DesignReviewCoordinatorProtocol {
 extension DesignReviewCoordinator: UIAdaptivePresentationControllerDelegate {
   func presentationControllerDidDismiss(_ presentationController: UIPresentationController) {
     refreshSelectionBorders()
+
+    removeAllChildren()
   }
 }

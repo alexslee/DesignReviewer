@@ -138,6 +138,10 @@ class DesignReviewExplodedHierarchyViewController: UIViewController {
     container.jumpStart()
   }
 
+  func reconstructExplodedHierarchy() {
+    container.reconstructExplodedHierarchy()
+  }
+
   @objc private func sliderNoSliding(_ slider: UISlider) {
     container.updateSpacing(slider.value)
   }

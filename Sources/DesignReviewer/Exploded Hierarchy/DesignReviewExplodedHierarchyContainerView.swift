@@ -61,6 +61,14 @@ class DesignReviewExplodedHierarchyContainerView: UIView {
     addGestureRecognizer(movePan)
   }
 
+  func reconstructExplodedHierarchy() {
+    for view in subviews {
+      view.removeFromSuperview()
+    }
+
+    jumpStart()
+  }
+
   // Should wait until the parent view controller is done whatever transition (present, push), otherwise
   // animations could clash and the runtime won't like you
   func jumpStart() {

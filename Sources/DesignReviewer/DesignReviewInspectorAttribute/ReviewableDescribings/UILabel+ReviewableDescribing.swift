@@ -7,7 +7,7 @@
 
 import UIKit
 
-extension NSLineBreakMode: ReviewableDescribing, CaseIterable {
+extension NSLineBreakMode: ReviewableDescribing {
   public static var allCases: [NSLineBreakMode] = {
     return [.byCharWrapping, .byClipping, .byTruncatingHead,
             .byTruncatingTail, .byTruncatingMiddle, .byWordWrapping]
@@ -33,7 +33,7 @@ extension NSLineBreakMode: ReviewableDescribing, CaseIterable {
   }
 }
 
-extension NSTextAlignment: ReviewableDescribing, CaseIterable {
+extension NSTextAlignment: ReviewableDescribing {
   public static var allCases: [NSTextAlignment] = {
     return [.center, .justified, .left, .natural, .right]
   }()

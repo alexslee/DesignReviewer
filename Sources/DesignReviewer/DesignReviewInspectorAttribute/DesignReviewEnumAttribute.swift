@@ -8,14 +8,13 @@
 import Foundation
 
 /// Protocol that any enum must conform to if it is to be displayed in the inspector VC's table.
-protocol ReviewableDescribing: DesignReviewAttributeOptionSelectable {
+public protocol ReviewableDescribing: DesignReviewAttributeOptionSelectable, CaseIterable, Hashable, RawRepresentable {
   var displayName: String { get }
 }
 
 /// Pretty much the same as a dynamic attribute, but for an enum value.
 class DesignReviewEnumAttribute<T>: DesignReviewInspectorAttribute,
-                                    Equatable where T: CaseIterable & Hashable & RawRepresentable & ReviewableDescribing,
-                                        T.RawValue == Int {
+                                    Equatable where T: ReviewableDescribing, T.RawValue == Int {
   let keyPath: String
   let subtitle: String?
   let title: String

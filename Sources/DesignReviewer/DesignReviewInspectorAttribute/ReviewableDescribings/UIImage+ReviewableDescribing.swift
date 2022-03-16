@@ -7,7 +7,7 @@
 
 import UIKit
 
-extension UIImage.RenderingMode: ReviewableDescribing, CaseIterable {
+extension UIImage.RenderingMode: ReviewableDescribing {
   public static var allCases: [UIImage.RenderingMode] {
     return [.alwaysOriginal, .alwaysTemplate, .automatic]
   }

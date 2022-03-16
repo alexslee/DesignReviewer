@@ -7,7 +7,7 @@
 
 import UIKit
 
-extension NSLayoutConstraint.Attribute: ReviewableDescribing, CaseIterable {
+extension NSLayoutConstraint.Attribute: ReviewableDescribing {
   public static var allCases: [NSLayoutConstraint.Attribute] = {
     return [.bottom, .bottomMargin, .centerX, .centerXWithinMargins, .centerY, .centerYWithinMargins,
             .firstBaseline, .height, .lastBaseline, .leading, .leadingMargin, .left, .leftMargin, .notAnAttribute,
@@ -64,7 +64,7 @@ extension NSLayoutConstraint.Attribute: ReviewableDescribing, CaseIterable {
   }
 }
 
-extension NSLayoutConstraint.Axis: ReviewableDescribing, CaseIterable {
+extension NSLayoutConstraint.Axis: ReviewableDescribing {
   public static var allCases: [NSLayoutConstraint.Axis] = {
     return [.horizontal, .vertical]
   }()
@@ -81,7 +81,7 @@ extension NSLayoutConstraint.Axis: ReviewableDescribing, CaseIterable {
   }
 }
 
-extension NSLayoutConstraint.Relation: ReviewableDescribing, CaseIterable {
+extension NSLayoutConstraint.Relation: ReviewableDescribing {
   public static var allCases: [NSLayoutConstraint.Relation] = {
     return []
   }()

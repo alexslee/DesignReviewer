@@ -17,7 +17,9 @@ public class DesignReviewer {
 
   internal static var window: UIWindow?
 
-  internal static var customAttributes = [String: Set<DesignReviewCustomAttribute>]()
+  internal static var customAttributes = [String: DesignReviewCustomAttributeSet]()
+
+  internal static var onFinish: (() -> Void)?
 
   /**
    Spins up the `DesignReviewer`.
@@ -29,14 +31,18 @@ public class DesignReviewer {
 
    - Parameters:
      - appWindow: The target window through which the `DesignReviewer` should parse.
+     - onFinish: Optionally, you can provide a closure you would like to execute when the DesignReviewer is dismissed.
    */
-  public static func start(inAppWindow appWindow: UIWindow?) {
+  public static func start(inAppWindow appWindow: UIWindow?, onFinish: (() -> Void)? = nil) {
     window = appWindow
+    self.onFinish = onFinish
     initializeCoordinatorIfNeededAndStart()
   }
 
   private static func initializeCoordinatorIfNeededAndStart() {
     guard coordinator == nil else {
+      coordinator?.userDefinedCustomAttributes = customAttributes
+      coordinator?.onFinish = onFinish
       coordinator?.start()
       return
     }
@@ -44,6 +50,7 @@ public class DesignReviewer {
     let viewModel = DesignReviewViewModel()
     coordinator = DesignReviewCoordinator(viewModel: viewModel, appWindow: window)
     coordinator?.userDefinedCustomAttributes = customAttributes
+    coordinator?.onFinish = onFinish
     coordinator?.start()
   }
 
@@ -55,6 +62,7 @@ public class DesignReviewer {
    */
   public static func finish() {
     coordinator?.finish()
+    coordinator?.userDefinedCustomAttributes.values.forEach({ $0.removeAll() })
     coordinator?.userDefinedCustomAttributes.removeAll()
     coordinator = nil
     window = nil
@@ -63,19 +71,36 @@ public class DesignReviewer {
   // MARK: - Custom Attributes
 
   /**
-   Add a custom attribute that will be shown for reviewable objects in the DesignReviewer. For now,
+   Add a custom mutable attribute that will be shown for reviewable objects in the DesignReviewer. For now,
    values must be key-value coding-compliant properties of the target reviewable!! In most cases, this
    is achievable by adding `@objc dynamic` in front of the property declaration for Swift properties. See
    the `dummyString` computed property in the UILabel+CustomAttribute of the sample project for an example.
    */
-  public static func addCustomAttribute<T: DesignReviewable>(_ attribute: DesignReviewCustomAttribute,
-                                                             to reviewable: T.Type) {
+  public static func addCustomMutableAttribute<T: DesignReviewable>(_ attribute: DesignReviewCustomMutableAttribute,
+                                                                    to reviewable: T.Type) {
     let key = String(describing: reviewable)
     if customAttributes[key] == nil {
-      customAttributes[key] = Set<DesignReviewCustomAttribute>()
+      customAttributes[key] = DesignReviewCustomAttributeSet()
     }
 
     customAttributes[key]?.insert(attribute)
+  }
+
+  /**
+   Add a custom enum-based attribute that will be shown for reviewable objects in the DesignReviewer. For now,
+   values must be key-value coding-compliant properties of the target reviewable!! In most cases, this
+   is achievable by adding `@objc dynamic` in front of the property declaration for Swift properties. See
+   the `dummyEnum` computed property in the UILabel+CustomAttribute of the sample project for an example.
+   */
+  public static func addCustomEnumAttribute<T: DesignReviewable, EnumDescribing: ReviewableDescribing>(
+    _ attribute: DesignReviewCustomEnumAttribute<EnumDescribing>,
+    to reviewable: T.Type) {
+      let key = String(describing: reviewable)
+      if customAttributes[key] == nil {
+        customAttributes[key] = DesignReviewCustomAttributeSet()
+      }
+
+      customAttributes[key]?.insert(attribute)
   }
 
   /**
@@ -87,6 +112,7 @@ public class DesignReviewer {
    */
   public static func resetCustomAttributes<T: DesignReviewable>(for reviewable: T.Type? = nil) {
     guard let nilSafeReviewable = reviewable else {
+      customAttributes.values.forEach({ $0.removeAll() })
       customAttributes.removeAll()
       return
     }
@@ -96,22 +122,22 @@ public class DesignReviewer {
   }
 }
 
-/// A custom attribute you wish to inspect.
-public struct DesignReviewCustomAttribute: Hashable {
-  /// The string that will be displayed in the main text label of the entry in the `DesignReviewer`
-  public let title: String
-  /// The keyPath for the given attribute. The property you wish to inspect MUST BE KVC-compliant!
-  public let keyPath: String
-  /// The group under which the attribute will be shown
-  public let group: DesignReviewInspectorAttributeGroup
+/// Wrapper around a set, to allow for generics to be utilized in conjunction with the AnyHashable needed for sets
+internal class DesignReviewCustomAttributeSet {
+  private(set) var set = Set<AnyHashable>()
 
-  public init(title: String, keyPath: String, group: DesignReviewInspectorAttributeGroup = .general) {
-    self.title = title
-    self.keyPath = keyPath
-    self.group = group
+  func iterate(performing action: ((DesignReviewCustomAttribute) -> Void)?) {
+    for item in set {
+      // cast should never fail since only the `insert` method can be used to add, and it only accepts that type
+      action?(item as! DesignReviewCustomAttribute)
+    }
   }
 
-  internal func toMutableAttribute(for reviewable: DesignReviewable) -> DesignReviewMutableAttribute {
-    DesignReviewMutableAttribute(title: title, keyPath: keyPath, reviewable: reviewable)
+  func insert<T>(_ item: T) where T: DesignReviewCustomAttribute & Hashable {
+      set.insert(AnyHashable(item))
+  }
+
+  func removeAll() {
+    set.removeAll()
   }
 }

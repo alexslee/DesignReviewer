@@ -7,6 +7,7 @@
 
 import UIKit
 import DesignReviewer
+import os.log
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -18,8 +19,23 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
      any point really, as the internal setup uses a Set. Abstracting it to something that happens
      at launch (as well as behind any debug-only flags you may wish to configure) is your perogative.
      */
-    DesignReviewer.addCustomAttribute(DesignReviewCustomAttribute(title: "Dummy Try", keyPath: "dummyString"),
-                                      to: UILabel.self)
+    DesignReviewer.addCustomMutableAttribute(DesignReviewCustomMutableAttribute(title: "Dummy Try", keyPath: "dummyString"),
+                                             to: UILabel.self)
+
+    let enumAttr = DesignReviewCustomEnumAttribute(title: "Dummy enum try",
+                                                   keyPath: "dummyEnum",
+                                                   modifier: { newValue in
+      guard let newRawValue = newValue as? MyDummyEnum else {
+        os_log("enum callback triggered, value is nil")
+        return
+      }
+
+      os_log("enum callback triggered, value is %@", newRawValue.displayName)
+      globalDummyEnum = newRawValue
+
+    }, associatedEnum: MyDummyEnum.first)
+
+    DesignReviewer.addCustomEnumAttribute(enumAttr, to: UILabel.self)
     return true
   }
 

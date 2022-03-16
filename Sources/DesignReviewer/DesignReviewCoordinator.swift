@@ -25,7 +25,8 @@ class DesignReviewCoordinator: NSObject, DesignReviewCoordinatorProtocol {
   static var isPresenting = false
   private var window: UIWindow?
 
-  var userDefinedCustomAttributes = [String: Set<DesignReviewCustomAttribute>]()
+  var userDefinedCustomAttributes = [String: DesignReviewCustomAttributeSet]()
+  var onFinish: (() -> Void)?
 
   private var currentColorPickerObserver: DesignReviewColorPickerSessionObserver?
 
@@ -64,6 +65,11 @@ class DesignReviewCoordinator: NSObject, DesignReviewCoordinatorProtocol {
       Self.isPresenting = false
       // wipe indices clean s.t. a subsequent open wouldn't draw rects where the views may no longer exist
       self?.viewModel.selectedReviewableIndices.removeAll()
+
+      self?.userDefinedCustomAttributes.values.forEach({ $0.removeAll() })
+      self?.userDefinedCustomAttributes.removeAll()
+
+      self?.onFinish?()
 
       self?.children.removeAll()
     })

@@ -55,7 +55,7 @@ class DesignReviewInspectorViewModel {
   private var currentSegmentedIndex: DesignReviewInspectorSegmentedIndex = .landing
   private var actualCreatedSegmentedIndices = [DesignReviewInspectorSegmentedIndex]()
 
-  init(reviewable: DesignReviewable?, userDefinedCustomAttributes: Set<DesignReviewCustomAttribute>? = nil) {
+  init(reviewable: DesignReviewable?, userDefinedCustomAttributes: DesignReviewCustomAttributeSet? = nil) {
     self.reviewable = reviewable
 
     let reviewableAttributes = reviewable?.createReviewableAttributes()
@@ -240,19 +240,19 @@ class DesignReviewInspectorViewModel {
     return sections[section].isExpanded
   }
 
-  private func accountForUserDefinedCustomAttributes(_ attributes: Set<DesignReviewCustomAttribute>?) {
+  private func accountForUserDefinedCustomAttributes(_ attributes: DesignReviewCustomAttributeSet?) {
     guard let reviewable = reviewable else { return }
 
-    for attribute in attributes ?? [] {
+    attributes?.iterate(performing: { attribute in
       let convertedAttribute = attribute.toMutableAttribute(for: reviewable)
-      let newRow = DesignReviewInspectorRow(attribute: convertedAttribute, title: attribute.title)
+      let newRow = DesignReviewInspectorRow(attribute: convertedAttribute, title: convertedAttribute.title)
 
-      guard let internalIndex = allSections.firstIndex(where: { $0.title == attribute.group }) else {
-        allSections.append(DesignReviewInspectorSection(rows: [newRow], title: attribute.group))
-        continue
+      guard let internalIndex = self.allSections.firstIndex(where: { $0.title == attribute.group }) else {
+        self.allSections.append(DesignReviewInspectorSection(rows: [newRow], title: attribute.group))
+        return
       }
 
-      allSections[internalIndex].rows.append(newRow)
-    }
+      self.allSections[internalIndex].rows.append(newRow)
+    })
   }
 }

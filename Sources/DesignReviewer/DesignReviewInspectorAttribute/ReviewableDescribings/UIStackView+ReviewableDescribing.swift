@@ -7,7 +7,7 @@
 
 import UIKit
 
-extension UIStackView.Alignment: ReviewableDescribing, CaseIterable {
+extension UIStackView.Alignment: ReviewableDescribing {
   public static var allCases: [UIStackView.Alignment] = {
     return [.bottom, .center, .fill, .firstBaseline, .lastBaseline, .leading, .top, .trailing]
   }()
@@ -36,7 +36,7 @@ extension UIStackView.Alignment: ReviewableDescribing, CaseIterable {
   }
 }
 
-extension UIStackView.Distribution: ReviewableDescribing, CaseIterable {
+extension UIStackView.Distribution: ReviewableDescribing {
   public static var allCases: [UIStackView.Distribution] = {
     return [.equalCentering, .equalSpacing, .fill, .fillEqually, .fillProportionally]
   }()

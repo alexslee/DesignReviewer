@@ -7,7 +7,7 @@
 
 import UIKit
 
-extension UIView.ContentMode: ReviewableDescribing, CaseIterable {
+extension UIView.ContentMode: ReviewableDescribing {
   public static var allCases: [UIView.ContentMode] = {
     return [.left, .right, .top, .bottom, .bottomLeft, .bottomRight, .center, .topLeft, .topRight,
             .redraw, .scaleAspectFill, .scaleToFill, .scaleAspectFit]
@@ -47,7 +47,7 @@ extension UIView.ContentMode: ReviewableDescribing, CaseIterable {
   }
 }
 
-extension UIView.TintAdjustmentMode: ReviewableDescribing, CaseIterable {
+extension UIView.TintAdjustmentMode: ReviewableDescribing {
   public static var allCases: [UIView.TintAdjustmentMode] = {
     return [.automatic, .normal, .dimmed]
   }()

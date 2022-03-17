@@ -142,6 +142,8 @@ class DesignReviewInspectorTableViewCell: UITableViewCell {
       text = value.summaryDisplayName
     case let value as UIViewController:
       text = String(describing: value.classForCoder)
+    case let value as DesignReviewAttributeOptionSelectable:
+      text = value.displayName
     default:
       if let value = attribute.value { text = "\(value)" }
     }
@@ -229,6 +231,8 @@ class DesignReviewInspectorTableViewCell: UITableViewCell {
       text = value.summaryDisplayName
     case let value as UIViewController:
       text = String(describing: value.classForCoder)
+    case let value as DesignReviewAttributeOptionSelectable:
+      text = value.displayName
     default:
       if let value = attribute.value { text = "\(value)" }
     }

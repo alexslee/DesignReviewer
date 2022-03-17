@@ -25,7 +25,7 @@ class DesignReviewEnumAttribute<T>: DesignReviewInspectorAttribute,
         fatalError()
     }
 
-    return enumRep.displayName
+    return enumRep
   }
 
   var isModifiable: Bool { modifier != nil }

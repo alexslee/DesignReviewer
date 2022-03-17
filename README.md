@@ -28,9 +28,17 @@ You can setup the reviewer to display any custom attributes you wish for a given
 ```
 You can then call this function on the `DesignReviewer` to add this attribute to the list of values for display:
 ```swift
-  static func addCustomAttribute<T: DesignReviewable>(_ attribute: DesignReviewCustomAttribute, to reviewable: T.Type)
+  static func addCustomMutableAttribute<T: DesignReviewable>(_ attribute: DesignReviewCustomMutableAttribute, to reviewable: T.Type)
 ```
-An example of this functionality is provided in the sample project.
+You can add regular property types with the above, but for enum properties you need to handle them a bit differently. They still need
+to be `@objc dynamic` unfortunately due to keyPath access requirements. Anyway, you need to call this method to add an enum attribute:
+```swift
+  static func addCustomEnumAttribute<T: DesignReviewable, EnumDescribing: ReviewableDescribing>(
+  _ attribute: DesignReviewCustomEnumAttribute<EnumDescribing>, 
+  to reviewable: T.Type)
+```
+
+Examples of both of these are provided in the sample project.
 
 ---
 

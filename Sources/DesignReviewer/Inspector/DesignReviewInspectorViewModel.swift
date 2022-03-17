@@ -135,7 +135,7 @@ class DesignReviewInspectorViewModel {
         })
     } else {
       var initialOption: DesignReviewAttributeOptionSelectable?
-      if let value = attribute.value as? String { // enum attributes should be casted to strings for value
+      if let value = attribute.value as? String { // if it happens to be a string, make sure it's part of the alertable set
         initialOption = attribute.alertableOptions.first(where: { $0.displayName == value })
       } else if let value = attribute.value as? DesignReviewAttributeOptionSelectable {
         // failing that, the attribute value should be a conformant enum type in order to get to here...

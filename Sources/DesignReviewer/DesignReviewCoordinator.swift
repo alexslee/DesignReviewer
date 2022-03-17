@@ -115,6 +115,13 @@ class DesignReviewCoordinator: NSObject, DesignReviewCoordinatorProtocol {
       customAttributes?.merge(with: viewAttributes)
     }
 
+    if let _ = reviewable as? UILabel, let labelAttributes = DesignReviewer.customAttributes["UILabel"] {
+      if customAttributes == nil {
+        customAttributes = DesignReviewCustomAttributeSet()
+      }
+      customAttributes?.merge(with: labelAttributes)
+    }
+
     let inspectorViewModel = DesignReviewInspectorViewModel(reviewable: reviewable,
                                                             userDefinedCustomAttributes: customAttributes)
 

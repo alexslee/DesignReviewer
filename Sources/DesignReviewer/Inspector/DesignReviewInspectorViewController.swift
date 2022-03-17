@@ -218,8 +218,9 @@ extension DesignReviewInspectorViewController: DesignReviewCollapsibleHeaderView
       // reloading all the rows, rather than the whole section directly, prevents extra header animations
       let rowCount = self.tableView.numberOfRows(inSection: sectionIndex)
       let indicesToReload = (0..<rowCount).map { IndexPath(row: $0, section: sectionIndex) }
-
+      self.tableView.beginUpdates()
       self.tableView.reloadRows(at: indicesToReload, with: .fade)
+      self.tableView.endUpdates()
     }
   }
 }
@@ -242,8 +243,9 @@ extension DesignReviewInspectorViewController: DesignReviewInspectorTableViewCel
       indicesToReload.append(IndexPath(row: 0, section: screenshotSectionIndex))
     }
 
+    self.tableView.beginUpdates()
     tableView.reloadRows(at: indicesToReload, with: .none)
-
+    self.tableView.endUpdates()
     self.reconstructExplodedHierarchy()
   }
 }

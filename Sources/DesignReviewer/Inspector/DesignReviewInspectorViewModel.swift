@@ -137,6 +137,9 @@ class DesignReviewInspectorViewModel {
       var initialOption: DesignReviewAttributeOptionSelectable?
       if let value = attribute.value as? String { // enum attributes should be casted to strings for value
         initialOption = attribute.alertableOptions.first(where: { $0.displayName == value })
+      } else if let value = attribute.value as? DesignReviewAttributeOptionSelectable {
+        // failing that, the attribute value should be a conformant enum type in order to get to here...
+        initialOption = value
       }
 
       newViewModel = DesignReviewSuboptimalAlertOptionsViewModel(

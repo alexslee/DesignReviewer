@@ -133,6 +133,10 @@ internal class DesignReviewCustomAttributeSet {
     }
   }
 
+  func merge(with otherSet: DesignReviewCustomAttributeSet) {
+    set = set.union(otherSet.set)
+  }
+
   func insert<T>(_ item: T) where T: DesignReviewCustomAttribute & Hashable {
       set.insert(AnyHashable(item))
   }

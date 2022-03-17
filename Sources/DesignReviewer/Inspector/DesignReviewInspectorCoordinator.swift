@@ -72,9 +72,9 @@ class DesignReviewInspectorCoordinator: NSObject, DesignReviewCoordinatorProtoco
 
   func presentDesignReview(for reviewable: DesignReviewable) {
     let currentContext = router.viewController
-    var customAttributes = DesignReviewer.customAttributes[String(describing: reviewable.classForCoder)]
+    let customAttributes = DesignReviewer.customAttributes[String(describing: reviewable.classForCoder)]
 
-    if reviewable is UIView, let viewAttributes = DesignReviewer.customAttributes["UIView"] {
+    if let _ = reviewable as? UIView, let viewAttributes = DesignReviewer.customAttributes["UIView"] {
       customAttributes?.merge(with: viewAttributes)
     }
 

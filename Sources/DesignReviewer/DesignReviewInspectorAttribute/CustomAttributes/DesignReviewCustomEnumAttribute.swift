@@ -17,7 +17,7 @@ public struct DesignReviewCustomEnumAttribute<T>: DesignReviewCustomAttribute, H
   public let group: DesignReviewInspectorAttributeGroup
   /// The closure that runs when you try to mutate the value of the attribute. Use this to properly change the value, and its updated contents
   /// will be automatically fetched by the inspector (since it uses keypath).
-  public let modifier: ((Any?) -> Void)?
+  public let modifier: ((_ newValue: Any?, _ reviewable: DesignReviewable?) -> Void)?
   /// An enum value from which the DesignReviewer is able to extract the type. Due to Swift constraints around generics and Alex not wanting
   /// to completely implement type erasure, you just need to provide any random value here for the given enum you're tracking.
   private let associatedEnum: T
@@ -38,7 +38,7 @@ public struct DesignReviewCustomEnumAttribute<T>: DesignReviewCustomAttribute, H
   public init(title: String,
               keyPath: String,
               group: DesignReviewInspectorAttributeGroup = .general,
-              modifier: ((Any?) -> Void)? = nil,
+              modifier: ((Any?, DesignReviewable?) -> Void)? = nil,
               shouldModifyViaAlert: Bool = false,
               associatedEnum: T) {
     self.title = title

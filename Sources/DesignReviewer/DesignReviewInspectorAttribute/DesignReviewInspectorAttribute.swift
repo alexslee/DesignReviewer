@@ -66,7 +66,7 @@ public protocol DesignReviewInspectorAttribute: CustomStringConvertible {
   var isModifiable: Bool { get }
 
   /// Closure to mutate the attribute (nil for immutable values and unsupported mutables+enums).
-  var modifier: ((Any) -> Void)? { get }
+  var modifier: ((_ newValue: Any?, _ reviewable: DesignReviewable?) -> Void)? { get }
 
   /// Whether or not the attribute can be mutated via an alert (requires the attribute to have a dedicated closure to
   /// handle the change).
@@ -82,7 +82,7 @@ extension DesignReviewInspectorAttribute {
   public var isModifiable: Bool { false }
   public var isAlertable: Bool { false }
 
-  public var modifier: ((Any) -> Void)? { nil }
+  public var modifier: ((_ newValue: Any?, _ reviewable: DesignReviewable?) -> Void)? { nil }
 
   public var alertableOptions: [DesignReviewAttributeOptionSelectable] { [] }
 }

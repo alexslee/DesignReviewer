@@ -160,7 +160,7 @@ class DesignReviewInspectorViewController: UIViewController {
         viewModel.showColorPicker(initialColor: colorValue, changeHandler: { [weak self] newColor in
           guard let self = self else { return }
 
-          attribute.modifier?(newColor)
+          attribute.modifier?(newColor, self.viewModel.reviewable)
 
           if let screenshotSectionIndex = self.viewModel.refreshScreenshot() {
             let screenshotIndexPath = IndexPath(row: 0, section: screenshotSectionIndex)
@@ -175,7 +175,7 @@ class DesignReviewInspectorViewController: UIViewController {
         viewModel.showAlertIfPossible(for: attribute, in: self, changeHandler: { [weak self] newValue in
           guard let self = self else { return }
 
-          attribute.modifier?(newValue)
+          attribute.modifier?(newValue, self.viewModel.reviewable)
 
           if let screenshotSectionIndex = self.viewModel.refreshScreenshot() {
             let screenshotIndexPath = IndexPath(row: 0, section: screenshotSectionIndex)

@@ -46,7 +46,7 @@ extension NSLayoutConstraint: DesignReviewable {
       title: "Constant",
       keyPath: "constant",
       reviewable: self,
-      modifier: { [weak self] newVal in
+      modifier: { [weak self] newVal, _ in
         guard let self = self,
           let rawConstant = newVal as? Double else {
             return

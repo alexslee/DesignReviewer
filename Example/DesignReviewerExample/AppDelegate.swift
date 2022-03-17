@@ -24,7 +24,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     let enumAttr = DesignReviewCustomEnumAttribute(title: "Dummy enum try",
                                                    keyPath: "dummyEnum",
-                                                   modifier: { newValue in
+                                                   modifier: { newValue, _ in
       guard let newRawValue = newValue as? MyDummyEnum else {
         os_log("enum callback triggered, value is nil")
         return

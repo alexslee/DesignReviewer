@@ -28,7 +28,7 @@ class DesignReviewMutableAttribute: DesignReviewInspectorAttribute, Equatable {
   let isAlertable: Bool
   let modifierIncrementSize: Double
   let modifierRange: ClosedRange<Double>?
-  private(set) var modifier: ((Any) -> Void)?
+  private(set) var modifier: ((_ newValue: Any?, _ reviewable: DesignReviewable?) -> Void)?
 
   private(set) weak var reviewable: DesignReviewable?
 
@@ -36,7 +36,7 @@ class DesignReviewMutableAttribute: DesignReviewInspectorAttribute, Equatable {
        subtitle: String? = nil,
        keyPath: String,
        reviewable: DesignReviewable,
-       modifier: ((Any) -> Void)? = nil,
+       modifier: ((Any?, DesignReviewable?) -> Void)? = nil,
        modifierIncrementSize: Double = 4,
        modifierRange: ClosedRange<Double>? = nil,
        shouldModifyViaAlert: Bool = false) {

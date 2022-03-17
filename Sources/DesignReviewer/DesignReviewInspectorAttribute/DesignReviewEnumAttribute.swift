@@ -31,7 +31,7 @@ class DesignReviewEnumAttribute<T>: DesignReviewInspectorAttribute,
   var isModifiable: Bool { modifier != nil }
   var isAlertable: Bool { isModifiable }
 
-  private(set) var modifier: ((Any) -> Void)?
+  private(set) var modifier: ((Any?, DesignReviewable?) -> Void)?
 
   var alertableOptions: [DesignReviewAttributeOptionSelectable] {
     T.allCases.compactMap({ $0 as DesignReviewAttributeOptionSelectable })
@@ -43,7 +43,7 @@ class DesignReviewEnumAttribute<T>: DesignReviewInspectorAttribute,
        subtitle: String? = nil,
        keyPath: String,
        reviewable: DesignReviewable,
-       modifier: ((Any) -> Void)? = nil) {
+       modifier: ((Any?, DesignReviewable?) -> Void)? = nil) {
     self.title = title ?? keyPath.capitalized
     self.subtitle = subtitle
     self.keyPath = keyPath

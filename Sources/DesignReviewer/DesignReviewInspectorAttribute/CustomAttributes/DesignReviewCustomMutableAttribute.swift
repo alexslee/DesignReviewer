@@ -23,14 +23,14 @@ public struct DesignReviewCustomMutableAttribute: DesignReviewCustomAttribute, H
   public let group: DesignReviewInspectorAttributeGroup
   /// The closure that runs when you try to mutate the value of the attribute. Use this to properly change the value, and its updated contents
   /// will be automatically fetched by the inspector (since it uses keypath).
-  public let modifier: ((Any?) -> Void)?
+  public let modifier: ((_ newValue: Any?, _ reviewable: DesignReviewable?) -> Void)?
   /// Whether or not the editing should be displayed as an alert. Alerts support enums conforming to `ReviewableDescribing`, as well as Strings.
   public let shouldModifyViaAlert: Bool
 
   public init(title: String,
               keyPath: String,
               group: DesignReviewInspectorAttributeGroup = .general,
-              modifier: ((Any?) -> Void)? = nil,
+              modifier: ((Any?, DesignReviewable?) -> Void)? = nil,
               shouldModifyViaAlert: Bool = false) {
     self.title = title
     self.keyPath = keyPath

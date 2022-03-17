@@ -194,7 +194,7 @@ extension UIView: DesignReviewable {
       title: "User Interaction Enabled",
       keyPath: "userInteractionEnabled",
       reviewable: self,
-      modifier: { [weak self] newValue in
+      modifier: { [weak self] newValue, _ in
         guard let self = self,
           let newBool = newValue as? Bool else {
             return
@@ -206,7 +206,7 @@ extension UIView: DesignReviewable {
       title: "Multiple Touch Enabled",
       keyPath: "multipleTouchEnabled",
       reviewable: self,
-      modifier: { [weak self] newValue in
+      modifier: { [weak self] newValue, _ in
         guard let self = self,
           let newBool = newValue as? Bool else {
             return
@@ -227,7 +227,7 @@ extension UIView: DesignReviewable {
       title: "Background Color",
       keyPath: "backgroundColor",
       reviewable: self,
-      modifier: { [weak self] newValue in
+      modifier: { [weak self] newValue, _ in
         guard let self = self,
           let newColor = newValue as? UIColor else {
             return
@@ -240,7 +240,7 @@ extension UIView: DesignReviewable {
       title: "Corner Radius",
       keyPath: "layer.cornerRadius",
       reviewable: self,
-      modifier: { [weak self] newValue in
+      modifier: { [weak self] newValue, _ in
         guard let self = self,
           let rawRadius = newValue as? Double else {
             return
@@ -256,7 +256,7 @@ extension UIView: DesignReviewable {
       title: "Tint Color",
       keyPath: "tintColor",
       reviewable: self,
-      modifier: { [weak self] newValue in
+      modifier: { [weak self] newValue, _ in
         guard let self = self,
           let newColor = newValue as? UIColor else {
             return
@@ -269,7 +269,7 @@ extension UIView: DesignReviewable {
       title: "Opacity",
       keyPath: "alpha",
       reviewable: self,
-      modifier: { [weak self] newValue in
+      modifier: { [weak self] newValue, _ in
         guard let self = self,
           let rawAlpha = newValue as? Double else {
             return
@@ -284,7 +284,7 @@ extension UIView: DesignReviewable {
       title: "Content Mode",
       keyPath: "contentMode",
       reviewable: self,
-      modifier: { [weak self] newValue in
+      modifier: { [weak self] newValue, _ in
         guard let self = self,
           let newContentMode = newValue as? UIView.ContentMode else {
             return
@@ -355,7 +355,7 @@ extension UIView: DesignReviewable {
         title: "Text",
         keyPath: "text",
         reviewable: self,
-        modifier: { [weak self] newValue in
+        modifier: { [weak self] newValue, _ in
           guard let self = self,
             let newText = newValue as? String else {
               return
@@ -375,7 +375,7 @@ extension UIView: DesignReviewable {
         title: "Attributed Text",
         keyPath: "attributedText",
         reviewable: self,
-        modifier: { [weak self] newValue in
+        modifier: { [weak self] newValue, _ in
           guard let self = self,
             let newText = newValue as? String,
             let currentString = (self as? UILabel)?.attributedText as? NSMutableAttributedString else {
@@ -391,7 +391,7 @@ extension UIView: DesignReviewable {
         title: "LineBreakMode",
         keyPath: "lineBreakMode",
         reviewable: self,
-        modifier: { [weak self] newValue in
+        modifier: { [weak self] newValue, _ in
           guard let self = self,
             let newBreakMode = newValue as? NSLineBreakMode else {
               return
@@ -404,7 +404,7 @@ extension UIView: DesignReviewable {
         title: "Text Alignment",
         keyPath: "textAlignment",
         reviewable: self,
-        modifier: { [weak self] newValue in
+        modifier: { [weak self] newValue, _ in
           guard let self = self,
             let newAlignment = newValue as? NSTextAlignment else {
               return
@@ -417,7 +417,7 @@ extension UIView: DesignReviewable {
         title: "Text Color",
         keyPath: "textColor",
         reviewable: self,
-        modifier: { [weak self] newValue in
+        modifier: { [weak self] newValue, _ in
           guard let self = self,
             let newColor = newValue as? UIColor else {
               return
@@ -433,7 +433,7 @@ extension UIView: DesignReviewable {
         title: "Number Of Lines",
         keyPath: "numberOfLines",
         reviewable: self,
-        modifier: { [weak self] newValue in
+        modifier: { [weak self] newValue, _ in
           guard let self = self,
             let rawLineCount = newValue as? Double else {
               return
@@ -451,7 +451,7 @@ extension UIView: DesignReviewable {
         title: "Stack Alignment",
         keyPath: "alignment",
         reviewable: self,
-        modifier: { [weak self] newValue in
+        modifier: { [weak self] newValue, _ in
           guard let self = self,
             let newAlignment = newValue as? UIStackView.Alignment else {
               return
@@ -464,7 +464,7 @@ extension UIView: DesignReviewable {
         title: "Stack Axis",
         keyPath: "axis",
         reviewable: self,
-        modifier: { [weak self] newValue in
+        modifier: { [weak self] newValue, _ in
           guard let self = self,
             let newAxis = newValue as? NSLayoutConstraint.Axis else {
               return
@@ -477,7 +477,7 @@ extension UIView: DesignReviewable {
         title: "Stack Distribution",
         keyPath: "distribution",
         reviewable: self,
-        modifier: { [weak self] newValue in
+        modifier: { [weak self] newValue, _ in
           guard let self = self,
             let newDistribution = newValue as? UIStackView.Distribution else {
               return
@@ -490,7 +490,7 @@ extension UIView: DesignReviewable {
         title: "Stack Spacing",
         keyPath: "spacing",
         reviewable: self,
-        modifier: { [weak self] newValue in
+        modifier: { [weak self] newValue, _ in
           guard let self = self,
             let rawSpacing = newValue as? Double else {
               return

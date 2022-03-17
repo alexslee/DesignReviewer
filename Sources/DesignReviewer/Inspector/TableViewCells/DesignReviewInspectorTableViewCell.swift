@@ -17,7 +17,7 @@ class DesignReviewInspectorTableViewCell: UITableViewCell {
 
   weak var delegate: DesignReviewInspectorTableViewCellDelegate?
 
-  private var attributeModifier: ((Any) -> Void)?
+  private var attributeModifier: ((_ newValue: Any?, _ reviewable: DesignReviewable?) -> Void)?
   private var section: DesignReviewInspectorAttributeGroup?
 
   override var accessoryView: UIView? {
@@ -245,10 +245,10 @@ class DesignReviewInspectorTableViewCell: UITableViewCell {
 
   @objc private func accessoryInteracted(_ sender: Any) {
     if let stepper = sender as? UIStepper {
-      attributeModifier?(stepper.value)
+      attributeModifier?(stepper.value, nil)
       delegate?.inspectorTableViewCellWasModified(self)
     } else if let switcher = sender as? UISwitch {
-      attributeModifier?(switcher.isOn)
+      attributeModifier?(switcher.isOn, nil)
       delegate?.inspectorTableViewCellWasModified(self)
     }
   }

@@ -162,11 +162,14 @@ class DesignReviewInspectorViewController: UIViewController {
 
           attribute.modifier?(newColor, self.viewModel.reviewable)
 
+          let rowCount = self.tableView.numberOfRows(inSection: indexPath.section)
+          var indicesToReload = (0..<rowCount).map { IndexPath(row: $0, section: indexPath.section) }
+
           if let screenshotSectionIndex = self.viewModel.refreshScreenshot() {
-            self.tableView.reloadSections(IndexSet([screenshotSectionIndex, indexPath.section]), with: .none)
-          } else {
-            self.tableView.reloadRows(at: [indexPath], with: .none)
+            indicesToReload.append(IndexPath(row: 0, section: screenshotSectionIndex))
           }
+
+          self.tableView.reloadRows(at: indicesToReload, with: .none)
 
           self.reconstructExplodedHierarchy()
         })
@@ -176,11 +179,14 @@ class DesignReviewInspectorViewController: UIViewController {
 
           attribute.modifier?(newValue, self.viewModel.reviewable)
 
+          let rowCount = self.tableView.numberOfRows(inSection: indexPath.section)
+          var indicesToReload = (0..<rowCount).map { IndexPath(row: $0, section: indexPath.section) }
+
           if let screenshotSectionIndex = self.viewModel.refreshScreenshot() {
-            self.tableView.reloadSections(IndexSet([screenshotSectionIndex, indexPath.section]), with: .none)
-          } else {
-            self.tableView.reloadRows(at: [indexPath], with: .none)
+            indicesToReload.append(IndexPath(row: 0, section: screenshotSectionIndex))
           }
+
+          self.tableView.reloadRows(at: indicesToReload, with: .none)
 
           self.reconstructExplodedHierarchy()
         })
@@ -227,9 +233,15 @@ extension DesignReviewInspectorViewController: DesignReviewInspectorTableViewCel
     }
 
     cell.refreshTextOnly(attribute: attribute)
+
+    let rowCount = self.tableView.numberOfRows(inSection: indexPath.section)
+    var indicesToReload = (0..<rowCount).map { IndexPath(row: $0, section: indexPath.section) }
+
     if let screenshotSectionIndex = viewModel.refreshScreenshot() {
-      tableView.reloadSections(IndexSet([screenshotSectionIndex, indexPath.section]), with: .none)
+      indicesToReload.append(IndexPath(row: 0, section: screenshotSectionIndex))
     }
+
+    tableView.reloadRows(at: indicesToReload, with: .none)
 
     self.reconstructExplodedHierarchy()
   }

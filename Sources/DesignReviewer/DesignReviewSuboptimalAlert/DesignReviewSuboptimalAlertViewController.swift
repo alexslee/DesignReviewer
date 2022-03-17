@@ -104,5 +104,9 @@ class DesignReviewSuboptimalAlertViewController: UIViewController {
 }
 
 extension DesignReviewSuboptimalAlertViewController: DesignReviewSuboptimalAlertViewDelegate {
-  func alertView(_ alertView: DesignReviewSuboptimalAlertView, valueDidChange newValue: Any?) {}
+  func alertView(_ alertView: DesignReviewSuboptimalAlertView, valueDidChange newValue: Any?) {
+    guard let newValue = newValue else { return }
+
+    viewModel.onOptionChosen?(newValue)
+  }
 }

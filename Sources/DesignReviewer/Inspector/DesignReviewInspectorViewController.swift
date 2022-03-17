@@ -169,8 +169,9 @@ class DesignReviewInspectorViewController: UIViewController {
             indicesToReload.append(IndexPath(row: 0, section: screenshotSectionIndex))
           }
 
+          self.tableView.beginUpdates()
           self.tableView.reloadRows(at: indicesToReload, with: .none)
-
+          self.tableView.endUpdates()
           self.reconstructExplodedHierarchy()
         })
       } else {
@@ -185,9 +186,9 @@ class DesignReviewInspectorViewController: UIViewController {
           if let screenshotSectionIndex = self.viewModel.refreshScreenshot() {
             indicesToReload.append(IndexPath(row: 0, section: screenshotSectionIndex))
           }
-
+          self.tableView.beginUpdates()
           self.tableView.reloadRows(at: indicesToReload, with: .none)
-
+          self.tableView.endUpdates()
           self.reconstructExplodedHierarchy()
         })
       }

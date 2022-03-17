@@ -163,8 +163,7 @@ class DesignReviewInspectorViewController: UIViewController {
           attribute.modifier?(newColor, self.viewModel.reviewable)
 
           if let screenshotSectionIndex = self.viewModel.refreshScreenshot() {
-            let screenshotIndexPath = IndexPath(row: 0, section: screenshotSectionIndex)
-            self.tableView.reloadRows(at: [screenshotIndexPath, indexPath], with: .none)
+            self.tableView.reloadSections(IndexSet([screenshotSectionIndex, indexPath.section]), with: .none)
           } else {
             self.tableView.reloadRows(at: [indexPath], with: .none)
           }
@@ -178,8 +177,7 @@ class DesignReviewInspectorViewController: UIViewController {
           attribute.modifier?(newValue, self.viewModel.reviewable)
 
           if let screenshotSectionIndex = self.viewModel.refreshScreenshot() {
-            let screenshotIndexPath = IndexPath(row: 0, section: screenshotSectionIndex)
-            self.tableView.reloadRows(at: [screenshotIndexPath, indexPath], with: .none)
+            self.tableView.reloadSections(IndexSet([screenshotSectionIndex, indexPath.section]), with: .none)
           } else {
             self.tableView.reloadRows(at: [indexPath], with: .none)
           }
@@ -230,7 +228,7 @@ extension DesignReviewInspectorViewController: DesignReviewInspectorTableViewCel
 
     cell.refreshTextOnly(attribute: attribute)
     if let screenshotSectionIndex = viewModel.refreshScreenshot() {
-      tableView.reloadRows(at: [IndexPath(row: 0, section: screenshotSectionIndex)], with: .none)
+      tableView.reloadSections(IndexSet([screenshotSectionIndex, indexPath.section]), with: .none)
     }
 
     self.reconstructExplodedHierarchy()

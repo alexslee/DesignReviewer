@@ -72,6 +72,10 @@ public protocol DesignReviewInspectorAttribute: CustomStringConvertible {
   /// handle the change).
   var isAlertable: Bool { get }
 
+  /// Whether or not the attribute's alert is cancellable (requires the attribute to have a dedicated closure to
+  /// handle the change).
+  var isAlertCancellable: Bool { get }
+
   /// List of options for the alert (requires the attribute to have `isAlertable = true`).
   var alertableOptions: [DesignReviewAttributeOptionSelectable] { get }
 }
@@ -81,6 +85,7 @@ public protocol DesignReviewInspectorAttribute: CustomStringConvertible {
 extension DesignReviewInspectorAttribute {
   public var isModifiable: Bool { false }
   public var isAlertable: Bool { false }
+  public var isAlertCancellable: Bool { true }
 
   public var modifier: ((_ newValue: Any?, _ reviewable: DesignReviewable?) -> Void)? { nil }
 

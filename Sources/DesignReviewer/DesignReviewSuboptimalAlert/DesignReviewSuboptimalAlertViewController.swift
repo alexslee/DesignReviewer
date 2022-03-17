@@ -20,6 +20,7 @@ class DesignReviewSuboptimalAlertViewController: UIViewController {
     view.translatesAutoresizingMaskIntoConstraints = false
     view.okayButton.addTarget(self, action: #selector(okayDokay), for: .touchUpInside)
     view.notOkayButton.addTarget(self, action: #selector(thanksButNoThanks), for: .touchUpInside)
+    view.notOkayButton.isHidden = !viewModel.isAlertCancellable
 
     view.delegate = self
 
@@ -105,7 +106,7 @@ class DesignReviewSuboptimalAlertViewController: UIViewController {
 
 extension DesignReviewSuboptimalAlertViewController: DesignReviewSuboptimalAlertViewDelegate {
   func alertView(_ alertView: DesignReviewSuboptimalAlertView, valueDidChange newValue: Any?) {
-    guard let newValue = newValue, viewModel is DesignReviewSuboptimalAlertTextViewModel else { return }
+    guard let newValue = newValue else { return }
 
     viewModel.onOptionChosen?(newValue)
   }

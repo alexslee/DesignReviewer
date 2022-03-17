@@ -12,6 +12,7 @@ protocol DesignReviewSuboptimalAlertViewModelProtocol {
   var subtitle: String? { get }
   var onOptionChosen: ((Any) -> Void)? { get }
   var coordinator: DesignReviewSuboptimalAlertCoordinator? { get set }
+  var isAlertCancellable: Bool { get set }
 }
 
 class DesignReviewSuboptimalAlertTextViewModel: DesignReviewSuboptimalAlertViewModelProtocol {
@@ -23,6 +24,8 @@ class DesignReviewSuboptimalAlertTextViewModel: DesignReviewSuboptimalAlertViewM
   private(set) var onOptionChosen: ((Any) -> Void)?
 
   weak var coordinator: DesignReviewSuboptimalAlertCoordinator?
+
+  var isAlertCancellable = true
 
   init(title: String,
        subtitle: String?,
@@ -45,6 +48,8 @@ class DesignReviewSuboptimalAlertOptionsViewModel: DesignReviewSuboptimalAlertVi
   private(set) var onOptionChosen: ((Any) -> Void)?
 
   weak var coordinator: DesignReviewSuboptimalAlertCoordinator?
+
+  var isAlertCancellable = true
 
   init(title: String,
        subtitle: String?,

@@ -59,7 +59,8 @@ public struct DesignReviewCustomEnumAttribute<T>: DesignReviewCustomAttribute, H
                                         subtitle: nil,
                                         keyPath: keyPath,
                                         reviewable: reviewable,
-                                        modifier: modifier)
+                                        modifier: modifier,
+                                        isAlertCancellable: false)
   }
 
   public static func ==(lhs: DesignReviewCustomEnumAttribute, rhs: DesignReviewCustomEnumAttribute) -> Bool {

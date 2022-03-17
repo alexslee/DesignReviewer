@@ -124,7 +124,7 @@ class DesignReviewInspectorViewModel {
                            changeHandler: ((Any) -> Void)?) {
     guard attribute.isAlertable else { return }
 
-    let newViewModel: DesignReviewSuboptimalAlertViewModelProtocol
+    var newViewModel: DesignReviewSuboptimalAlertViewModelProtocol
     if attribute is DesignReviewMutableAttribute, let initialValue = attribute.value as? String {
       newViewModel = DesignReviewSuboptimalAlertTextViewModel(
         title: attribute.title,
@@ -151,6 +151,8 @@ class DesignReviewInspectorViewModel {
           changeHandler?(newOption)
         })
     }
+
+    newViewModel.isAlertCancellable = attribute.isAlertCancellable
 
     coordinator?.showAlert(viewModel: newViewModel, in: context)
   }

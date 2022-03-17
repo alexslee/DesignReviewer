@@ -30,6 +30,7 @@ class DesignReviewEnumAttribute<T>: DesignReviewInspectorAttribute,
 
   var isModifiable: Bool { modifier != nil }
   var isAlertable: Bool { isModifiable }
+  var isAlertCancellable: Bool
 
   private(set) var modifier: ((Any?, DesignReviewable?) -> Void)?
 
@@ -43,12 +44,14 @@ class DesignReviewEnumAttribute<T>: DesignReviewInspectorAttribute,
        subtitle: String? = nil,
        keyPath: String,
        reviewable: DesignReviewable,
-       modifier: ((Any?, DesignReviewable?) -> Void)? = nil) {
+       modifier: ((Any?, DesignReviewable?) -> Void)? = nil,
+       isAlertCancellable: Bool = true) {
     self.title = title ?? keyPath.capitalized
     self.subtitle = subtitle
     self.keyPath = keyPath
     self.reviewable = reviewable
     self.modifier = modifier
+    self.isAlertCancellable = isAlertCancellable
   }
 
   static func == (lhs: DesignReviewEnumAttribute<T>, rhs: DesignReviewEnumAttribute<T>) -> Bool {

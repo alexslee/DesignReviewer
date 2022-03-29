@@ -1,5 +1,7 @@
 # DesignReviewer
 
+[![](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2Falexslee%2FDesignReviewer%2Fbadge%3Ftype%3Dswift-versions)](https://swiftpackageindex.com/alexslee/DesignReviewer) [![](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2Falexslee%2FDesignReviewer%2Fbadge%3Ftype%3Dplatforms)](https://swiftpackageindex.com/alexslee/DesignReviewer)
+
 `DesignReviewer` is an in-app alternative to view debugging that you'd normally need to be wired up to
 Xcode to perform. 
 

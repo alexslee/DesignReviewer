@@ -52,6 +52,6 @@ Examples of both of these are provided in the sample project.
   - Note: for now, these custom attributes must be KVC-compliant properties on the `DesignReviewable` types
 - [x] Make text attributes editable
 - [ ] Refine position of the constraint padding labels
-- [ ] Bump min version target up from 12 ("soon :tm:")
+- [x] Bump min version target up from 12 ("soon :tm:")
 - [ ] Properly center the 3D hierarchy rects, rather than just converting the views' rects to the 3D hierarchy coordinate space and using those relative positions
 - [ ] All the bugfixes

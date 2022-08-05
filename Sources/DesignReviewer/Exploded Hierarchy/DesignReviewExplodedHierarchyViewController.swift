@@ -127,8 +127,7 @@ class DesignReviewExplodedHierarchyViewController: UIViewController {
 
   override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
     super.traitCollectionDidChange(previousTraitCollection)
-    if #available(iOS 13, *),
-      traitCollection.hasDifferentColorAppearance(comparedTo: previousTraitCollection) {
+    if traitCollection.hasDifferentColorAppearance(comparedTo: previousTraitCollection) {
       let isDark = traitCollection.userInterfaceStyle == .dark
       effectView.effect = isDark ? UIBlurEffect(style: .dark) : UIBlurEffect(style: .light)
     }

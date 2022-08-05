@@ -102,7 +102,6 @@ class DesignReviewInspectorCoordinator: NSObject, DesignReviewCoordinatorProtoco
   }
 
   func showColorPicker(initialColor: UIColor, changeHandler: ((UIColor) -> Void)?) {
-    guard #available(iOS 14, *) else { return }
     let pickerViewController = UIColorPickerViewController()
     pickerViewController.view.backgroundColor = .background
     pickerViewController.selectedColor = initialColor
@@ -118,7 +117,6 @@ class DesignReviewInspectorCoordinator: NSObject, DesignReviewCoordinatorProtoco
 
 // MARK: - UIColorPickerViewControllerDelegate
 
-@available(iOS 14, *)
 extension DesignReviewInspectorCoordinator: UIColorPickerViewControllerDelegate {
   func colorPickerViewControllerDidFinish(_ viewController: UIColorPickerViewController) {
     currentColorPickerObserver = nil

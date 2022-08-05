@@ -207,22 +207,25 @@ class DesignReviewInspectorViewModel {
 
     let addThreeDimensionalItem = (reviewable as? UIView) != nil
 
-    if #available(iOS 13, *) {
-      if landingHasData { items.append(UIImage(systemName: "person.crop.rectangle")) }
-      if constraintsHasData { items.append(UIImage(systemName: "ruler")) }
-      if hierarchyHasData { items.append(UIImage(systemName: "rectangle.on.rectangle")) }
-      if addThreeDimensionalItem { items.append(UIImage(systemName: "square.stack.3d.down.right")) }
-    } else {
-      if landingHasData { items.append(UIImage(named: "person-crop-rectangle")) }
-      if constraintsHasData { items.append(UIImage(named: "square-and-line-vertical-and-square")) }
-      if hierarchyHasData { items.append(UIImage(named: "rectangle-on-rectangle")) }
-      if addThreeDimensionalItem { items.append(UIImage(named: "square-stack-3d-down-right")) }
+    if landingHasData {
+      items.append(UIImage(systemName: "person.crop.rectangle"))
+      actualCreatedSegmentedIndices.append(.landing)
     }
 
-    if landingHasData { actualCreatedSegmentedIndices.append(.landing) }
-    if constraintsHasData { actualCreatedSegmentedIndices.append(.constraints) }
-    if hierarchyHasData { actualCreatedSegmentedIndices.append(.twoDimensionalHierarchy) }
-    if addThreeDimensionalItem { actualCreatedSegmentedIndices.append(.threeDimensionalHierarchy) }
+    if constraintsHasData {
+      items.append(UIImage(systemName: "ruler"))
+      actualCreatedSegmentedIndices.append(.constraints)
+    }
+
+    if hierarchyHasData {
+      items.append(UIImage(systemName: "rectangle.on.rectangle"))
+      actualCreatedSegmentedIndices.append(.twoDimensionalHierarchy)
+    }
+
+    if addThreeDimensionalItem {
+      items.append(UIImage(systemName: "square.stack.3d.down.right"))
+      actualCreatedSegmentedIndices.append(.threeDimensionalHierarchy)
+    }
 
     return items.compactMap { $0 }
   }

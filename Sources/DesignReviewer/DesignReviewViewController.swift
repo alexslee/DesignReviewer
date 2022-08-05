@@ -157,10 +157,7 @@ extension DesignReviewViewController: UINavigationControllerDelegate {
   func navigationController(_ navigationController: UINavigationController,
                             willShow viewController: UIViewController,
                             animated: Bool) {
-
-    if #available(iOS 14, *), viewController is UIColorPickerViewController {
-      return
-    } else if viewController is DesignReviewInspectorViewController {
+    if viewController is UIColorPickerViewController || viewController is DesignReviewInspectorViewController {
       return
     }
 

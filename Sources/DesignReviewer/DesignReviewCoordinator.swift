@@ -78,7 +78,7 @@ class DesignReviewCoordinator: NSObject, DesignReviewCoordinatorProtocol {
   private func presentReviewHUD() {
     let window: UIWindow
 
-    if #available(iOS 13, *), let scene = appWindow?.windowScene {
+    if let scene = appWindow?.windowScene {
       window = UIWindow(windowScene: scene)
     } else {
       window = UIWindow(frame: UIScreen.main.bounds)

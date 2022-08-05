@@ -23,12 +23,7 @@ class DesignReviewCollapsibleHeaderView: UITableViewHeaderFooterView {
 
   private lazy var imageView: UIImageView = {
     let imageView = UIImageView()
-
-    if #available(iOS 13, *) {
-      imageView.image = UIImage(systemName: "chevron.down")?.withRenderingMode(.alwaysTemplate)
-    } else {
-      imageView.image = UIImage(named: "chevron-down")?.withRenderingMode(.alwaysTemplate)
-    }
+    imageView.image = UIImage(systemName: "chevron.down")?.withRenderingMode(.alwaysTemplate)
 
     imageView.contentMode = .scaleAspectFit
     imageView.tintColor = .monochrome4

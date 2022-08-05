@@ -151,7 +151,7 @@ class DesignReviewInspectorViewController: UIViewController {
   }
 
   @objc private func longPressed(_ sender: UILongPressGestureRecognizer) {
-    guard sender.state == .began, #available(iOS 14, *) else { return }
+    guard sender.state == .began else { return }
     let convertedPoint = sender.location(in: tableView)
 
     if let indexPath = tableView.indexPathForRow(at: convertedPoint),

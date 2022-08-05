@@ -14,13 +14,8 @@ class DesignReviewHUD: UIControl {
   private lazy var visualEffectView: UIVisualEffectView = {
     let style: UIBlurEffect.Style
     let image: UIImage?
-    if #available(iOS 13.0, *) {
-      style = .systemThinMaterialDark
-      image = UIImage(systemName: "eye")?.withRenderingMode(.alwaysTemplate)
-    } else {
-      style = .dark
-      image = UIImage(named: "eye")?.withRenderingMode(.alwaysTemplate)
-    }
+    style = .systemThinMaterialDark
+    image = UIImage(systemName: "eye")?.withRenderingMode(.alwaysTemplate)
 
     let view = UIVisualEffectView(effect: UIBlurEffect(style: style))
     view.translatesAutoresizingMaskIntoConstraints = false

@@ -176,7 +176,7 @@ class DesignReviewSpecContainerView: DesignReviewSelectableView {
         let leftOfSecondary = CGPoint(x: secondaryFrame.origin.x, y: leftOfPrimary.y)
         centerPoint = CGPoint(x: leftOfSecondary.x + ((leftOfPrimary.x - leftOfSecondary.x) / 2), y: leftOfSecondary.y)
 
-        path = makePath(from: leftOfPrimary, to: leftOfSecondary)
+        path = makePath(from: leftOfSecondary, to: leftOfPrimary)
       } else if primaryFrame.origin.x + primaryFrame.size.width < secondaryFrame.origin.x {
         // primary view is entirely left of the secondary view
         let leftOfSecondary = CGPoint(x: secondaryFrame.origin.x, y: leftOfPrimary.y)
@@ -185,11 +185,31 @@ class DesignReviewSpecContainerView: DesignReviewSelectableView {
         centerPoint = CGPoint(x: rightOfPrimary.x + ((leftOfSecondary.x - rightOfPrimary.x) / 2), y: leftOfSecondary.y)
 
         path = makePath(from: rightOfPrimary, to: leftOfSecondary)
-      } else {
+      } else if isFrame(secondaryFrame, inside: primaryFrame) {
+        // secondary view is entirely inside the primary view
         let leftOfSecondary = CGPoint(x: secondaryFrame.origin.x, y: leftOfPrimary.y)
         centerPoint = CGPoint(x: leftOfSecondary.x + ((leftOfPrimary.x - leftOfSecondary.x) / 2), y: leftOfSecondary.y)
 
         path = makePath(from: leftOfPrimary, to: leftOfSecondary)
+      } else if primaryFrame.origin.x > secondaryFrame.origin.x {
+        // primary view's left edge is still a bit further right than the left edge of the secondary view
+        let leftOfSecondary = CGPoint(x: secondaryFrame.origin.x, y: leftOfPrimary.y)
+        centerPoint = CGPoint(x: leftOfSecondary.x + ((leftOfPrimary.x - leftOfSecondary.x) / 2), y: leftOfPrimary.y)
+
+        path = makePath(from: leftOfSecondary, to: leftOfPrimary)
+      } else if primaryFrame.origin.x < secondaryFrame.origin.x {
+        // primary view is partially, but not entirely, left of the secondary view
+        let leftOfSecondary = CGPoint(x: secondaryFrame.origin.x, y: leftOfPrimary.y)
+        centerPoint = CGPoint(x: leftOfPrimary.x + ((leftOfSecondary.x - leftOfPrimary.x) / 2), y: leftOfPrimary.y)
+
+        path = makePath(from: leftOfPrimary, to: leftOfSecondary)
+      } else {
+        let leftOfSecondary = CGPoint(x: secondaryFrame.origin.x, y: leftOfPrimary.y)
+        let rightOfPrimary = CGPoint(x: primaryFrame.origin.x + primaryFrame.size.width,
+                                     y: primaryFrame.origin.y + primaryFrame.size.height / 2)
+        centerPoint = CGPoint(x: leftOfSecondary.x + ((rightOfPrimary.x - leftOfSecondary.x) / 2), y: leftOfSecondary.y)
+
+        path = makePath(from: leftOfSecondary, to: rightOfPrimary)
       }
 
       guard let center = centerPoint else { return }
@@ -250,11 +270,31 @@ class DesignReviewSpecContainerView: DesignReviewSelectableView {
         centerPoint = CGPoint(x: rightOfSecondary.x + ((leftOfPrimary.x - rightOfSecondary.x) / 2), y: leftOfPrimary.y)
 
         path = makePath(from: rightOfSecondary, to: leftOfPrimary)
-      } else {
+      } else if isFrame(secondaryFrame, inside: primaryFrame) {
+        // secondary view is entirely inside the primary view
         let rightOfSecondary = CGPoint(x: secondaryFrame.origin.x + secondaryFrame.size.width, y: rightOfPrimary.y)
         centerPoint = CGPoint(x: rightOfSecondary.x + ((rightOfPrimary.x - rightOfSecondary.x) / 2), y: rightOfPrimary.y)
 
         path = makePath(from: rightOfSecondary, to: rightOfPrimary)
+      } else if primaryFrame.origin.x + primaryFrame.size.width < secondaryFrame.origin.x + secondaryFrame.size.width {
+        // primary view's right edge is still a bit further left than the right edge of the secondary view
+        let rightOfSecondary = CGPoint(x: secondaryFrame.origin.x + secondaryFrame.size.width, y: rightOfPrimary.y)
+        centerPoint = CGPoint(x: rightOfPrimary.x + ((rightOfSecondary.x - rightOfPrimary.x) / 2), y: rightOfSecondary.y)
+
+        path = makePath(from: rightOfPrimary, to: rightOfSecondary)
+      } else if primaryFrame.origin.x + primaryFrame.size.width > secondaryFrame.origin.x + secondaryFrame.size.width {
+        // primary view's right edge is now further right than the right edge of the secondary
+        let rightOfSecondary = CGPoint(x: secondaryFrame.origin.x + secondaryFrame.size.width, y: rightOfPrimary.y)
+        centerPoint = CGPoint(x: rightOfSecondary.x + ((rightOfPrimary.x - rightOfSecondary.x) / 2), y: rightOfSecondary.y)
+
+        path = makePath(from: rightOfSecondary, to: rightOfPrimary)
+      } else {
+        // primary view's left edge is partially, but not entirely, right of the secondary view
+        let leftOfPrimary = CGPoint(x: primaryFrame.origin.x, y: primaryFrame.origin.y + primaryFrame.size.height / 2)
+        let rightOfSecondary = CGPoint(x: secondaryFrame.origin.x + secondaryFrame.size.width, y: leftOfPrimary.y)
+        centerPoint = CGPoint(x: leftOfPrimary.x + ((rightOfSecondary.x - leftOfPrimary.x) / 2), y: leftOfPrimary.y)
+
+        path = makePath(from: leftOfPrimary, to: rightOfSecondary)
       }
 
       guard let center = centerPoint else { return }

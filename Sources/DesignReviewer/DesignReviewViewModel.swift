@@ -23,13 +23,13 @@ struct Specs {
   func shouldHideSpec(for side: Side) -> Bool {
     switch side {
     case .top:
-      return top == 0
+      return top.roundedForSpecString() == 0.00
     case .left:
-      return left == 0
+      return left.roundedForSpecString() == 0.00
     case .bottom:
-      return bottom == 0
+      return bottom.roundedForSpecString() == 0.00
     case .right:
-      return right == 0
+      return right.roundedForSpecString() == 0.00
     }
   }
 }

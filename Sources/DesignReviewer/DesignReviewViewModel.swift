@@ -122,9 +122,9 @@ extension DesignReviewViewModel {
       right = rect1.maxX - rect2.maxX
     } else if rect1.minX > rect2.minX {
       left = 0
-      right = bounds.width - (rect1.width + rect2.width)
+      right = abs(bounds.width - (rect1.width + rect2.width))
     } else {
-      left = bounds.width - (rect1.width + rect2.width)
+      left = abs(bounds.width - (rect1.width + rect2.width))
       right = 0
     }
 
@@ -139,19 +139,22 @@ extension DesignReviewViewModel {
     var bottom: CGFloat = 0
 
     if rect1.minY == rect2.minY, rect1.maxY == rect2.maxY {
+      // rects are identical
       top = 0
       bottom = 0
     } else if rect1.minY >= rect2.minY, rect1.maxY <= rect2.maxY {
+      // rect1 entirely inside rect2
       top = rect1.minY - rect2.minY
       bottom = rect2.maxY - rect1.maxY
     } else if rect1.minY <= rect2.minY, rect1.maxY >= rect2.maxY {
+      // rect2 entirely inside rect1
       top = rect2.minY - rect1.minY
       bottom = rect1.maxY - rect2.maxY
     } else if rect1.minY > rect2.minY {
       top = 0
-      bottom = bounds.height - (rect1.height + rect2.height)
+      bottom = abs(bounds.height - (rect1.height + rect2.height))
     } else {
-      top = bounds.height - (rect1.height + rect2.height)
+      top = abs(bounds.height - (rect1.height + rect2.height))
       bottom = 0
     }
 

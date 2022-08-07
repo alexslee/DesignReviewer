@@ -13,6 +13,19 @@ import UIKit
 struct Specs {
   enum Side {
     case top, left, bottom, right
+
+    var labelled: String {
+      switch self {
+      case .top:
+        return "T"
+      case .left:
+        return "L"
+      case .bottom:
+        return "B"
+      case .right:
+        return "R"
+      }
+    }
   }
 
   let top: CGFloat
@@ -23,13 +36,13 @@ struct Specs {
   func shouldHideSpec(for side: Side) -> Bool {
     switch side {
     case .top:
-      return top.roundedForSpecString() == 0.00
+      return top.roundedForSpecString() <= 0.00
     case .left:
-      return left.roundedForSpecString() == 0.00
+      return left.roundedForSpecString() <= 0.00
     case .bottom:
-      return bottom.roundedForSpecString() == 0.00
+      return bottom.roundedForSpecString() <= 0.00
     case .right:
-      return right.roundedForSpecString() == 0.00
+      return right.roundedForSpecString() <= 0.00
     }
   }
 }
@@ -115,17 +128,16 @@ extension DesignReviewViewModel {
       left = 0
       right = 0
     } else if rect1.minX >= rect2.minX, rect1.maxX <= rect2.maxX {
+      // rect1 entirely inside rect2
       left = rect1.minX - rect2.minX
       right = rect2.maxX - rect1.maxX
     } else if rect1.minX <= rect2.minX, rect1.maxX >= rect2.maxX {
+      // rect2 entirely inside rect1
       left = rect2.minX - rect1.minX
       right = rect1.maxX - rect2.maxX
-    } else if rect1.minX > rect2.minX {
-      left = 0
-      right = abs(bounds.width - (rect1.width + rect2.width))
     } else {
-      left = abs(bounds.width - (rect1.width + rect2.width))
-      right = 0
+      left = abs(rect1.origin.x - rect2.origin.x)
+      right = abs((rect1.origin.x + rect1.size.width) - (rect2.origin.x + rect2.size.width))
     }
 
     return (left, right)
@@ -150,12 +162,9 @@ extension DesignReviewViewModel {
       // rect2 entirely inside rect1
       top = rect2.minY - rect1.minY
       bottom = rect1.maxY - rect2.maxY
-    } else if rect1.minY > rect2.minY {
-      top = 0
-      bottom = abs(bounds.height - (rect1.height + rect2.height))
     } else {
-      top = abs(bounds.height - (rect1.height + rect2.height))
-      bottom = 0
+      top = abs(rect1.origin.y - rect2.origin.y)
+      bottom = abs((rect1.origin.y + rect1.size.height) - (rect2.origin.y + rect2.size.height))
     }
 
     return (top, bottom)

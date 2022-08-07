@@ -43,8 +43,8 @@ class DesignReviewSpecView: UIVisualEffectView {
     NSLayoutConstraint.activate(label.constraints(toView: contentView, withEqualInset: .extraExtraSmall))
   }
 
-  func updateSpec(_ spec: CGFloat) {
-    label.text = spec.toString()
+  func updateSpec(_ spec: CGFloat, side: Specs.Side) {
+    label.text = spec.toString(prepending: side.labelled + ": ")
     label.sizeToFit()
   }
 }

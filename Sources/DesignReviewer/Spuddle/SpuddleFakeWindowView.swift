@@ -49,6 +49,10 @@ class SpuddleFakeWindowView: UIView {
         spuddlePresentedViewModel.spuddles.forEach { dismissIfNeeded($0) }
         return super.hitTest(point, with: event) // don't let the touch keep propagating
       }
+
+      if spuddle.viewModel.shouldBlockOutsideTouches {
+        return super.hitTest(point, with: event)
+      }
     }
 
     return nil

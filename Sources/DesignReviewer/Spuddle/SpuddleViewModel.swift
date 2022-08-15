@@ -12,7 +12,9 @@ class SpuddleViewModel: ObservableObject {
   let animation: Animation
   let placement: SpuddlePlacement
   let transition: AnyTransition
-  let onDismiss: (() -> Void)?
+  let dismissTransition: AnyTransition
+  let shouldBlockOutsideTouches: Bool
+  var onDismiss: (() -> Void)?
 
   var currentTransaction: Transaction?
   @Published var currentFrame: CGRect = .zero
@@ -20,7 +22,10 @@ class SpuddleViewModel: ObservableObject {
 
   let id = UUID()
 
-  var fakeWindow: SpuddleFakeWindowView? = nil
+  weak var fakeWindow: SpuddleFakeWindowView? = nil
+  weak var coordinator: DesignReviewCoordinatorProtocol?
+
+  var onContainerDisappear: (() -> Void)?
 
   /**
    The frame that the popover attaches to or is placed within (configure in `position`). This must be in global window coordinates.
@@ -40,6 +45,8 @@ class SpuddleViewModel: ObservableObject {
   init(animation: Animation = .spuddleSpringyDefault,
        placement: SpuddlePlacement,
        transition: AnyTransition = .opacity,
+       dismissTransition: AnyTransition = .opacity,
+       shouldBlockOutsideTouches: Bool = true,
        sourceFrame: @escaping (() -> CGRect) = { .zero },
        sourceFrameInset: UIEdgeInsets = .zero,
        onDismiss: (() -> Void)?) {
@@ -47,6 +54,8 @@ class SpuddleViewModel: ObservableObject {
     self.placement = placement
     self.onDismiss = onDismiss
     self.transition = transition
+    self.dismissTransition = transition
+    self.shouldBlockOutsideTouches = shouldBlockOutsideTouches
     self.sourceFrame = sourceFrame
     self.sourceFrameInset = sourceFrameInset
   }

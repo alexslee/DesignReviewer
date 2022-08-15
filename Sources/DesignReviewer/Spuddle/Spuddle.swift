@@ -32,6 +32,57 @@ struct Spuddle: Identifiable, Equatable {
       self.backgroundView = AnyView(backgroundView().environmentObject(viewModel))
     }
 
+  func dismiss() {
+    guard let window = viewModel.fakeWindow else { return }
+
+    viewModel.onContainerDisappear = { [weak window, weak viewModel] in
+      if (window?.spuddlePresentedViewModel.spuddles ?? []).isEmpty {
+        viewModel?.fakeWindow?.removeFromSuperview()
+        viewModel?.fakeWindow = nil
+        viewModel?.coordinator?.finish()
+      }
+
+      SpuddleWindowManager.shared.deleteAsNeeded()
+    }
+
+    // TODO: dedicated dismiss animation
+    withTransaction(Transaction(animation: viewModel.animation)) { [weak window] in
+      window?.spuddlePresentedViewModel.spuddles.removeAll(where: { $0 == self })
+    }
+
+    viewModel.onDismiss?()
+  }
+
+  func positionDidChange(to newPoint: CGPoint) {
+    let bounds = viewModel.fakeWindow?.window?.bounds ?? .zero
+
+    if newPoint.y >= bounds.height - (bounds.height * 0.25) {
+      var newFrame = viewModel.staticFrame
+      newFrame.origin.y = bounds.height
+
+      viewModel.staticFrame = newFrame
+      viewModel.currentFrame = newFrame
+
+      dismiss()
+      return
+    }
+
+    let sourceFrame = viewModel.sourceFrame().inset(by: viewModel.sourceFrameInset)
+
+    let closestPlacement = SpuddlePlacement.closestPlacement(
+      for: newPoint,
+      in: sourceFrame,
+      spuddleSize: viewModel.currentSize ?? .zero)
+
+    let newFrame = SpuddlePlacement.calculateRelativePosition(
+      for: closestPlacement,
+      in: sourceFrame,
+      with: viewModel.currentSize ?? .zero)
+
+    viewModel.staticFrame = newFrame
+    viewModel.currentFrame = newFrame
+  }
+
   func present(in window: UIWindow) {
     let transaction = Transaction(animation: viewModel.animation)
 
@@ -43,8 +94,11 @@ struct Spuddle: Identifiable, Equatable {
       showSpuddle(in: currentFakeWindow, transaction: transaction, window: window)
     } else {
       fakeWindow = SpuddleFakeWindowView(frame: window.bounds)
-      fakeWindow.movedToWindow = { [weak fakeWindow] in
-        if let stillFakeWindow = fakeWindow { showSpuddle(in: stillFakeWindow, transaction: transaction, window: window) }
+      fakeWindow.movedToWindow = { [weak fakeWindow, weak viewModel, weak window] in
+        guard let stillFakeWindow = fakeWindow else { return }
+        guard let animation = viewModel?.animation else { return }
+        guard let targetWindow = window else { return }
+        showSpuddle(in: stillFakeWindow, transaction: Transaction(animation: animation), window: targetWindow)
       }
 
       window.addSubview(fakeWindow)

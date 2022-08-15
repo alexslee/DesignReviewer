@@ -8,8 +8,13 @@
 import Foundation
 import CoreGraphics
 
-enum SpuddlePlacement {
+enum SpuddlePlacement: CaseIterable {
   case topLeft, top, topRight, centerLeft, center, centerRight, bottomLeft, bottom, bottomRight
+
+  static var allCases: [SpuddlePlacement] {
+    return [.topLeft, .top, .topRight, .centerLeft, .center, .centerRight, .bottomLeft, .bottom, .bottomRight]
+  }
+
   static func calculateRelativePosition(for placement: SpuddlePlacement,
                                         in containerFrame: CGRect,
                                         with spuddleSize: CGSize) -> CGRect {
@@ -48,5 +53,21 @@ enum SpuddlePlacement {
       return CGPoint(x: containerFrame.origin.x + containerFrame.width - spuddleSize.width,
                      y: containerFrame.origin.y + containerFrame.height - spuddleSize.height)
     }
+  }
+
+  static func closestPlacement(for point: CGPoint, in referenceFrame: CGRect, spuddleSize: CGSize) -> SpuddlePlacement {
+    var closestPlacement = SpuddlePlacement.bottom
+    var closestDistance = CGFloat.infinity
+    for placement in allCases {
+      let origin = relativeOrigin(for: placement, in: referenceFrame, with: spuddleSize)
+      let distance = (point.x - origin.x) * (point.x - origin.x) + (point.y - origin.y) * (point.y - origin.y)
+
+      if distance < closestDistance {
+        closestPlacement = placement
+        closestDistance = distance
+      }
+    }
+
+    return closestPlacement
   }
 }

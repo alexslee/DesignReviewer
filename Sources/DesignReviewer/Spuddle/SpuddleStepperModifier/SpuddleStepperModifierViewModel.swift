@@ -15,12 +15,18 @@ class SpuddleStepperModifierViewModel: ObservableObject {
   private let maximumValue: CGFloat
   @Published private(set) var currentValue: Double
 
+  @Published var shouldDismiss = false
+
   var changeHandler: ((Any) -> Void)?
 
+  var dismissHandler: (() -> Void)?
+
   init(attribute: any DesignReviewInspectorAttribute,
-       changeHandler: ((Any) -> Void)? = nil) {
+       changeHandler: ((Any) -> Void)? = nil,
+       dismissHandler: (() -> Void)? = nil) {
     self.attribute = attribute
     self.changeHandler = changeHandler
+    self.dismissHandler = dismissHandler
 
     let numberValue = attribute.value as? Double
     assert(numberValue != nil)

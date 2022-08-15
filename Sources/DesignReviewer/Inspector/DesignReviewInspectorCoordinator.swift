@@ -77,6 +77,7 @@ class DesignReviewInspectorCoordinator: NSObject, DesignReviewCoordinatorProtoco
                    changeHandler: ((Any) -> Void)?) {
     let spuddleViewModel = SpuddleViewModel(placement: .bottom,
                                             transition: .move(edge: .bottom),
+                                            dismissTransition: .slide,
                                             onDismiss: nil)
     spuddleViewModel.sourceFrame = sourceFrameGetter
 

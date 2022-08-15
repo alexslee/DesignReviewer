@@ -40,7 +40,7 @@ class SpuddleWindowManager {
 
   // MARK: - Helpers
 
-  private func deleteAsNeeded() {
+  func deleteAsNeeded() {
     mappedViewModels.keys.filter(\.isDeallocated).forEach { key in
       mappedViewModels[key] = nil
     }

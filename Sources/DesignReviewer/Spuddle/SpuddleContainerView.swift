@@ -9,8 +9,22 @@ import Combine
 import Foundation
 import SwiftUI
 
+extension CGPoint {
+  /// Add 2 CGPoints.
+  static func + (left: CGPoint, right: CGPoint) -> CGPoint {
+    return CGPoint(x: left.x + right.x, y: left.y + right.y)
+  }
+
+  /// Subtract 2 CGPoints.
+  static func - (left: CGPoint, right: CGPoint) -> CGPoint {
+    return CGPoint(x: left.x - right.x, y: left.y - right.y)
+  }
+}
+
 struct SpuddleContainerView: View {
   @ObservedObject var viewModel: SpuddlePresentedViewModel
+  @State private var spuddleOffset: CGSize = .zero
+  @State var selectedSpuddle: Spuddle? = nil
 
   var body: some View {
     ZStack {
@@ -41,19 +55,77 @@ struct SpuddleContainerView: View {
               }
             })
             .offset(offset(for: spuddle))
+            .simultaneousGesture(
+              DragGesture(minimumDistance: .extraExtraSmall)
+                .onChanged({ value in
+                  func update() {
+                    dragOffset(value.translation, spuddle: spuddle)
+                    spuddle.viewModel.currentFrame = CGRect(
+                      origin: spuddle.viewModel.staticFrame.origin + CGPoint(x: spuddleOffset.width, y: spuddleOffset.height),
+                      size: spuddle.viewModel.currentSize ?? .zero)
+                  }
+
+                  if selectedSpuddle == nil {
+                    withAnimation(.spuddleSpringyDefault) {
+                      selectedSpuddle = spuddle
+                      update()
+                    }
+                  } else {
+                    update() // drag already in progress
+                  }
+                })
+                .onEnded({ value in
+                  let finalOrigin = CGPoint(
+                      x: spuddle.viewModel.staticFrame.origin.x + value.predictedEndTranslation.width,
+                      y: spuddle.viewModel.staticFrame.origin.y + value.predictedEndTranslation.height
+                  )
+
+                  withAnimation(.spuddleSpringyDefault) {
+                    spuddleOffset = .zero
+                    spuddle.positionDidChange(to: finalOrigin)
+                    spuddle.viewModel.currentFrame = spuddle.viewModel.staticFrame
+                  }
+
+                  selectedSpuddle = nil
+                })
+            )
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .transition(.asymmetric(insertion: spuddle.viewModel.transition, removal: .opacity)) // TODO: dismissal transition
+        .transition(.asymmetric(insertion: spuddle.viewModel.transition, removal: spuddle.viewModel.dismissTransition))
+        .onDisappear(perform: { spuddle.viewModel.onContainerDisappear?() })
       }
     }
     .edgesIgnoringSafeArea(.all)
+  }
+
+  private func dragOffset(_ offset: CGSize, spuddle: Spuddle) {
+    var newSpuddleOffset = CGSize.zero
+    func applyVerticalOffset(dragDown: Bool) {
+      let condition = dragDown ? offset.height <= 0 : offset.height >= 0
+      if condition {
+        /// dragged in the opposite direction, so apply rubber banding.
+        newSpuddleOffset.height = getRubberBanding(translation: offset).height
+      } else {
+        newSpuddleOffset.height = offset.height
+      }
+    }
+
+    applyVerticalOffset(dragDown: true)
+    spuddleOffset = newSpuddleOffset
+  }
+
+  private func getRubberBanding(translation: CGSize) -> CGSize {
+    var offset = CGSize.zero
+    offset.width = pow(abs(translation.width), 0.7) * (translation.width > 0 ? 1 : -1)
+    offset.height = pow(abs(translation.height), 0.7) * (translation.height > 0 ? 1 : -1)
+    return offset
   }
 
   private func offset(for spuddle: Spuddle) -> CGSize {
     guard spuddle.viewModel.currentSize != nil else { return .zero }
 
     return CGSize(
-      width: spuddle.viewModel.staticFrame.origin.x,
-      height: spuddle.viewModel.staticFrame.origin.y)
+      width: spuddle.viewModel.staticFrame.origin.x + (selectedSpuddle == spuddle ? spuddleOffset.width : 0),
+      height: spuddle.viewModel.staticFrame.origin.y + (selectedSpuddle == spuddle ? spuddleOffset.height : 0))
   }
 }

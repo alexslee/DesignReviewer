@@ -42,6 +42,7 @@ struct SpuddleStepperModiferView: View {
           Spacer()
 
           Button (action: {
+            viewModel.shouldDismiss = true
           }, label: {
             Image(systemName: "xmark")
               .font(.system(size: .medium))
@@ -71,6 +72,10 @@ struct SpuddleStepperModiferView: View {
     .background(VisualEffecter(.systemMaterial))
     .cornerRadius(.medium)
     .padding()
+    .onChange(of: viewModel.shouldDismiss) { newValue in
+      guard newValue else { return }
+      viewModel.dismissHandler?()
+    }
   }
 }
 

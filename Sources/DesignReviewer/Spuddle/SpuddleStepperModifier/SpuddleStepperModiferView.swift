@@ -64,6 +64,7 @@ struct SpuddleStepperModiferView: View {
     .padding(.large)
     .background(VisualEffecter(.systemMaterial))
     .cornerRadius(.medium)
+    .padding()
   }
 }
 

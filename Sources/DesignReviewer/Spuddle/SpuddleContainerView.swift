@@ -17,6 +17,7 @@ struct SpuddleContainerView: View {
       ForEach(viewModel.spuddles) { spuddle in
         ZStack(alignment: .topLeading) {
           spuddle.backgroundView
+            .transaction({ $0.animation = nil }) // TODO: control bg animation separately. disabled for now
 
           spuddle.view
             .opacity(spuddle.viewModel.currentSize != nil ? 1 : 0)

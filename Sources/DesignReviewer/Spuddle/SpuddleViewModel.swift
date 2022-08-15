@@ -37,7 +37,7 @@ class SpuddleViewModel: ObservableObject {
   /// The frame of the popover, without drag gesture offset applied.
   @Published var staticFrame = CGRect.zero
 
-  init(animation: Animation = .easeOut,
+  init(animation: Animation = .spuddleSpringyDefault,
        placement: SpuddlePlacement,
        transition: AnyTransition = .opacity,
        sourceFrame: @escaping (() -> CGRect) = { .zero },

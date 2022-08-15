@@ -75,8 +75,7 @@ class DesignReviewInspectorCoordinator: NSObject, DesignReviewCoordinatorProtoco
                    attribute: DesignReviewInspectorAttribute,
                    sourceFrameGetter: @escaping (() -> CGRect),
                    changeHandler: ((Any) -> Void)?) {
-    let spuddleViewModel = SpuddleViewModel(animation: .spring(response: 0.55, dampingFraction: 0.5, blendDuration: 0.0),
-                                            placement: .bottom,
+    let spuddleViewModel = SpuddleViewModel(placement: .bottom,
                                             transition: .move(edge: .bottom),
                                             onDismiss: nil)
     spuddleViewModel.sourceFrame = sourceFrameGetter

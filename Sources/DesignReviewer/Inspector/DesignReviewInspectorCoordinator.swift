@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftUI
 import UIKit
 
 class DesignReviewInspectorRouter {
@@ -70,13 +71,18 @@ class DesignReviewInspectorCoordinator: NSObject, DesignReviewCoordinatorProtoco
     newCoordinator.start()
   }
 
-  func showSpuddle(viewModel: SpuddleViewModel,
-                   in viewController: UIViewController,
+  func showSpuddle(in viewController: UIViewController,
                    attribute: DesignReviewInspectorAttribute,
+                   sourceFrameGetter: @escaping (() -> CGRect),
                    changeHandler: ((Any) -> Void)?) {
+    let spuddleViewModel = SpuddleViewModel(placement: .bottom,
+                                            transition: .move(edge: .bottom),
+                                            onDismiss: nil)
+    spuddleViewModel.sourceFrame = sourceFrameGetter
+
     let newRouter = SpuddleRouter(viewController: viewController)
     let newCoordinator = SpuddleStepperCoordinator(
-      viewModel: viewModel,
+      viewModel: spuddleViewModel,
       router: newRouter,
       attribute: attribute,
       changeHandler: changeHandler)

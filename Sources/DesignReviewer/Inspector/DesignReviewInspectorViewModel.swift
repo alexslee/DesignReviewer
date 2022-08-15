@@ -124,13 +124,9 @@ class DesignReviewInspectorViewModel {
                              sourceFrameGetter: @escaping (() -> CGRect),
                              changeHandler: ((Any) -> Void)?) {
 //    guard attribute.isAlertable else { return }
-    let spuddleViewModel = SpuddleViewModel(placement: .bottom, onDismiss: nil)
-
-    spuddleViewModel.sourceFrame = sourceFrameGetter
-
-    coordinator?.showSpuddle(viewModel: spuddleViewModel,
-                             in: context,
+    coordinator?.showSpuddle(in: context,
                              attribute: attribute,
+                             sourceFrameGetter: sourceFrameGetter,
                              changeHandler: changeHandler)
   }
 

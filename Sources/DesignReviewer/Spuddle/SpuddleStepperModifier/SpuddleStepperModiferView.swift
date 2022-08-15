@@ -32,34 +32,40 @@ struct SpuddleStepperModiferView: View {
   @ObservedObject var viewModel: SpuddleStepperModifierViewModel
 
   var body: some View {
-    VStack(spacing: .medium) {
-      HStack {
-        Spacer()
-
-        Button (action: {
-        }, label: {
-          Image(systemName: "xmark")
-            .font(.system(size: .medium))
-            .foregroundColor(.secondary)
-            .frame(width: .extraLarge, height: .extraLarge)
-            .background(Color(.systemBackground))
-            .cornerRadius(.medium)
-        })
-      }
-
+    ZStack(alignment: .top) {
       Text("Edit")
         .font(.system(size: .extraLarge))
-        .bold()
+        .fontWeight(.heavy)
 
-      Text("Current value: \(viewModel.currentValue)")
+      VStack(spacing: .medium) {
+        HStack {
+          Spacer()
 
-      Stepper("Stepper",
-              onIncrement: {
-        viewModel.handleIncrement()
-      }, onDecrement: {
-        viewModel.handleDecrement()
-      })
+          Button (action: {
+          }, label: {
+            Image(systemName: "xmark")
+              .font(.system(size: .medium))
+              .foregroundColor(.secondary)
+              .frame(width: .extraLarge, height: .extraLarge)
+              .background(Color(.systemBackground))
+              .cornerRadius(.medium)
+          })
+        }
+
+        Text("\(viewModel.attribute.title)")
+          .font(.system(size: .large))
+          .bold()
+
+        Text("Current value: \(viewModel.currentValue)")
+
+        Stepper("Stepper",
+                onIncrement: {
+          viewModel.handleIncrement()
+        }, onDecrement: {
+          viewModel.handleDecrement()
+        })
         .labelsHidden()
+      }
     }
     .padding(.large)
     .background(VisualEffecter(.systemMaterial))

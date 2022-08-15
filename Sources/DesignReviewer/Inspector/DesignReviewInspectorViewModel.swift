@@ -119,6 +119,21 @@ class DesignReviewInspectorViewModel {
     coordinator?.finish()
   }
 
+  func showSpuddleIfPossible(for attribute: DesignReviewInspectorAttribute,
+                             in context: UIViewController,
+                             sourceFrameGetter: @escaping (() -> CGRect),
+                             changeHandler: ((Any) -> Void)?) {
+//    guard attribute.isAlertable else { return }
+    let spuddleViewModel = SpuddleViewModel(placement: .bottom, onDismiss: nil)
+
+    spuddleViewModel.sourceFrame = sourceFrameGetter
+
+    coordinator?.showSpuddle(viewModel: spuddleViewModel,
+                             in: context,
+                             attribute: attribute,
+                             changeHandler: changeHandler)
+  }
+
   func showAlertIfPossible(for attribute: DesignReviewInspectorAttribute,
                            in context: UIViewController,
                            changeHandler: ((Any) -> Void)?) {

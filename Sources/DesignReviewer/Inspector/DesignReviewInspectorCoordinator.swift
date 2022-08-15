@@ -70,6 +70,22 @@ class DesignReviewInspectorCoordinator: NSObject, DesignReviewCoordinatorProtoco
     newCoordinator.start()
   }
 
+  func showSpuddle(viewModel: SpuddleViewModel,
+                   in viewController: UIViewController,
+                   attribute: DesignReviewInspectorAttribute,
+                   changeHandler: ((Any) -> Void)?) {
+    let newRouter = SpuddleRouter(viewController: viewController)
+    let newCoordinator = SpuddleStepperCoordinator(
+      viewModel: viewModel,
+      router: newRouter,
+      attribute: attribute,
+      changeHandler: changeHandler)
+
+    newCoordinator.parent = self
+    children.append(newCoordinator)
+    newCoordinator.start()
+  }
+
   func presentDesignReview(for reviewable: DesignReviewable) {
     let currentContext = router.viewController
     var customAttributes = DesignReviewer.customAttributes[String(describing: reviewable.classForCoder)]

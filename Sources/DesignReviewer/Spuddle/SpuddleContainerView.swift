@@ -10,17 +10,16 @@ import Foundation
 import SwiftUI
 
 extension CGPoint {
-  /// Add 2 CGPoints.
-  static func + (left: CGPoint, right: CGPoint) -> CGPoint {
+  static func +(left: CGPoint, right: CGPoint) -> CGPoint {
     return CGPoint(x: left.x + right.x, y: left.y + right.y)
   }
 
-  /// Subtract 2 CGPoints.
-  static func - (left: CGPoint, right: CGPoint) -> CGPoint {
+  static func -(left: CGPoint, right: CGPoint) -> CGPoint {
     return CGPoint(x: left.x - right.x, y: left.y - right.y)
   }
 }
 
+/// Holds the spuddle view and provides support for drag gesture + snapping-to-position when it ends
 struct SpuddleContainerView: View {
   @ObservedObject var viewModel: SpuddlePresentedViewModel
   @State private var spuddleOffset: CGSize = .zero
@@ -76,9 +75,8 @@ struct SpuddleContainerView: View {
                 })
                 .onEnded({ value in
                   let finalOrigin = CGPoint(
-                      x: spuddle.viewModel.staticFrame.origin.x + value.predictedEndTranslation.width,
-                      y: spuddle.viewModel.staticFrame.origin.y + value.predictedEndTranslation.height
-                  )
+                    x: spuddle.viewModel.staticFrame.origin.x + value.predictedEndTranslation.width,
+                    y: spuddle.viewModel.staticFrame.origin.y + value.predictedEndTranslation.height)
 
                   withAnimation(.spuddleSpringyDefault) {
                     spuddleOffset = .zero
@@ -100,25 +98,22 @@ struct SpuddleContainerView: View {
 
   private func dragOffset(_ offset: CGSize, spuddle: Spuddle) {
     var newSpuddleOffset = CGSize.zero
-    func applyVerticalOffset(dragDown: Bool) {
-      let condition = dragDown ? offset.height <= 0 : offset.height >= 0
-      if condition {
-        /// dragged in the opposite direction, so apply rubber banding.
-        newSpuddleOffset.height = getRubberBanding(translation: offset).height
-      } else {
-        newSpuddleOffset.height = offset.height
-      }
+
+    let didDragTheOtherWay = offset.height <= 0
+    if didDragTheOtherWay {
+      newSpuddleOffset.height = getRubberBanding(translation: offset).height
+    } else {
+      newSpuddleOffset.height = offset.height
     }
 
-    applyVerticalOffset(dragDown: true)
     spuddleOffset = newSpuddleOffset
   }
 
   private func getRubberBanding(translation: CGSize) -> CGSize {
-    var offset = CGSize.zero
-    offset.width = pow(abs(translation.width), 0.7) * (translation.width > 0 ? 1 : -1)
-    offset.height = pow(abs(translation.height), 0.7) * (translation.height > 0 ? 1 : -1)
-    return offset
+    var retVal = CGSize.zero
+    retVal.width = pow(abs(translation.width), 0.7) * (translation.width > 0 ? 1 : -1)
+    retVal.height = pow(abs(translation.height), 0.7) * (translation.height > 0 ? 1 : -1)
+    return retVal
   }
 
   private func offset(for spuddle: Spuddle) -> CGSize {

@@ -8,9 +8,7 @@
 import Foundation
 import UIKit
 
-/**
- Supports multiple windows by maintaining a 1:1 mapping of `UIWindow` to `SpuddlePresentedViewModel`.
- */
+/// Supports multiple windows by maintaining a 1:1 mapping of `UIWindow` to `SpuddlePresentedViewModel`.
 class SpuddleWindowManager {
   static let shared = SpuddleWindowManager()
 

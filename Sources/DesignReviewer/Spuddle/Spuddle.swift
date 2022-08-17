@@ -45,7 +45,6 @@ struct Spuddle: Identifiable, Equatable {
       SpuddleWindowManager.shared.deleteAsNeeded()
     }
 
-    // TODO: dedicated dismiss animation
     withTransaction(Transaction(animation: viewModel.animation)) { [weak window] in
       window?.spuddlePresentedViewModel.spuddles.removeAll(where: { $0 == self })
     }

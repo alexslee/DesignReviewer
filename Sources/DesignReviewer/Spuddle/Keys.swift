@@ -15,7 +15,7 @@ struct ContentSizeReaderPreferenceKey: PreferenceKey {
 }
 
 extension EnvironmentValues {
-  // Designates the `UIWindow` hosting the views within the current environment.
+  // The `UIWindow` hosting the views within the current environment.
   var window: UIWindow? {
     get {
       self[WindowEnvironmentKey.self]

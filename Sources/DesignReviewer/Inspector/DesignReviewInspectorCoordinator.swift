@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftUI
 import UIKit
 
 class DesignReviewInspectorRouter {
@@ -64,6 +65,28 @@ class DesignReviewInspectorCoordinator: NSObject, DesignReviewCoordinatorProtoco
                  in viewController: UIViewController) {
     let newRouter = DesignReviewSuboptimalAlertRouter(viewController: viewController)
     let newCoordinator = DesignReviewSuboptimalAlertCoordinator(viewModel: viewModel, router: newRouter)
+
+    newCoordinator.parent = self
+    children.append(newCoordinator)
+    newCoordinator.start()
+  }
+
+  func showSpuddle(in viewController: UIViewController,
+                   attribute: DesignReviewInspectorAttribute,
+                   sourceFrameGetter: @escaping (() -> CGRect),
+                   changeHandler: ((Any) -> Void)?) {
+    let spuddleViewModel = SpuddleViewModel(placement: .bottom,
+                                            transition: .move(edge: .bottom),
+                                            dismissTransition: .slide,
+                                            onDismiss: nil)
+    spuddleViewModel.sourceFrame = sourceFrameGetter
+
+    let newRouter = SpuddleRouter(viewController: viewController)
+    let newCoordinator = SpuddleStepperCoordinator(
+      viewModel: spuddleViewModel,
+      router: newRouter,
+      attribute: attribute,
+      changeHandler: changeHandler)
 
     newCoordinator.parent = self
     children.append(newCoordinator)

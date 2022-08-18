@@ -185,7 +185,7 @@ class DesignReviewInspectorViewController: UIViewController {
 //              return cell.windowFrame()
 //            }
 
-            return self?.tableView.windowFrame() ?? .zero
+            return self?.tableView.windowFrame ?? .zero
           }, changeHandler: { [weak self] newValue in
             guard let self = self else { return }
             attribute.modifier?(newValue, self.viewModel.reviewable)

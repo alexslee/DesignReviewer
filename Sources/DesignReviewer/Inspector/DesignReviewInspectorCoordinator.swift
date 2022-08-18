@@ -104,6 +104,16 @@ class DesignReviewInspectorCoordinator: NSObject, DesignReviewCoordinatorProtoco
         stepperViewModel: stepperViewModel,
         router: newRouter,
         changeHandler: changeHandler)
+    case .text(let textViewModel):
+      spuddleViewModel = SpuddleViewModel(placement: .top,
+                                          transition: .move(edge: .top),
+                                          dismissTransition: .slide,
+                                          shouldAllowDragToDismiss: false,
+                                          onDismiss: nil)
+      newCoordinator = SpuddleTextCoordinator(viewModel: spuddleViewModel,
+                                              textViewModel: textViewModel,
+                                              router: newRouter,
+                                              changeHandler: changeHandler)
     }
     spuddleViewModel.sourceFrame = sourceFrameGetter
     newCoordinator.parent = self

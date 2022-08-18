@@ -10,6 +10,7 @@ import Foundation
 enum SpuddleModifierViewModel {
   case option(viewModel: SpuddleOptionsModifierViewModel)
   case stepper(viewModel: SpuddleStepperModifierViewModel)
+  case text(viewModel: SpuddleTextModifierViewModel)
 }
 
 class SpuddleOptionsModifierViewModel: ObservableObject {

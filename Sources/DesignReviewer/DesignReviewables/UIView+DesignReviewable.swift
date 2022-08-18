@@ -235,7 +235,8 @@ extension UIView: DesignReviewable {
         }
 
         self.layer.cornerRadius = CGFloat(rawRadius)
-      }))
+      },
+      shouldModifyViaAlert: true))
     attributes[.styling]?.append(DesignReviewEnumAttribute<UIView.TintAdjustmentMode>(
       title: "Tint Adjustment Mode",
       keyPath: "tintAdjustmentMode",
@@ -266,7 +267,8 @@ extension UIView: DesignReviewable {
         self.alpha = CGFloat(rawAlpha)
       },
       modifierIncrementSize: 0.1,
-      modifierRange: 0.1...1))
+      modifierRange: 0.1...1,
+      shouldModifyViaAlert: true))
 
     attributes[.generalLayout]?.append(DesignReviewEnumAttribute<UIView.ContentMode>(
       title: "Content Mode",
@@ -362,18 +364,7 @@ extension UIView: DesignReviewable {
       attributes[.typography]?.append(DesignReviewMutableAttribute(
         title: "Attributed Text",
         keyPath: "attributedText",
-        reviewable: self,
-        modifier: { [weak self] newValue, _ in
-          guard let self = self,
-            let newText = newValue as? String,
-            let currentString = (self as? UILabel)?.attributedText as? NSMutableAttributedString else {
-              return
-          }
-
-          currentString.mutableString.setString(newText)
-          (self as? UILabel)?.attributedText = currentString
-        },
-      shouldModifyViaAlert: true))
+        reviewable: self))
 
       attributes[.typography]?.append(DesignReviewEnumAttribute<NSLineBreakMode>(
         title: "LineBreakMode",
@@ -429,7 +420,8 @@ extension UIView: DesignReviewable {
 
           (self as? UILabel)?.numberOfLines = Int(rawLineCount)
         },
-      modifierIncrementSize: 1))
+      modifierIncrementSize: 1,
+      shouldModifyViaAlert: true))
     }
 
     // special fields for UIStackViews

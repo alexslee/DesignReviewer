@@ -123,17 +123,13 @@ class DesignReviewInspectorViewModel {
                              in context: UIViewController,
                              sourceFrameGetter: @escaping (() -> CGRect),
                              changeHandler: ((Any) -> Void)?) {
-//    guard attribute.isAlertable else { return }
-    var newViewModel: DesignReviewSuboptimalAlertViewModelProtocol?
-    var newSpuddleViewModel: SpuddleModifierViewModel?
-    if attribute is DesignReviewMutableAttribute, let initialValue = attribute.value as? String {
-      newViewModel = DesignReviewSuboptimalAlertTextViewModel(
-        title: attribute.title,
-        subtitle: nil,
-        initialValue: initialValue,
-        onOptionChosen: { newOption in
-          changeHandler?(newOption)
-        })
+    guard attribute.isAlertable else { return }
+    var newSpuddleViewModel: SpuddleModifierViewModel
+    if let initialValue = attribute.value as? String {
+      let textViewModel = SpuddleTextModifierViewModel(initialValue: initialValue,
+                                                       title: attribute.title,
+                                                       changeHandler: changeHandler)
+      newSpuddleViewModel = .text(viewModel: textViewModel)
     } else if let _ = attribute.value as? NSNumber {
       let stepperViewModel = SpuddleStepperModifierViewModel(attribute: attribute, changeHandler: changeHandler)
       newSpuddleViewModel = .stepper(viewModel: stepperViewModel)
@@ -155,9 +151,8 @@ class DesignReviewInspectorViewModel {
       newSpuddleViewModel = .option(viewModel: optionsViewModel)
     }
 
-    guard let spuddledVM = newSpuddleViewModel else { return }
     coordinator?.showSpuddle(in: context,
-                             viewModel: spuddledVM,
+                             viewModel: newSpuddleViewModel,
                              sourceFrameGetter: sourceFrameGetter,
                              changeHandler: changeHandler)
   }

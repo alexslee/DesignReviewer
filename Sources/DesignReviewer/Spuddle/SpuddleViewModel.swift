@@ -13,6 +13,7 @@ class SpuddleViewModel: ObservableObject {
   let placement: SpuddlePlacement
   let transition: AnyTransition
   let dismissTransition: AnyTransition
+  let shouldAllowDragToDismiss: Bool
   let shouldBlockOutsideTouches: Bool
   var onDismiss: (() -> Void)?
 
@@ -39,6 +40,7 @@ class SpuddleViewModel: ObservableObject {
        placement: SpuddlePlacement,
        transition: AnyTransition = .opacity,
        dismissTransition: AnyTransition = .opacity,
+       shouldAllowDragToDismiss: Bool = true,
        shouldBlockOutsideTouches: Bool = true,
        sourceFrame: @escaping (() -> CGRect) = { .zero },
        sourceFrameInset: UIEdgeInsets = .zero,
@@ -48,6 +50,7 @@ class SpuddleViewModel: ObservableObject {
     self.onDismiss = onDismiss
     self.transition = transition
     self.dismissTransition = transition
+    self.shouldAllowDragToDismiss = shouldAllowDragToDismiss
     self.shouldBlockOutsideTouches = shouldBlockOutsideTouches
     self.sourceFrame = sourceFrame
     self.sourceFrameInset = sourceFrameInset

@@ -9,6 +9,16 @@ import Foundation
 import SwiftUI
 
 extension View {
+  /// Convenience view builder that applies the provided transform if a given bool evaluates to true.
+  @ViewBuilder
+  func apply<T: View>(_ block: (Self) -> T, if condition: Bool) -> some View {
+    if condition {
+      block(self)
+    } else {
+      self
+    }
+  }
+
   /**
    Convenience wrapper around `GeometryReader` to receive word whenever the view's size is updated (includes rotation).
    h/t to https://stackoverflow.com/a/66822461/14351818

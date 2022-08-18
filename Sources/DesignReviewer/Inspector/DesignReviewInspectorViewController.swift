@@ -175,7 +175,6 @@ class DesignReviewInspectorViewController: UIViewController {
           self.reconstructExplodedHierarchy()
         })
       } else {
-        ///*
         viewModel.showSpuddleIfPossible(
           for: attribute,
           in: self,
@@ -200,24 +199,6 @@ class DesignReviewInspectorViewController: UIViewController {
             self.tableView.endUpdates()
             self.reconstructExplodedHierarchy()
           })
-        //*/
-        // TODO: fully replace alerts with the spuddles
-//        viewModel.showAlertIfPossible(for: attribute, in: self, changeHandler: { [weak self] newValue in
-//          guard let self = self else { return }
-//
-//          attribute.modifier?(newValue, self.viewModel.reviewable)
-//
-//          let rowCount = self.tableView.numberOfRows(inSection: indexPath.section)
-//          var indicesToReload = (0..<rowCount).map { IndexPath(row: $0, section: indexPath.section) }
-//
-//          if let screenshotSectionIndex = self.viewModel.refreshScreenshot() {
-//            indicesToReload.append(IndexPath(row: 0, section: screenshotSectionIndex))
-//          }
-//          self.tableView.beginUpdates()
-//          self.tableView.reloadRows(at: indicesToReload, with: .none)
-//          self.tableView.endUpdates()
-//          self.reconstructExplodedHierarchy()
-//        })
       }
     }
   }

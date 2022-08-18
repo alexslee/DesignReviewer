@@ -157,44 +157,6 @@ class DesignReviewInspectorViewModel {
                              changeHandler: changeHandler)
   }
 
-  func showAlertIfPossible(for attribute: DesignReviewInspectorAttribute,
-                           in context: UIViewController,
-                           changeHandler: ((Any) -> Void)?) {
-    guard attribute.isAlertable else { return }
-
-    var newViewModel: DesignReviewSuboptimalAlertViewModelProtocol
-    if attribute is DesignReviewMutableAttribute, let initialValue = attribute.value as? String {
-      newViewModel = DesignReviewSuboptimalAlertTextViewModel(
-        title: attribute.title,
-        subtitle: nil,
-        initialValue: initialValue,
-        onOptionChosen: { newOption in
-          changeHandler?(newOption)
-        })
-    } else {
-      var initialOption: DesignReviewAttributeOptionSelectable?
-      if let value = attribute.value as? String { // if it happens to be a string, make sure it's part of the alertable set
-        initialOption = attribute.alertableOptions.first(where: { $0.displayName == value })
-      } else if let value = attribute.value as? DesignReviewAttributeOptionSelectable {
-        // failing that, the attribute value should be a conformant enum type in order to get to here...
-        initialOption = value
-      }
-
-      newViewModel = DesignReviewSuboptimalAlertOptionsViewModel(
-        title: attribute.title,
-        subtitle: nil,
-        options: attribute.alertableOptions,
-        initialOption: initialOption,
-        onOptionChosen: { newOption in
-          changeHandler?(newOption)
-        })
-    }
-
-    newViewModel.isAlertCancellable = attribute.isAlertCancellable
-
-    coordinator?.showAlert(viewModel: newViewModel, in: context)
-  }
-
   func showColorPicker(initialColor: UIColor, changeHandler: ((UIColor) -> Void)?) {
     coordinator?.showColorPicker(initialColor: initialColor, changeHandler: changeHandler)
   }

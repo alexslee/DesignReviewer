@@ -80,6 +80,7 @@ struct SpuddleOptionsModifierView: View {
         LinearGradient(colors: [Color.black.opacity(0.3), Color.clear], startPoint: .bottom, endPoint: .top)
           .frame(height: 24)
       }
+      .cornerRadius(.extraExtraSmall)
 
       HStack(spacing: .extraSmall) {
         Button(action: {

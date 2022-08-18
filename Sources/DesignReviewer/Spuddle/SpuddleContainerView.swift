@@ -54,39 +54,41 @@ struct SpuddleContainerView: View {
               }
             })
             .offset(offset(for: spuddle))
-            .simultaneousGesture(
-              DragGesture(minimumDistance: .extraExtraSmall)
-                .onChanged({ value in
-                  func update() {
-                    dragOffset(value.translation, spuddle: spuddle)
-                    spuddle.viewModel.currentFrame = CGRect(
-                      origin: spuddle.viewModel.staticFrame.origin + CGPoint(x: spuddleOffset.width, y: spuddleOffset.height),
-                      size: spuddle.viewModel.currentSize ?? .zero)
-                  }
-
-                  if selectedSpuddle == nil {
-                    withAnimation(.spuddleSpringyDefault) {
-                      selectedSpuddle = spuddle
-                      update()
+            .apply({ view in
+              view.simultaneousGesture(
+                DragGesture(minimumDistance: .extraExtraSmall)
+                  .onChanged({ value in
+                    func update() {
+                      dragOffset(value.translation, spuddle: spuddle)
+                      spuddle.viewModel.currentFrame = CGRect(
+                        origin: spuddle.viewModel.staticFrame.origin + CGPoint(x: spuddleOffset.width, y: spuddleOffset.height),
+                        size: spuddle.viewModel.currentSize ?? .zero)
                     }
-                  } else {
-                    update() // drag already in progress
-                  }
-                })
-                .onEnded({ value in
-                  let finalOrigin = CGPoint(
-                    x: spuddle.viewModel.staticFrame.origin.x + value.predictedEndTranslation.width,
-                    y: spuddle.viewModel.staticFrame.origin.y + value.predictedEndTranslation.height)
 
-                  withAnimation(.spuddleSpringyDefault) {
-                    spuddleOffset = .zero
-                    spuddle.positionDidChange(to: finalOrigin)
-                    spuddle.viewModel.currentFrame = spuddle.viewModel.staticFrame
-                  }
+                    if selectedSpuddle == nil {
+                      withAnimation(.spuddleSpringyDefault) {
+                        selectedSpuddle = spuddle
+                        update()
+                      }
+                    } else {
+                      update() // drag already in progress
+                    }
+                  })
+                  .onEnded({ value in
+                    let finalOrigin = CGPoint(
+                      x: spuddle.viewModel.staticFrame.origin.x + value.predictedEndTranslation.width,
+                      y: spuddle.viewModel.staticFrame.origin.y + value.predictedEndTranslation.height)
 
-                  selectedSpuddle = nil
-                })
-            )
+                    withAnimation(.spuddleSpringyDefault) {
+                      spuddleOffset = .zero
+                      spuddle.positionDidChange(to: finalOrigin)
+                      spuddle.viewModel.currentFrame = spuddle.viewModel.staticFrame
+                    }
+
+                    selectedSpuddle = nil
+                  })
+              )
+            }, if: spuddle.viewModel.shouldAllowDragToDismiss)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .transition(.asymmetric(insertion: spuddle.viewModel.transition, removal: spuddle.viewModel.dismissTransition))

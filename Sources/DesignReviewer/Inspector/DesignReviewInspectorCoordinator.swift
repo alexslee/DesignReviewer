@@ -72,22 +72,50 @@ class DesignReviewInspectorCoordinator: NSObject, DesignReviewCoordinatorProtoco
   }
 
   func showSpuddle(in viewController: UIViewController,
-                   attribute: DesignReviewInspectorAttribute,
+                   viewModel: SpuddleModifierViewModel,
                    sourceFrameGetter: @escaping (() -> CGRect),
                    changeHandler: ((Any) -> Void)?) {
-    let spuddleViewModel = SpuddleViewModel(placement: .bottom,
-                                            transition: .move(edge: .bottom),
-                                            dismissTransition: .slide,
-                                            onDismiss: nil)
-    spuddleViewModel.sourceFrame = sourceFrameGetter
-
     let newRouter = SpuddleRouter(viewController: viewController)
-    let newCoordinator = SpuddleStepperCoordinator(
-      viewModel: spuddleViewModel,
-      router: newRouter,
-      attribute: attribute,
-      changeHandler: changeHandler)
 
+    let spuddleViewModel: SpuddleViewModel
+    let newCoordinator: DesignReviewCoordinatorProtocol
+    switch viewModel {
+    case .option(let optionsViewModel):
+      spuddleViewModel = SpuddleViewModel(placement: .bottom,
+                                          transition: .move(edge: .bottom),
+                                          dismissTransition: .slide,
+                                          shouldAllowDragToDismiss: false,
+                                          onDismiss: nil)
+      spuddleViewModel.sourceFrame = sourceFrameGetter
+
+      newCoordinator = SpuddleOptionsCoordinator(
+        viewModel: spuddleViewModel,
+        optionsViewModel: optionsViewModel,
+        router: newRouter,
+        changeHandler: changeHandler)
+    case .stepper(let stepperViewModel):
+      spuddleViewModel = SpuddleViewModel(placement: .bottom,
+                                          transition: .move(edge: .bottom),
+                                          dismissTransition: .slide,
+                                          onDismiss: nil)
+
+      newCoordinator = SpuddleStepperCoordinator(
+        viewModel: spuddleViewModel,
+        stepperViewModel: stepperViewModel,
+        router: newRouter,
+        changeHandler: changeHandler)
+    case .text(let textViewModel):
+      spuddleViewModel = SpuddleViewModel(placement: .top,
+                                          transition: .move(edge: .top),
+                                          dismissTransition: .slide,
+                                          shouldAllowDragToDismiss: false,
+                                          onDismiss: nil)
+      newCoordinator = SpuddleTextCoordinator(viewModel: spuddleViewModel,
+                                              textViewModel: textViewModel,
+                                              router: newRouter,
+                                              changeHandler: changeHandler)
+    }
+    spuddleViewModel.sourceFrame = sourceFrameGetter
     newCoordinator.parent = self
     children.append(newCoordinator)
     newCoordinator.start()

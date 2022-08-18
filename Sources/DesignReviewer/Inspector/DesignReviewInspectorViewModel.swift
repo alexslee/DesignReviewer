@@ -123,27 +123,16 @@ class DesignReviewInspectorViewModel {
                              in context: UIViewController,
                              sourceFrameGetter: @escaping (() -> CGRect),
                              changeHandler: ((Any) -> Void)?) {
-//    guard attribute.isAlertable else { return }
-    coordinator?.showSpuddle(in: context,
-                             attribute: attribute,
-                             sourceFrameGetter: sourceFrameGetter,
-                             changeHandler: changeHandler)
-  }
-
-  func showAlertIfPossible(for attribute: DesignReviewInspectorAttribute,
-                           in context: UIViewController,
-                           changeHandler: ((Any) -> Void)?) {
     guard attribute.isAlertable else { return }
-
-    var newViewModel: DesignReviewSuboptimalAlertViewModelProtocol
-    if attribute is DesignReviewMutableAttribute, let initialValue = attribute.value as? String {
-      newViewModel = DesignReviewSuboptimalAlertTextViewModel(
-        title: attribute.title,
-        subtitle: nil,
-        initialValue: initialValue,
-        onOptionChosen: { newOption in
-          changeHandler?(newOption)
-        })
+    var newSpuddleViewModel: SpuddleModifierViewModel
+    if let initialValue = attribute.value as? String {
+      let textViewModel = SpuddleTextModifierViewModel(initialValue: initialValue,
+                                                       title: attribute.title,
+                                                       changeHandler: changeHandler)
+      newSpuddleViewModel = .text(viewModel: textViewModel)
+    } else if let _ = attribute.value as? NSNumber {
+      let stepperViewModel = SpuddleStepperModifierViewModel(attribute: attribute, changeHandler: changeHandler)
+      newSpuddleViewModel = .stepper(viewModel: stepperViewModel)
     } else {
       var initialOption: DesignReviewAttributeOptionSelectable?
       if let value = attribute.value as? String { // if it happens to be a string, make sure it's part of the alertable set
@@ -153,19 +142,19 @@ class DesignReviewInspectorViewModel {
         initialOption = value
       }
 
-      newViewModel = DesignReviewSuboptimalAlertOptionsViewModel(
-        title: attribute.title,
-        subtitle: nil,
+      let optionsViewModel = SpuddleOptionsModifierViewModel(
         options: attribute.alertableOptions,
         initialOption: initialOption,
-        onOptionChosen: { newOption in
-          changeHandler?(newOption)
-        })
+        title: attribute.title,
+        changeHandler: changeHandler)
+
+      newSpuddleViewModel = .option(viewModel: optionsViewModel)
     }
 
-    newViewModel.isAlertCancellable = attribute.isAlertCancellable
-
-    coordinator?.showAlert(viewModel: newViewModel, in: context)
+    coordinator?.showSpuddle(in: context,
+                             viewModel: newSpuddleViewModel,
+                             sourceFrameGetter: sourceFrameGetter,
+                             changeHandler: changeHandler)
   }
 
   func showColorPicker(initialColor: UIColor, changeHandler: ((UIColor) -> Void)?) {

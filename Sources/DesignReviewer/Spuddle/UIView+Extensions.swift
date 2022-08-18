@@ -22,14 +22,12 @@ extension UIView {
   }
 
   /// Express view's frame in global coordinate space
-  func windowFrame() -> CGRect {
-    return convert(bounds, to: nil)
-  }
+  var windowFrame: CGRect { convert(bounds, to: nil) }
 }
 
 extension Optional where Wrapped: UIView {
   func windowFrame() -> CGRect {
-    if let view = self { return view.windowFrame() }
+    if let view = self { return view.windowFrame }
     return .zero
   }
 }

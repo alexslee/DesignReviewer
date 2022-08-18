@@ -35,17 +35,17 @@ class SpuddleStepperCoordinator: NSObject, DesignReviewCoordinatorProtocol {
   var parent: DesignReviewCoordinatorProtocol?
 
   private let viewModel: SpuddleViewModel
+  private let stepperViewModel: SpuddleStepperModifierViewModel
   private let router: SpuddleRouter
-  private let attribute: DesignReviewInspectorAttribute
   private let changeHandler: ((Any) -> Void)?
 
   init(viewModel: SpuddleViewModel,
+       stepperViewModel: SpuddleStepperModifierViewModel,
        router: SpuddleRouter,
-       attribute: DesignReviewInspectorAttribute,
        changeHandler: ((Any) -> Void)?) {
     self.viewModel = viewModel
+    self.stepperViewModel = stepperViewModel
     self.router = router
-    self.attribute = attribute
     self.changeHandler = changeHandler
   }
 
@@ -54,12 +54,7 @@ class SpuddleStepperCoordinator: NSObject, DesignReviewCoordinatorProtocol {
       viewModel: viewModel,
       view: { [weak self] in
         if let self = self {
-          let stepperViewModel = SpuddleStepperModifierViewModel(attribute: self.attribute,
-                                                                 changeHandler: self.changeHandler,
-                                                                 dismissHandler: { [weak self] in
-            self?.dismissHandler()
-          })
-          SpuddleStepperModiferView(viewModel: stepperViewModel)
+          SpuddleStepperModiferView(viewModel: self.stepperViewModel)
         } else {
           EmptyView()
         }
@@ -68,6 +63,11 @@ class SpuddleStepperCoordinator: NSObject, DesignReviewCoordinatorProtocol {
       })
 
     viewModel.coordinator = self
+
+    stepperViewModel.dismissHandler = { [weak self] in
+      self?.dismissHandler()
+    }
+
     router.present(spuddle)
   }
 

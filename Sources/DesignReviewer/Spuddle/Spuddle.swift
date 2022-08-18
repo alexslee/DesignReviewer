@@ -26,7 +26,7 @@ struct Spuddle: Identifiable, Equatable {
   init<MainContent: View, BackgroundContent: View>(
     viewModel: SpuddleViewModel,
     @ViewBuilder view: @escaping () -> MainContent,
-    @ViewBuilder backgroundView: @escaping () -> BackgroundContent = { Color.clear }) {
+    @ViewBuilder backgroundView: @escaping () -> BackgroundContent) {
       self.viewModel = viewModel
       self.view = AnyView(view().environmentObject(viewModel))
       self.backgroundView = AnyView(backgroundView().environmentObject(viewModel))

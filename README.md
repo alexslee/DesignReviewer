@@ -5,10 +5,37 @@
 `DesignReviewer` is an in-app alternative to view debugging that you'd normally need to be wired up to
 Xcode to perform. 
 
-* When LLDB just won't cooperate: view inspection without needing to wait for Xcode to stop lagging
-* When Xcode screeches to a halt: utilize a 3D view hierarchy experience that mimics that of Xcode
-* Who needs to recompile?: modify various view/constraint properties, with real-time changes reflected in the preview + back in the app itself
-* Sanity check your constraints: quickly view the space between any two views on the screen
+<p align="center"><i>
+When LLDB just won't cooperate: view inspection without needing to wait for Xcode to stop lagging
+</i></p>
+
+<p align="center">
+<img width="350" src="readme-assets/open-reviewer-and-mutate-text.gif">
+</p>
+
+<p align="center"><i>
+When Xcode screeches to a halt: utilize a 3D view hierarchy experience that mimics that of Xcode
+</i></p>
+
+| Navigation by hierarchy list | Navigation by exploded hierarchy |
+| ----------- | ----------- |
+| <img width="350" src="readme-assets/traverse-hierarchy-by-list-and-use-exploded-view.gif"> | <img width="350" src="readme-assets/traverse-hierarchy-by-exploded-view.gif"> |
+
+<p align="center"><i>
+Who needs to recompile?: modify various view/constraint properties, with real-time changes reflected in the preview + back in the app itself
+</i></p>
+
+<p align="center">
+<img width="350" src="readme-assets/inspect-and-edit-button.gif">
+</i></p>
+
+<p align="center"><i>
+Sanity check your constraints: quickly view the space between any two views on the screen
+</i></p>
+
+<p align="center">
+<img width="350" src="readme-assets/check-padding-between-any-views.gif">
+</p>
 
 ## Usage
 

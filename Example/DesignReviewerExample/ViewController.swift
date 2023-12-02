@@ -133,6 +133,35 @@ Never gonna say goodbye
     return scroll
   }()
 
+  private lazy var testLeftNavBarItem: UIView = {
+    let view = UIView()
+    let dummyImage = UIImageView(image: UIImage(systemName: "eyes"))
+    dummyImage.contentMode = .scaleAspectFit
+    dummyImage.translatesAutoresizingMaskIntoConstraints = false
+
+    let dummyLabel = UILabel()
+    dummyLabel.font = .systemFont(ofSize: 16)
+    dummyLabel.text = "Left Nav Offset"
+    dummyLabel.translatesAutoresizingMaskIntoConstraints = false
+
+    view.addSubview(dummyImage)
+    view.addSubview(dummyLabel)
+
+    NSLayoutConstraint.activate([
+      dummyImage.heightAnchor.constraint(equalToConstant: 32),
+      dummyImage.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+      dummyImage.widthAnchor.constraint(equalTo: dummyImage.heightAnchor),
+      dummyImage.topAnchor.constraint(equalTo: view.topAnchor),
+
+      dummyLabel.topAnchor.constraint(equalTo: dummyImage.topAnchor, constant: 16),
+      dummyLabel.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+      dummyLabel.leadingAnchor.constraint(equalTo: dummyImage.trailingAnchor, constant: 4),
+      dummyLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor)
+    ])
+
+    return view
+  }()
+
   private lazy var testNavBarButton: UIButton = {
     let button = UIButton(type: .system)
     button.setImage(UIImage(systemName: "gear"), for: .normal)
@@ -165,6 +194,7 @@ Never gonna say goodbye
     navigationController?.navigationBar.prefersLargeTitles = true
 
     navigationItem.rightBarButtonItem = UIBarButtonItem(customView: testNavBarButton)
+    navigationItem.leftBarButtonItem = UIBarButtonItem(customView: testLeftNavBarItem)
 
     view.backgroundColor = .systemBackground
     testScrollView.backgroundColor = .systemBackground

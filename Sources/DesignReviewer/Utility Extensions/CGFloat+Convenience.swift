@@ -48,4 +48,9 @@ extension CGFloat {
 
     return nilSafeBuild.joined(separator: separator)
   }
+
+  func roundedForSpecString() -> CGFloat {
+    let temp = self * 100.0
+    return temp.rounded() / 100.0
+  }
 }
